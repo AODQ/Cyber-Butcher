@@ -137,7 +137,13 @@ bool Init_Game() {
   // physics
   world.SetupPhysics();
 
-  world.Add(new GridActor());
+  GridActor* test_grid = new GridActor();
+  test_grid->SetMaxCoord(Vector2(500, 500));
+  test_grid->SetMinCoord(Vector2(-500, -500));
+  test_grid->SetAxisColor(Color(0.0f, 0.0f, 0.0f));
+  test_grid->SetLineColor(Color(0.9f, 0.9f, 0.9f));
+  world.Add(test_grid);
+  //world.Add(new GridActor());
   world.SetGameManager(&Circle_Game_manager::Get_Instance());
 
   auto t = new PhysicsActor();
