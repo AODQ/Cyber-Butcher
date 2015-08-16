@@ -69,7 +69,7 @@ void Circle::Update(float dt) {
         this->InitPhysics();
       }
     }
-  } else if ( lifetime-- < 0 ) {
+  } else if ( lifetime -- < 0 ) {
     for ( int i = 0; i < circles.size(); ++ i )
       if ( circles[i] == this ) {
         circles[i]->Destroy();
