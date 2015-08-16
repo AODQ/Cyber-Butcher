@@ -20,7 +20,7 @@ void Circle_Game_manager::Update ( float dx ) {
 
   // player
 
-  static const float _Force = 250;
+  static const float _Force = 2500;
 
   if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
     player->ApplyForce(Vector2(-_Force, 0),Vector2(0,0));
@@ -35,7 +35,7 @@ void Circle_Game_manager::Update ( float dx ) {
     player->ApplyForce(Vector2(_Force, 0),Vector2(0,0));
   }
   if ( theInput.IsKeyDown(GLFW_KEY_Q) ) {
-    player->ApplyTorque(1500.f);
+    player->ApplyTorque(15000.f);
   }
 
 }
@@ -110,8 +110,8 @@ void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
   i->InitPhysics();
   i->GetBody()->SetGravityScale(16.f);
   theWorld.Add(i);
-  float vx = std::cos(_ang)*60000000,
-        vy = std::sin(_ang)*60000000;
+  float vx = std::cos(_ang)*600000,
+        vy = std::sin(_ang)*600000;
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
@@ -125,7 +125,7 @@ void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
 bool Init_Game() {
   // world
   world.Initialize(utility::Window_height,
-                   utility::Window_width, "Circle Test", true, false);
+                   utility::Window_width, "Circle Test", true, false, true);
   theCamera.SetZByViewRadius(100);
   world.GetConsole()->WriteToOutput("Testing random output\n");
   for ( int i = 0; i != 5; ++ i )
@@ -143,7 +143,12 @@ bool Init_Game() {
   test_grid->SetAxisColor(Color(0.0f, 0.0f, 0.0f));
   test_grid->SetLineColor(Color(0.9f, 0.9f, 0.9f));
   world.Add(test_grid);
-  //world.Add(new GridActor());
+  
+  // background
+  FullScreenActor* backdrop = new FullScreenActor();
+  backdrop->SetSprite("LD33-Wallpaper1.png");
+  world.Add(backdrop);
+  
   world.SetGameManager(&Circle_Game_manager::Get_Instance());
 
   auto t = new PhysicsActor();
@@ -154,7 +159,7 @@ bool Init_Game() {
   t->SetSize(150,10);
   t->SetDensity(0);
   t->InitPhysics();
-  t->GetBody()->SetGravityScale(0.0f);
+  t->GetBody()->SetGravityScale(15.0f);
 
   player = new PhysicsActor();
   player->SetPosition(0,0);
@@ -164,6 +169,7 @@ bool Init_Game() {
   player->SetDensity(30.f);
   player->GetBody()->SetGravityScale(0.0f);
   world.Add(player);
+  
   return 1;
 }
 
