@@ -20,7 +20,7 @@ void Circle_Game_manager::Update ( float dx ) {
 
   // player
 
-  static const float _Force = 2500;
+  static const float _Force = 250;
 
   if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
     player->ApplyForce(Vector2(-_Force, 0),Vector2(0,0));
