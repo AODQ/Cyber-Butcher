@@ -99,9 +99,9 @@ void Bullet::Update(float dt) {
 const int Text_Fade::total_lifetime = 50;
 Text_Fade::Text_Fade() {}
 void Text_Fade::Update(float dt) {
-  SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*2.0f));
+  SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*4.0f));
   SetAlpha(lifetime/total_lifetime);
-  if ( lifetime/total_lifetime < 0 )
+  if ( --lifetime/total_lifetime < 0 )
     this->Destroy();
 }
 
@@ -198,6 +198,8 @@ void Add_Circle(int pos_x, int pos_y) {
 void Add_Fade_Text(std::string text, int pos_x, int pos_y) {
   auto i = new Text_Fade();
   i->SetDisplayString(text);
+  i->SetColor(Color(.4f,.4f,.2f));
+  //i->SetRotation(utility::R_Rand()*3.6f);
   i->SetPosition(Vector2(pos_x,pos_y));
   theWorld.Add(i);
 }
