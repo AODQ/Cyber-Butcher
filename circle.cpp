@@ -143,6 +143,8 @@ bool Init_Game() {
   world.GetConsole()->WriteToOutput("Done\n");
 
   new _Mouse(); // initialize mouse event thingamajig
+  
+  world.SetGameManager(&Circle_Game_manager::Get_Instance());
 
   // physics
   world.SetupPhysics();
@@ -155,11 +157,20 @@ bool Init_Game() {
   world.Add(test_grid);
   
   // background
-  FullScreenActor* backdrop = new FullScreenActor();
-  backdrop->SetSprite("LD33-Wallpaper1.png");
-  world.Add(backdrop);
+  //FullScreenActor* backdrop = new FullScreenActor();
+  //backdrop->SetSprite("LD33-Wallpaper1.png");
+  //world.Add(backdrop);
   
-  world.SetGameManager(&Circle_Game_manager::Get_Instance());
+  ParticleActor* pa = new ParticleActor();
+  pa->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
+  pa->SetEndColor(Color(0.0f, 0.0f, 0.0f, 0.0f));
+  pa->SetSize(Vector2(0.2f, 0.2f));
+  pa->SetMaxParticles(5000);
+  pa->SetParticlesPerSecond(1000.0f);
+  pa->SetSpread(MathUtil::Pi);
+  pa->SetSpeedRange(3.0f, 4.0f);
+  pa->SetGravity(Vector2(0, -5));
+  world.Add(pa);
 
   auto t = new PhysicsActor();
   world.Add(t);
@@ -200,7 +211,7 @@ void Add_Circle(int pos_x, int pos_y) {
 void Add_Fade_Text(std::string text, int pos_x, int pos_y) {
   auto i = new Text_Fade();
   i->SetDisplayString(text);
-  i->SetColor(Color(utility::rand()/100.f,
+  i->SetColor(Color(utility::rand()/100.f, // broken, contains only white values
                     utility::rand()/100.f,
                     utility::rand()/100.f));
   //i->SetRotation(utility::R_Rand()*3.6f);
