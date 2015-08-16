@@ -47,7 +47,7 @@ class Text_Fade : public TextActor {
   static const int total_lifetime;
 public:
   Text_Fade();
-  void Update(float dt);
+  void Update(float);
 };
 
 bool Init_Game();
