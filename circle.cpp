@@ -97,11 +97,13 @@ void Bullet::Update(float dt) {
 }
 
 const int Text_Fade::total_lifetime = 50;
-Text_Fade::Text_Fade() {}
+Text_Fade::Text_Fade() {
+  lifetime = total_lifetime;
+}
 void Text_Fade::Update(float dt) {
   SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*4.0f));
   SetAlpha(lifetime/total_lifetime);
-  if ( --lifetime/total_lifetime < 0 )
+  if ( --lifetime < 0 )
     this->Destroy();
 }
 
