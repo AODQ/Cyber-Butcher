@@ -14,7 +14,7 @@ Circle_Game_manager& Circle_Game_manager::Get_Instance() {
 void Circle_Game_manager::Update ( float dx ) {
 
   // circles
-  if ( circles.size() != 200 ) {
+  if ( circles.size() != 100 ) {
     Add_Circle(utility::R_Rand()-50,utility::R_Rand()-50);
   }
 
@@ -43,7 +43,7 @@ void Circle_Game_manager::Update ( float dx ) {
 Circle::Circle() {
   vel_x = orig_vel_x = vel_y = orig_vel_y = 0.f;
   physics_trig = 0;
-  max_lifetime = lifetime = (utility::R_Rand()/10 + 50)*50;
+  max_lifetime = lifetime = (utility::R_Rand()/10 + 50)*25;
 }
 void Circle::Set_Velocity(float vx, float vy) {
   orig_vel_x = vel_x = vx;
@@ -90,14 +90,20 @@ Bullet::Bullet() {
   SetFriction(.2f);
   SetDensity(0.3f);
 }
-
 void Bullet::Update(float dt) {
   if ( lifetime-- < 0 ) {
     this->Destroy();
   }
 }
 
-
+const int Text_Fade::total_lifetime;
+Text_Fade::Text_Fade() {}
+void Text_Fade::Update(float dt) {
+  SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*2.0f));
+  SetAlpha(lifetime/total_lifetime);
+  if ( lifetime/total_lifetime < 0 )
+    this->Destroy();
+}
 
 void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
   // create bullet
@@ -115,11 +121,13 @@ void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
   i->ApplyForce(Vector2(vx,vy),Vector2(0,0));
-  theWorld.GetConsole()->WriteToOutput(
+  utility::Output(
   "\nBullet x: " + std::to_string(i->GetPosition().X) + "\n" +
     "       y: " + std::to_string(i->GetPosition().Y) + "\n" +
     "   vel x: " + std::to_string(vx)      + "\n" +
     "   vel y: " + std::to_string(vy));
+  Add_Fade_Text(std::to_string(vx+vy),i->GetPosition().X,
+                                      i->GetPosition().Y)
 }
 
 bool Init_Game() {
@@ -187,6 +195,12 @@ void Add_Circle(int pos_x, int pos_y) {
   circles.push_back(t_circle);
 }
 
+void Add_Fade_Text(std::string text, int pos_x, int pos_y) {
+  auto i = new Text_Fade();
+  i->SetDisplayString(text);
+  i->SetPosition(Vector2(pos_x,pos_y));
+  theWorld.Add(i);
+}
 
 
 std::vector<Circle*> circles;

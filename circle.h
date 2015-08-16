@@ -42,9 +42,17 @@ public:
   void MouseDownEvent(Vec2i screenCoord, MouseButtonInput button );
 };
 
+class Text_Fade : public TextActor {
+  float lifetime;
+  static const int total_lifetime;
+public:
+  Text_Fade();
+  void Update(float dt);
+};
 
 bool Init_Game();
 void Add_Circle(int posx, int posy);
+void Add_Fade_Text(std::string text);
 
 extern std::vector<Circle*> circles;
 extern PhysicsActor* player;

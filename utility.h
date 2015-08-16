@@ -14,6 +14,8 @@ namespace utility {
   int Conv_To_World_X(int);
   int Conv_To_World_Y(int);
   float R_Rand();
+  
+  void Console_Output(std::string);
 };
 
 #endif

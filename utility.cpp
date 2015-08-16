@@ -18,3 +18,8 @@ int utility::Conv_To_World_Y(int x) {
 
 
 float utility::R_Rand() { return dist(rgen); }
+
+
+void Output(std::string text) {
+  theWorld.GetConsole()->WriteToOutput(text);
+}
