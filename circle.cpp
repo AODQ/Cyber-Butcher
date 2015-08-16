@@ -96,7 +96,7 @@ void Bullet::Update(float dt) {
   }
 }
 
-const int Text_Fade::total_lifetime;
+const int Text_Fade::total_lifetime = 50;
 Text_Fade::Text_Fade() {}
 void Text_Fade::Update(float dt) {
   SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*2.0f));
