@@ -200,7 +200,9 @@ void Add_Circle(int pos_x, int pos_y) {
 void Add_Fade_Text(std::string text, int pos_x, int pos_y) {
   auto i = new Text_Fade();
   i->SetDisplayString(text);
-  i->SetColor(Color(.4f,.4f,.2f));
+  i->SetColor(Color(utility::rand()/100.f,
+                    utility::rand()/100.f,
+                    utility::rand()/100.f));
   //i->SetRotation(utility::R_Rand()*3.6f);
   i->SetPosition(Vector2(pos_x,pos_y));
   theWorld.Add(i);
