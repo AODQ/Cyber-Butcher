@@ -127,7 +127,7 @@ void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
     "   vel x: " + std::to_string(vx)      + "\n" +
     "   vel y: " + std::to_string(vy));
   Add_Fade_Text(std::to_string(vx+vy),i->GetPosition().X,
-                                      i->GetPosition().Y)
+                                      i->GetPosition().Y);
 }
 
 bool Init_Game() {

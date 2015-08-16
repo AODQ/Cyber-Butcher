@@ -52,7 +52,7 @@ public:
 
 bool Init_Game();
 void Add_Circle(int posx, int posy);
-void Add_Fade_Text(std::string text);
+void Add_Fade_Text(std::string text, int, int);
 
 extern std::vector<Circle*> circles;
 extern PhysicsActor* player;
