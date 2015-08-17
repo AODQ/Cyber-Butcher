@@ -38,6 +38,7 @@ void Circle_Game_manager::Update ( float dx ) {
     player->ApplyTorque(15000.f);
   }
 
+  pa->SetPosition(player->GetPosition());
 }
 
 Circle::Circle() {
@@ -161,7 +162,7 @@ bool Init_Game() {
   //backdrop->SetSprite("LD33-Wallpaper1.png");
   //world.Add(backdrop);
   
-  ParticleActor* pa = new ParticleActor();
+  pa = new ParticleActor();
   pa->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
   pa->SetEndColor(Color(0.0f, 0.0f, 0.0f, 0.0f));
   pa->SetSize(Vector2(0.2f, 0.2f));
@@ -170,7 +171,7 @@ bool Init_Game() {
   pa->SetSpread(MathUtil::Pi);
   pa->SetSpeedRange(3.0f, 4.0f);
   pa->SetGravity(Vector2(0, -5));
-  pa->SetParticleLifetime(5f);
+  pa->SetParticleLifetime(5.0f);
   world.Add(pa);
   
   // ground
@@ -213,9 +214,7 @@ void Add_Circle(int pos_x, int pos_y) {
 void Add_Fade_Text(std::string text, int pos_x, int pos_y) {
   auto i = new Text_Fade();
   i->SetDisplayString(text);
-  i->SetColor(Color(utility::rand()/100.f, // broken, contains only white values
-                    utility::rand()/100.f,
-                    utility::rand()/100.f));
+  i->SetColor(Color(.1f,.1f,.1f));
   //i->SetRotation(utility::R_Rand()*3.6f);
   i->SetPosition(Vector2(pos_x,pos_y));
   theWorld.Add(i);

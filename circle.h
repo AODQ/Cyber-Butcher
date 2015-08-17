@@ -56,5 +56,6 @@ void Add_Fade_Text(std::string text, int, int);
 
 extern std::vector<Circle*> circles;
 extern PhysicsActor* player;
+extern ParticleActor* pa;
 
 #endif
