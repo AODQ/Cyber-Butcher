@@ -62,8 +62,8 @@ void Circle::Update(float dt) {
     vel_x *= .996f;
     vel_y *= .996f;
     // initiate collapse
-    if ( vel_x > -3 && vel_x < 3 &&
-       vel_y > -3   && vel_y < 3 ) {
+    if ( vel_x > -8 && vel_x < 8 &&
+         vel_y > -8 && vel_y < 8 ) {
       vel_x = -orig_vel_x;
       vel_y = -orig_vel_y;
       if ( ++physics_trig == 2 ) {
@@ -101,14 +101,21 @@ void Bullet::Update(float dt) {
 
 
 Enemy::Enemy() {
-  
+  switch ( static_cast<int>(utility::R_Rand()/25.f) ) {
+    case 0: SetSprite("EnemyImage1.png");
+    case 1: SetSprite("EnemyImage2.png");
+    case 2: SetSprite("EnemyImage3.png");
+    default:SetSprite("EnemyImage4.png");
+  } 
 }
 
 void Enemy::Update(float dt) {
-  Vector2List to_go;
+  /*Vector2List to_go;
   theSpatialGraph.GetPath(GetPosition(),player->GetPosition(),to_go);
-  SetPosition(to_go[0]);
+  if ( to_go.size() > 0 )
+    SetPosition(to_go[0]);*/
   if ( --shoot_timer < 0 ) {
+    ApplyForce(Vector2(utility::R_Rand(),utility::R_Rand(()),Vector2(0,0));
     shoot_timer = shoot_timer_def;
     // create bullet
     float _ang = std::atan2f(GetPosition().Y-player->GetPosition().Y,
@@ -120,18 +127,25 @@ void Enemy::Update(float dt) {
     bull->GetBody()->SetGravityScale(16.f);
     theWorld.Add(bull);
     bull->ApplyForce(Vector2(std::cos(_ang)*50000,
-                     Vector2(std::sin(_ang)*50000);
+                             std::sin(_ang)*50000),Vector2(0,0));
   }
 }
+
 
 const int Enemy::shoot_timer_def = 100;
 
 
-void Circle::Update(float dt) {
+Text_Fade::Text_Fade() { lifetime = total_lifetime; }
+
+void Text_Fade::Update(float dt) {
   SetAlpha(lifetime/total_lifetime);
   if ( --lifetime < 0 )
     this->Destroy();
 }
+
+const int Text_Fade::total_lifetime = 120;
+
+
 
 void _Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button ) {
   // create bullet
@@ -233,6 +247,9 @@ void Add_Circle(int pos_x, int pos_y) {
   Circle* t_circle = new Circle();
   t_circle->SetPosition(pos_x, pos_y);
   t_circle->SetDrawShape(ADS_Circle);
+  t_circle->SetColor(utility::R_Rand()/100.f,
+                     utility::R_Rand()/100.f,
+                     utility::R_Rand()/100.f);
   t_circle->SetSize(utility::R_Rand()/25.f + 1.f);
   t_circle->Set_Velocity((utility::R_Rand() - 50)*16,
                          (utility::R_Rand() - 50)*7);
