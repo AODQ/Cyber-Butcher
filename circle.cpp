@@ -104,7 +104,7 @@ Enemy::Enemy() {
   SetSize(10.f,10.f);
   InitPhysics();
   GetBody()->SetGravityScale(0.0f);
-  switch ( static_cast<int>(utility::R_Rand()/25.f) ) {
+  switch ( static_cast<int>(utility::R_Rand())%4) ) {
     case 0: SetSprite("EnemyImage1.png");
     case 1: SetSprite("EnemyImage2.png");
     case 2: SetSprite("EnemyImage3.png");
