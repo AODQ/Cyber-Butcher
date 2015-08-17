@@ -11,6 +11,8 @@ Circle_Game_manager& Circle_Game_manager::Get_Instance() {
     circle_manager = new Circle_Game_manager();
   return *circle_manager;
 }
+
+// generic update
 void Circle_Game_manager::Update ( float dx ) {
 
   // circles
@@ -38,8 +40,8 @@ void Circle_Game_manager::Update ( float dx ) {
     player->ApplyTorque(15000.f);
   }
 
-  //pa->SetPosition(player->GetPosition());
 }
+
 
 Circle::Circle() {
   vel_x = orig_vel_x = vel_y = orig_vel_y = 0.f;
@@ -97,12 +99,35 @@ void Bullet::Update(float dt) {
   }
 }
 
-const int Text_Fade::total_lifetime = 50;
-Text_Fade::Text_Fade() {
-  lifetime = total_lifetime;
+
+Enemy::Enemy() {
+  
 }
-void Text_Fade::Update(float dt) {
-  SetPosition(Vector2(GetPosition().X,GetPosition().Y-dt*4.0f));
+
+void Enemy::Update(float dt) {
+  Vector2List to_go;
+  theSpatialGraph.GetPath(GetPosition(),player->GetPosition(),to_go);
+  SetPosition(to_go[0]);
+  if ( --shoot_timer < 0 ) {
+    shoot_timer = shoot_timer_def;
+    // create bullet
+    float _ang = std::atan2f(GetPosition().Y-player->GetPosition().Y,
+                             GetPosition().X-player->GetPosition().X);
+    auto bull = new Bullet();
+    bull->SetPosition(GetPosition().X + std::cos(_ang)*10,
+                      GetPosition().Y + std::sin(_ang)*10);
+    bull->InitPhysics();
+    bull->GetBody()->SetGravityScale(16.f);
+    theWorld.Add(bull);
+    bull->ApplyForce(Vector2(std::cos(_ang)*50000,
+                     Vector2(std::sin(_ang)*50000);
+  }
+}
+
+const int Enemy::shoot_timer_def = 100;
+
+
+void Circle::Update(float dt) {
   SetAlpha(lifetime/total_lifetime);
   if ( --lifetime < 0 )
     this->Destroy();
@@ -194,15 +219,19 @@ bool Init_Game() {
   player->GetBody()->SetGravityScale(0.0f);
   world.Add(player);
   
+  // ai movement thing
+  theSpatialGraph.CreateGraph(10.f, theCamera.GetBoundingBox());
+  
+  
+  // enemy
+  theWorld.Add(new Enemy());
+  
   return 1;
 }
 
 void Add_Circle(int pos_x, int pos_y) {
   Circle* t_circle = new Circle();
   t_circle->SetPosition(pos_x, pos_y);
-  t_circle->SetColor(utility::R_Rand()/100.f,
-                     utility::R_Rand()/100.f,
-                     utility::R_Rand()/100.f);
   t_circle->SetDrawShape(ADS_Circle);
   t_circle->SetSize(utility::R_Rand()/25.f + 1.f);
   t_circle->Set_Velocity((utility::R_Rand() - 50)*16,

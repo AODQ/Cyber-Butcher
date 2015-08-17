@@ -37,6 +37,16 @@ public:
   void Update(float dt);
 };
 
+
+
+class Enemy : public Player {
+  int shoot_timer = 0;
+  static const int shoot_timer_def;
+public:
+  Enemy();
+  void Update(float dt);
+};
+
 class _Mouse : public MouseListener {
 public:
   void MouseDownEvent(Vec2i screenCoord, MouseButtonInput button );
