@@ -38,7 +38,7 @@ void Circle_Game_manager::Update ( float dx ) {
     player->ApplyTorque(15000.f);
   }
 
-  pa->SetPosition(player->GetPosition());
+  //pa->SetPosition(player->GetPosition());
 }
 
 Circle::Circle() {
@@ -162,7 +162,7 @@ bool Init_Game() {
   //backdrop->SetSprite("LD33-Wallpaper1.png");
   //world.Add(backdrop);
   
-  pa = new ParticleActor();
+  ParticleActor* pa = new ParticleActor();
   pa->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
   pa->SetEndColor(Color(0.0f, 0.0f, 0.0f, 0.0f));
   pa->SetSize(Vector2(0.2f, 0.2f));
