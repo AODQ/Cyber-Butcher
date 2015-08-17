@@ -170,8 +170,10 @@ bool Init_Game() {
   pa->SetSpread(MathUtil::Pi);
   pa->SetSpeedRange(3.0f, 4.0f);
   pa->SetGravity(Vector2(0, -5));
+  pa->SetParticleLifetime(5f);
   world.Add(pa);
-
+  
+  // ground
   auto t = new PhysicsActor();
   world.Add(t);
   t->SetPosition(-5,-40);
@@ -180,7 +182,7 @@ bool Init_Game() {
   t->SetSize(150,10);
   t->SetDensity(0);
   t->InitPhysics();
-  t->GetBody()->SetGravityScale(15.0f);
+  //t->GetBody()->SetGravityScale(15.0f);
 
   player = new PhysicsActor();
   player->SetPosition(0,0);
