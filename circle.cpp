@@ -101,6 +101,9 @@ void Bullet::Update(float dt) {
 
 
 Enemy::Enemy() {
+  SetSize(10.f,10.f);
+  InitPhysics();
+  GetBody()->SetGravityScale(0.0f);
   switch ( static_cast<int>(utility::R_Rand()/25.f) ) {
     case 0: SetSprite("EnemyImage1.png");
     case 1: SetSprite("EnemyImage2.png");
@@ -115,11 +118,11 @@ void Enemy::Update(float dt) {
   if ( to_go.size() > 0 )
     SetPosition(to_go[0]);*/
   if ( --shoot_timer < 0 ) {
-    ApplyForce(Vector2(utility::R_Rand(),utility::R_Rand(()),Vector2(0,0));
+    ApplyForce(Vector2(utility::R_Rand(),utility::R_Rand()),Vector2(0,0));
     shoot_timer = shoot_timer_def;
     // create bullet
-    float _ang = std::atan2f(GetPosition().Y-player->GetPosition().Y,
-                             GetPosition().X-player->GetPosition().X);
+    float _ang = -std::atan2f(GetPosition().Y-player->GetPosition().Y,
+                              GetPosition().X-player->GetPosition().X);
     auto bull = new Bullet();
     bull->SetPosition(GetPosition().X + std::cos(_ang)*10,
                       GetPosition().Y + std::sin(_ang)*10);

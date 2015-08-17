@@ -39,7 +39,7 @@ public:
 
 
 
-class Enemy : public Player {
+class Enemy : public PhysicsActor {
   int shoot_timer = 0;
   static const int shoot_timer_def;
 public:
