@@ -121,8 +121,8 @@ void Enemy::Update(float dt) {
     ApplyForce(Vector2(utility::R_Rand(),utility::R_Rand()),Vector2(0,0));
     shoot_timer = shoot_timer_def;
     // create bullet
-    float _ang = -std::atan2f(GetPosition().Y-player->GetPosition().Y,
-                              GetPosition().X-player->GetPosition().X);
+    float _ang = std::atan2f(player->GetPosition().Y-GetPosition().Y,
+                             player->GetPosition().X-GetPosition().X);
     auto bull = new Bullet();
     bull->SetPosition(GetPosition().X + std::cos(_ang)*10,
                       GetPosition().Y + std::sin(_ang)*10);
@@ -241,7 +241,8 @@ bool Init_Game() {
   
   
   // enemy
-  theWorld.Add(new Enemy());
+  for ( int i = 0; i != 5; ++ i )
+    theWorld.Add(new Enemy());
   
   return 1;
 }
