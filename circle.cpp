@@ -104,11 +104,12 @@ Enemy::Enemy() {
   SetSize(10.f,10.f);
   InitPhysics();
   GetBody()->SetGravityScale(0.0f);
-  switch ( static_cast<int>(utility::R_Rand())%4) ) {
-    case 0: SetSprite("EnemyImage1.png");
-    case 1: SetSprite("EnemyImage2.png");
-    case 2: SetSprite("EnemyImage3.png");
-    default:SetSprite("EnemyImage4.png");
+  //TODO: fix this not choosing from all enemy image types
+  switch ( static_cast<int>(utility::R_Rand())%4 ) {
+    case 0: SetSprite("EnemyImage1.png"); break;
+    case 1: SetSprite("EnemyImage2.png"); break;
+    case 2: SetSprite("EnemyImage3.png"); break;
+    default:SetSprite("EnemyImage4.png"); break;
   } 
 }
 
@@ -131,6 +132,9 @@ void Enemy::Update(float dt) {
     theWorld.Add(bull);
     bull->ApplyForce(Vector2(std::cos(_ang)*50000,
                              std::sin(_ang)*50000),Vector2(0,0));
+    // move towards player
+    ApplyForce(Vector2(std::cos(_ang)*250,std::sin(_ang)*250),
+               Vector2(0,0));
   }
 }
 
