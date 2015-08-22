@@ -2,6 +2,7 @@
 #define HERO_H_
 
 #include "Angel.h"
+#include "LD33.h"
 
 namespace Hero {
 
@@ -12,13 +13,15 @@ namespace Hero {
   };
   class Enemy : public PhysicsActor {
     int health;
+    int ab1_cooldown, ab2_cooldown;
     Ability ab1, ab2; // 2 for now, maybe 3 in future? shrug
   public:
     Enemy();
     void Update(float dt);
+    inline void Add_Health(int x) { health += x; }
   };
 
-  void Cast_Ability(Ability, Enemy*);
+  void Cast_Ability(Ability);
 
   // just moves into the screen all cool and then spawns Enemy
   class Enemy_Intro : public Actor {

@@ -13,21 +13,51 @@ void Game::Initialize() {
                       utility::Window_height, "You Are The Monster", // gramr
                       1, 0, 1);
   theWorld.SetupPhysics();
+  theWorld.SetSideBlockers(1);
   Level::Initialize();
   new Game::Mouse(); // for mouse events
-  
-  thePlayer = new Player::Monster(Augments::Head_Type::head,
-                                  Augments::Weapon_Type::sword,
-                                  Augments::Body_Type::body);
-  theWorld.Add(thePlayer);
-  
-
   // enemy events
   Hero::e_listener = new Hero::Enemy_Listener(); // for enemy events
   theSwitchboard.SubscribeTo(Hero::e_listener,"FinishedHeroMovement");
 
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
+
+  FullScreenActor* bg = new FullScreenActor();
+  bg->SetSprite("Images\\foreground.png");
+  theWorld.Add(bg);
+  
+  thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
+  theWorld.Add(thePlayer);
+  thePlayer->SetAlpha(1.0f);
+  // collision system
+  // left bottom corner wall
+  auto t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(30,225));
+  t->SetSize(MathUtil::PixelsToWorldUnits(65),
+             MathUtil::PixelsToWorldUnits(71));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
+  // bottom floor
+  t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(230,264));
+  t->SetSize(MathUtil::PixelsToWorldUnits(570),
+             MathUtil::PixelsToWorldUnits(15));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
+  // right bottom corner wall
+  t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(450,225));
+  t->SetSize(MathUtil::PixelsToWorldUnits(65),
+             MathUtil::PixelsToWorldUnits(71));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
 }
 
 Player::Monster* Game::thePlayer = nullptr;

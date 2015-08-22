@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Angel.h"
+#include "utility.h"
 
 namespace Level {
   void Initialize(); // sets up walls

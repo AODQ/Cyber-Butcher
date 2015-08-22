@@ -1,5 +1,6 @@
 #include <random>
 #include "stdafx.h"
+#include <typeindex>
 
 #ifndef __UTILITY_H_
 #define __UTILITY_H_
@@ -31,6 +32,37 @@ namespace utility {
   bool Find_Substr(std::string&, std::string);
   template <typename T>
   T Str_To_Type(std::string x);
+  
+  int GL_To_Angel(int);
+
+  /*// doesn't work
+  
+  // for use by collision_entity. Means absolutely nothing. Used as a default
+  // 'not colliding' state.
+  class nil {};
+
+  // For grabbing contact of collisions
+  // Everything that collides and needs to know what
+  // it collides with /MUST/ use this! Be sure to
+  // set contact ID to -1 every frame.
+  class Collision_Entity {
+  public:
+    enum class Type {
+      nil, monster, hero, platform, dagger
+    };
+  protected:
+    Type contact_type;
+  public:
+    virtual Type R_Entity_Type() = 0;
+    inline void Set_Contact_Type(Type T) { contact_type = T; }
+  };
+
+  // used for collisions that primarily deal damage
+  class Contact_Listener : public b2ContactListener {
+    void BeginContact(b2Contact* contact);
+    void EndContact(  b2Contact* contact);
+  };
+  //extern int mouse_x, mouse_y;*/
 };
 
 #endif

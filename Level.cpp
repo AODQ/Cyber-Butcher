@@ -2,10 +2,18 @@
 #include "Augments.h"
 #include "Level.h"
 #include "Angel.h"
+#include "utility.h"
 #include <vector>
 
 void Level::Initialize() {
-  theWorld.SetSideBlockers(true, 0.0f);
+  //theWorld.SetSideBlockers(true, 0.0f);
+  auto t = new Platform();
+  t->SetPosition(Vector2(MathUtil::ScreenToWorld(0,
+                                                 utility::Window_height)));
+  t->SetSize(250,1);
+  t->SetColor(0,0,0);
+  theWorld.Add(t);
+  t->InitPhysics();
 }
   
 void Level::Clear() {

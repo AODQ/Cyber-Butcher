@@ -1,10 +1,10 @@
-// monster related
-
 #include "Augments.h"
 #include "Angel.h"
-
+#include "LD33.h"
+#include "utility.h"
 #ifndef MONSTER_H_
 #define MONSTER_H_
+
 
 namespace Player {
   // contains information like health attack etc
@@ -12,9 +12,11 @@ namespace Player {
   class Monster : public PhysicsActor {
     int max_health, curr_health;
     int attack_damage;
-    Augments::Head* frame_head;
     Augments::Weapon* frame_weapon;
-    Augments::Body* frame_body;
+    bool direction;
+
+    float attack_cooldown;
+    float special_cooldown;
 
     // physics
     int phys_jump_timer, phys_jump_timer_max;
@@ -24,10 +26,9 @@ namespace Player {
     int R_Max_Health() const;
     int R_Curr_Health() const;
     int R_Attack_Damage() const;
+    bool R_Direction() const;
     
-    Augments::Head* R_Frame_Head();
     Augments::Weapon* R_Frame_Weapon();
-    Augments::Body* R_Frame_Body();
     
     
     void Set_Max_Health(int);
@@ -36,14 +37,10 @@ namespace Player {
     void Set_Attack_Damage(int);
     // will automatically remove old
     // actors from the stage and deallocate
-    void Set_Frame_Head(Augments::Head_Type);
     void Set_Frame_Weapon(Augments::Weapon_Type);
-    void Set_Frame_Body(Augments::Body_Type);
     
     
-    Monster(Augments::Head_Type,
-            Augments::Weapon_Type,
-            Augments::Body_Type);
+    Monster(Augments::Weapon_Type);
   };
   
 };

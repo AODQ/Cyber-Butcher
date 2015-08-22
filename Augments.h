@@ -5,18 +5,10 @@
 
 namespace Augments {
   // only used for pass-ins for constructors
+  
   enum class Weapon_Type {
-    sword
+    Big_Sword
   };
-
-  enum class Head_Type {
-    head
-  };
-  
-  enum class Body_Type {
-    body
-  };
-  
   // the player (Monster) has a head, body and weapon
   // that augments his abilities. This will mostly
   // be the thing that draws to the screen for each
@@ -26,30 +18,19 @@ namespace Augments {
   // So if there was a body that was able to fly,
   // there would be a bool that denotes this ability.
   
-  class Head : public Actor {
-    const Head_Type type;
-  public:
-    Head(Head_Type);
-    void Update(float dt);
-  };
-  
-  class Body : public Actor {
-    const Body_Type type;
-  public:
-    Body(Body_Type);
-    void Update(float dt);
-  };
   
   class Weapon : public Actor {
     const Weapon_Type type;
+    float animation_timer;
+    PhysicsActor* coll_check;
+    bool origin_direction;
   public:
     Weapon(Weapon_Type);
     void Update(float dt);
+    void Cast();
+    inline const Weapon_Type R_Type() const { return type; }
   };
 }
-
-using AugHead = Augments::Head;
-using AugBody = Augments::Body;
 using AugWep  = Augments::Weapon;
 
 #endif

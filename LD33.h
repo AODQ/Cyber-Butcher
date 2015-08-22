@@ -4,15 +4,17 @@
 #include "Angel.h"
 #include "Augments.h"
 #include "Monster.h"
+#include "utility.h"
+#include <typeinfo>
 
 // main game stuff goes here
 namespace Game {
   void Initialize();
   
   void Clear();
-  
+
+
   extern Player::Monster* thePlayer;
-  
   
   class Mouse : public MouseListener {
   public:
@@ -26,6 +28,7 @@ namespace Game {
   };
 
   extern Overseer* theOverseer;
+
 };
 
 #endif
