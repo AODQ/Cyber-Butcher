@@ -4,7 +4,7 @@
 
 
 int main ( ) {
-  Init_Game();
+  Game::Initialize();
   world.StartGame();
   world.Destroy();
   return 0;
