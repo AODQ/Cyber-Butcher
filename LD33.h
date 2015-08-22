@@ -3,7 +3,7 @@
 
 #include "Angel.h"
 #include "Augments.h"
-#include "Monster.cpp"
+#include "Monster.h"
 
 // main game stuff goes here
 namespace Game {

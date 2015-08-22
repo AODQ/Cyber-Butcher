@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Augments.h"
 #include "Level.h"
 #include "Angel.h"
 #include <vector>
@@ -6,18 +7,14 @@
 void Level::Initialize() {
   theWorld.SetSideBlockers(true, 0.0f);
     
-  /*Level::Platform left_wall;
-  Level::Platform right_wall;
-  Level::Platform top_wall;
-  Level::Platform bottom_wall;*/
     
-  Platform* test_platform = new Platform();
+  /*Platform* test_platform = new Platform();
   theWorld.Add(test_platform);
   platforms.push_back(test_platform);
   test_platform->SetPosition(0.0f, 0.0f);
   test_platform->SetSize(50.0f, 5.0f);
   test_platform->SetDrawShape(ADS_Square);
-  test_platform->SetColor(0, 0, 0);
+  test_platform->SetColor(0, 0, 0);*/
 }
   
 void Level::Clear() {

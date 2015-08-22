@@ -1,6 +1,9 @@
 #include "stdafx.h"
-#include "LD33.h"
 #include "Angel.h"
+#include "Augments.h"
+#include "Monster.h"
+#include "Level.h"
+#include "LD33.h"
 
 
 int main ( ) {

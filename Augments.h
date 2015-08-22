@@ -1,6 +1,8 @@
 #ifndef AUGMENTS_H_
 #define AUGMENTS_H_
 
+#include "Angel.h"
+
 namespace Augments {
   // only used for pass-ins for constructors
   enum class Weapon_Type {
