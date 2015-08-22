@@ -55,3 +55,8 @@ BleedLifeTime = {
   type = "float",
   value = 1.0f
 }
+
+BG_Scroll = {
+  type = "float",
+  value = .3f
+}

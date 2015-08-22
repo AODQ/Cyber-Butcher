@@ -18,10 +18,14 @@ namespace Level {
 
   namespace BG_Scroll {
     extern Actor* bg_scroll1, *bg_scroll2;
-    extern int clamp;
+    extern float clamp;
 
     void Update(float dt);
   }
+
+  namespace Leaves {
+    
+  };
 }
 
 

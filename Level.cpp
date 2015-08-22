@@ -33,14 +33,16 @@ Level::Platform::Platform() {
 
 
 extern Actor* Level::BG_Scroll::bg_scroll1 = nullptr,* Level::BG_Scroll::bg_scroll2 = nullptr;
-extern int Level::BG_Scroll::clamp = 0;
+extern float Level::BG_Scroll::clamp = 0;
 
 void Level::BG_Scroll::Update(float dt) {
+  
   if ( bg_scroll1 != nullptr && bg_scroll2 != nullptr ) {
-    clamp += dt;
-    bg_scroll1->SetPosition(MathUtil::ScreenToWorld(clamp-829/2,0));
-    bg_scroll2->SetPosition(MathUtil::ScreenToWorld(clamp+829/2,0));
-    if ( clamp > 829 ) clamp = 0;
+    
+    clamp += dt*0.3;
+    bg_scroll1->SetPosition(clamp-10,0);
+    bg_scroll2->SetPosition(clamp-60.f,0);
+    if ( clamp > 50 ) clamp = 0;
   }
 }
 
