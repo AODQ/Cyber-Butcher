@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "circle.h"
+#include "LD33.h"
 #include "Angel.h"
 
 
 int main ( ) {
   Game::Initialize();
-  world.StartGame();
-  world.Destroy();
+  theWorld.StartGame();
+  theWorld.Destroy();
   return 0;
 }

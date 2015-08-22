@@ -21,10 +21,10 @@ void utility::Output(std::string text) {
 
 
   template <typename T>
-  utility::R_Max(T x, T y) { return x > y ? x : y; }
+  T utility::R_Max(T x, T y) { return x > y ? x : y; }
   
   template <typename T>
-  utility::R_Min(T x, T y) { return x < y ? x : y; }
+  T utility::R_Min(T x, T y) { return x < y ? x : y; }
   
   
   bool Find_Substr(std::string& out, std::string in) {

@@ -1,26 +1,20 @@
-  // monster related
+// monster related
+
+#include "Augments.h"
+#include "Angel.h"
+
 #ifndef MONSTER_H_
 #define MONSTER_H_
 
-#include "Augments.h"
-  
 namespace Player {
-  
-  class Weapon;
-  class Head;
-  class Body;
-  
-
-  
-  
   // contains information like health attack etc
   // but more important body types
   class Monster : public PhysicsActor {
     int max_health, curr_health;
     int attack_damage;
-    Head* frame_head;
-    Weapon* frame_weapon;
-    Body* frame_body;
+    Augments::Head* frame_head;
+    Augments::Weapon* frame_weapon;
+    Augments::Body* frame_body;
   public:
     void Refresh(float dt);
     
@@ -28,9 +22,9 @@ namespace Player {
     int R_Curr_Health() const;
     int R_Attack_Damage() const;
     
-    Head* R_Frame_Head();
-    Weapon* R_Frame_Weapon();
-    Body* R_Frame_Body();
+    Augments::Head* R_Frame_Head();
+    Augments::Weapon* R_Frame_Weapon();
+    Augments::Body* R_Frame_Body();
     
     
     void Set_Max_Health(int);
@@ -39,17 +33,19 @@ namespace Player {
     void Set_Attack_Damage(int);
     // will automatically remove old
     // actors from the stage and deallocate
-    void Set_Frame_Head(Head_Type::HEAD_TYPE);
-    void Set_Frame_Weapon(Weapon_Type::WEAPON_TYPE);
-    void Set_Frame_Body(Body_Type::BODY_TYPE);
+    void Set_Frame_Head(Augments::Head_Type);
+    void Set_Frame_Weapon(Augments::Weapon_Type);
+    void Set_Frame_Body(Augments::Body_Type);
     
     
-    Monster(Head_Type::HEAD_TYPE,
-            Weapon_Type::WEAPON_TYPE,
-            Body_Type::BODY_TYPE);
+    Monster(Augments::Head_Type,
+            Augments::Weapon_Type,
+            Augments::Body_Type);
   };
   
 };
+
+using PlMonster = Player::Monster;
 
 
 #endif

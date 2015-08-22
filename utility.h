@@ -1,7 +1,8 @@
+#include <random>
+#include "stdafx.h"
+
 #ifndef __UTILITY_H_
 #define __UTILITY_H_
-
-#include <random>
 
 // general utility purposed things
 
@@ -21,10 +22,10 @@ namespace utility {
   void Output(std::string);
   
   template <typename T>
-  R_Max(T x, T y);
+  T R_Max(T x, T y);
   
   template <typename T>
-  R_Min(T x, T y);
+  T R_Min(T x, T y);
   
   
   bool Find_Substr(std::string&, std::string);

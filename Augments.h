@@ -2,25 +2,18 @@
 #define AUGMENTS_H_
 
 namespace Augments {
-    // only used for pass-ins for constructors
-  namespace Weapon_Type {
-    enum WEAPON_TYPE {
-      sword
-    };    
+  // only used for pass-ins for constructors
+  enum class Weapon_Type {
+    sword
+  };
+
+  enum class Head_Type {
+    head
   };
   
-  namespace Head_Type {
-    enum HEAD_TYPE {
-      head
-    };
+  enum class Body_Type {
+    body
   };
-  
-  namespace Body_Type {
-    enum BODY_TYPE{
-      body
-    };
-  };
-  
   
   // the player (Monster) has a head, body and weapon
   // that augments his abilities. This will mostly
@@ -32,25 +25,29 @@ namespace Augments {
   // there would be a bool that denotes this ability.
   
   class Head : public Actor {
-    const Head_Type::HEAD_TYPE type;
+    const Head_Type type;
   public:
-    Head(Head_Type::HEAD_TYPE);
+    Head(Head_Type);
     void Update(float dt);
   };
   
   class Body : public Actor {
-    const Body_Type::BODY_TYPE type;
+    const Body_Type type;
   public:
-    Body(Body_Type::BODY_TYPE);
+    Body(Body_Type);
     void Update(float dt);
   };
   
   class Weapon : public Actor {
-    const Weapon_Type::WEAPON_TYPE type;
+    const Weapon_Type type;
   public:
-    Weapon(Weapon_Type::WEAPON_TYPE);
+    Weapon(Weapon_Type);
     void Update(float dt);
   };
-};
+}
+
+using AugHead = Augments::Head;
+using AugBody = Augments::Body;
+using AugWep  = Augments::Weapon;
 
 #endif
