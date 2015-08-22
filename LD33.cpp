@@ -17,6 +17,7 @@ void Game::Initialize() {
   thePlayer = new Player::Monster(Augments::Head_Type::head,
                                   Augments::Weapon_Type::sword,
                                   Augments::Body_Type::body);
+  theWorld.Add(thePlayer);
   
 }
 

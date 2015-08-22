@@ -3,8 +3,16 @@
 #include "Augments.h"
 #include "Angel.h"
 
-void Player::Monster::Refresh(float dt) {
-    
+void Player::Monster::Update(float dt) {
+  dt = 900;
+  if ( theInput.IsKeyDown(GLFW_KEY_W) )
+    ApplyForce(Vec2i(0,-dt),Vec2i(0,0));
+  if ( theInput.IsKeyDown(GLFW_KEY_D) )
+    ApplyForce(Vec2i(dt, 0),Vec2i(0,0));
+  if ( theInput.IsKeyDown(GLFW_KEY_A) )
+    ApplyForce(Vec2i(-dt,0),Vec2i(0,0));
+  if ( theInput.IsKeyDown(GLFW_KEY_S) )
+    ApplyForce(Vec2i(0, dt),Vec2i(0,0));
     
 };
 
@@ -60,4 +68,9 @@ Player::Monster::Monster(Augments::Head_Type head,
   Set_Frame_Body(body);
   Set_Frame_Head(head);
   Set_Frame_Weapon(weapon);
+  
+  this->SetFixedRotation(0);
+  this->SetDensity(0.01);
+  
+  InitPhysics();
 }

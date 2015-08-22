@@ -16,7 +16,7 @@ namespace Player {
     Augments::Weapon* frame_weapon;
     Augments::Body* frame_body;
   public:
-    void Refresh(float dt);
+    void Update(float dt);
     
     int R_Max_Health() const;
     int R_Curr_Health() const;
