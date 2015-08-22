@@ -12,7 +12,7 @@
 void Game::Initialize() {
   theWorld.Initialize(utility::Window_width,
                       utility::Window_height, "You Are The Monster", // gramr
-                      1, 0, 0);
+                      1, 0, 1);
   theWorld.SetupPhysics();
   theWorld.SetSideBlockers(1);
   Level::Initialize();
@@ -23,7 +23,7 @@ void Game::Initialize() {
 
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
-  
+  theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
   
   Level::BG_Scroll::bg_scroll1 = new Actor();
   Level::BG_Scroll::bg_scroll2 = new Actor();
