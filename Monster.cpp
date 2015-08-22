@@ -4,16 +4,22 @@
 #include "Angel.h"
 
 void Player::Monster::Update(float dt) {
-  dt *= 1000;
-  if ( theInput.IsKeyDown(GLFW_KEY_W) )
-    ApplyForce(Vec2i(0, dt),Vec2i(0,0));
+  dt *= 7000;
+  if ( phys_jump_timer >= 0 ) phys_jump_timer -= dt;
+  // jump
+  if ( theInput.IsKeyDown(GLFW_KEY_W) &&
+      phys_jump_timer < 0 ) {
+    ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
+    phys_jump_timer = theTuning.GetInt("JumpTimer"); 
+  }
+  // movement
   if ( theInput.IsKeyDown(GLFW_KEY_D) )
     ApplyForce(Vec2i(dt, 0),Vec2i(0,0));
   if ( theInput.IsKeyDown(GLFW_KEY_A) )
     ApplyForce(Vec2i(-dt,0),Vec2i(0,0));
-  if ( theInput.IsKeyDown(GLFW_KEY_S) )
-    ApplyForce(Vec2i(0,-dt),Vec2i(0,0));
-    
+   
+  // movement friction
+  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x/5,0),Vector2(0,0));
 };
 
 int Player::Monster::R_Max_Health()    const { return max_health; }
@@ -68,9 +74,22 @@ Player::Monster::Monster(Augments::Head_Type head,
   Set_Frame_Body(body);
   Set_Frame_Head(head);
   Set_Frame_Weapon(weapon);
-  
-  this->SetFixedRotation(0);
-  
+  if ( !SetSprite("Images\\body.png") ) {
+    int x = 0;
+    x = 5;
+    SetSprite("head.png");
+  }
+
+  // physics related
+  this->SetFixedRotation(1);
+  this->SetPosition(0,0);
   InitPhysics();
-  this->GetBody()->SetGravityScale(0.01f);
+  this->SetPosition(0,0);
+  this->SetDensity(1.0f);
+  // to avoid collision with hero
+  auto fixture = GetBody()->GetFixtureList()->GetFilterData();
+  fixture.groupIndex = -8;
+  GetBody()->GetFixtureList()->SetFilterData(fixture);
+  phys_jump_timer = 0;
+  phys_jump_timer_max = 100000;
 }

@@ -19,6 +19,13 @@ namespace Game {
     void MouseDownEvent(Vec2i, MouseButtonInput);
   };
   
+  // for general events. Just does whatever it feels like.
+  class Overseer : public Actor {
+  public:
+    void Update(float dt);
+  };
+
+  extern Overseer* theOverseer;
 };
 
 #endif

@@ -7,8 +7,8 @@ std::random_device utility::rand;
 std::mt19937 utility::rgen(utility::rand());
 std::uniform_real_distribution<> utility::dist(0, 100);
 
-const int utility::Window_height = 1024,
-          utility::Window_width  = 968;
+const int utility::Window_width  = 480,
+          utility::Window_height = 320;
 
 
 

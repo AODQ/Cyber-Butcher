@@ -177,6 +177,7 @@ cd ..\Tools\BuildScripts\
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Augments.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="LD33.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -192,6 +193,7 @@ cd ..\Tools\BuildScripts\
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Augments.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="LD33.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />

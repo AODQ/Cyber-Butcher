@@ -12,9 +12,7 @@ Augments::Head::Head(Augments::Head_Type x) : type(x) {
 };
   
 void Augments::Head::Update(float dt) {
-  SetPosition(Game::thePlayer->GetPosition().X,
-              Game::thePlayer->GetPosition().Y-
-                MathUtil::ScreenToWorld(Vec2i(0,40)).Y);
+  SetPosition(Game::thePlayer->GetPosition());
 };
   
 Augments::Body::Body(Augments::Body_Type x) : type(x) {
@@ -26,8 +24,9 @@ Augments::Body::Body(Augments::Body_Type x) : type(x) {
 }
   
 void Augments::Body::Update(float dt) {
-  SetPosition(Game::thePlayer->GetPosition().X,
-              Game::thePlayer->GetPosition().Y);
+SetPosition(-60,-60); // temp
+ // SetPosition(Game::thePlayer->GetPosition().X,
+  //            Game::thePlayer->GetPosition().Y);
 }
 
 Augments::Weapon::Weapon(Augments::Weapon_Type x ) : type(x) {
@@ -39,7 +38,8 @@ Augments::Weapon::Weapon(Augments::Weapon_Type x ) : type(x) {
 }
   
 void Augments::Weapon::Update(float dt) {
-  SetPosition(Game::thePlayer->GetPosition().X,
-              Game::thePlayer->GetPosition().Y-
-                MathUtil::ScreenToWorld(Vec2i(0,-40)).Y);
+  SetPosition(-60,-60); // temp
+  //SetPosition(Game::thePlayer->GetPosition().X,
+  //            Game::thePlayer->GetPosition().Y-
+  //              MathUtil::ScreenToWorld(Vec2i(0,-40)).Y);
 }

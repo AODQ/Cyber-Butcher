@@ -15,6 +15,9 @@ namespace Player {
     Augments::Head* frame_head;
     Augments::Weapon* frame_weapon;
     Augments::Body* frame_body;
+
+    // physics
+    int phys_jump_timer, phys_jump_timer_max;
   public:
     void Update(float dt);
     

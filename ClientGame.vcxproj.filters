@@ -42,6 +42,7 @@
     <ClCompile Include="LD33.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Hero.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">
@@ -60,6 +61,7 @@
     <ClInclude Include="LD33.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Hero.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\defaults.lua">
