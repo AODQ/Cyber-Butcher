@@ -52,6 +52,6 @@ BigSwordDamage = {
 }
 
 BleedLifeTime = {
-  type = "int",
-  value = 1
+  type = "float",
+  value = 1.0f
 }
