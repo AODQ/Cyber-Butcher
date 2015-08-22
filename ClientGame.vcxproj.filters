@@ -22,6 +22,12 @@
     <Filter Include="files">
       <UniqueIdentifier>{e552ef66-0e05-4a17-ab08-47f41ca2fa81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="files\headers">
+      <UniqueIdentifier>{9a06d99f-eab3-4818-a169-2f775401394f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="files\sources">
+      <UniqueIdentifier>{48069c96-5671-4c4a-8bb2-277fd4f19155}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Angel\Scripting\Interfaces\AngelLuaWrapping.cpp">
@@ -30,15 +36,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>sys</Filter>
     </ClCompile>
-    <ClCompile Include="source.cpp">
-      <Filter>files</Filter>
-    </ClCompile>
-    <ClCompile Include="circle.cpp">
-      <Filter>files</Filter>
-    </ClCompile>
-    <ClCompile Include="utility.cpp">
-      <Filter>files</Filter>
-    </ClCompile>
+    <ClCompile Include="source.cpp" />
+    <ClCompile Include="utility.cpp" />
+    <ClCompile Include="Augments.cpp" />
+    <ClCompile Include="LD33.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Monster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">
@@ -52,12 +55,11 @@
     <ClInclude Include="stdafx.h">
       <Filter>sys</Filter>
     </ClInclude>
-    <ClInclude Include="circle.h">
-      <Filter>files</Filter>
-    </ClInclude>
-    <ClInclude Include="utility.h">
-      <Filter>files</Filter>
-    </ClInclude>
+    <ClInclude Include="utility.h" />
+    <ClInclude Include="Augments.h" />
+    <ClInclude Include="LD33.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Monster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\defaults.lua">
@@ -81,13 +83,5 @@
     <None Include="platforms\win\angel_small.ico">
       <Filter>Icons</Filter>
     </None>
-    <None Include="build.lua" />
-    <None Include="Resources\Scripts\client_start.lua" />
-    <None Include="script_interface.i" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="LD33-Wallpaper1.png">
-      <Filter>files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
