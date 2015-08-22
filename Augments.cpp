@@ -2,6 +2,7 @@
 #include "Angel.h"
 #include "Augments.h"
 #include "LD33.h"
+#include "Particle_System.h"
 #include "Hero.h"
 
 // helper functions
@@ -62,9 +63,11 @@ void Augments::Weapon::Update(float dt) {
     auto z = coll_check;
     coll_check = nullptr;
     if ( z->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
-          Hero::theEnemy->ApplyForce(Vector2((origin_direction?-1:1)*
-            theTuning.GetFloat("BigSwordForce"), 2), Vector2(0,0));
-          Hero::theEnemy->Add_Health(-theTuning.GetFloat("BigSwordDamage"));
+      Hero::theEnemy->ApplyForce(Vector2((origin_direction?-1:1)*
+        theTuning.GetFloat("BigSwordForce"), 2), Vector2(0,0));
+      Hero::theEnemy->Add_Health(-theTuning.GetFloat("BigSwordDamage"));
+      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+                                 Hero::theEnemy->GetPosition().Y),origin_direction);
     }
     z->Destroy();
   }

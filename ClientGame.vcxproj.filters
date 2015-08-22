@@ -43,6 +43,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="Particle_System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">
@@ -62,6 +63,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="Particle_System.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\defaults.lua">

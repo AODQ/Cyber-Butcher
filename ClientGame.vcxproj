@@ -181,6 +181,7 @@ cd ..\Tools\BuildScripts\
     <ClCompile Include="LD33.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Particle_System.cpp" />
     <ClCompile Include="source.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -197,6 +198,7 @@ cd ..\Tools\BuildScripts\
     <ClInclude Include="LD33.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Particle_System.h" />
     <ClInclude Include="platforms\win\resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="utility.h" />

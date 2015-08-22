@@ -11,7 +11,7 @@ JumpVelocity = {
 
 DaggerForce = {
   type = "float",
-  value = 5
+  value = 16
 }
 
 DaggerLifetime = {
@@ -49,4 +49,9 @@ BigSwordForce = {
 BigSwordDamage = {
   type = "int",
   value = 5
+}
+
+BleedLifeTime = {
+  type = "int",
+  value = 1
 }

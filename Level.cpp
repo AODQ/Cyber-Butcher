@@ -30,4 +30,14 @@ Level::Platform::Platform() {
   SetRestitution(0.0f);
 }
 
+
+Level::Scroll_Background::Scroll_Background(int pixel_width) {
+  clip = 0; clip_max = pixel_width;
+}
+void Level::Scroll_Background::Update(float dt) {
+  clip += dt;
+
+  // draw first cloud left right
+}
+
 std::vector<Level::Platform*> Level::platforms;

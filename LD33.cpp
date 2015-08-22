@@ -5,6 +5,7 @@
 #include "utility.h"
 #include "Level.h"
 #include "Angel.h"
+#include "Particle_System.h"
 #include "Hero.h"
 
 
@@ -22,11 +23,22 @@ void Game::Initialize() {
 
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
-
+   
+  
   FullScreenActor* bg = new FullScreenActor();
-  bg->SetSprite("Images\\foreground.png");
+  bg->SetSprite("Images\\YATM-layer3.png");
+  theWorld.Add(bg);
+
+  
+  bg = new FullScreenActor();
+  bg->SetSprite("Images\\YATM-layer2.png");
   theWorld.Add(bg);
   
+  
+  bg = new FullScreenActor();
+  bg->SetSprite("Images\\YATM-layer1.png");
+  theWorld.Add(bg);
+
   thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
   theWorld.Add(thePlayer);
   thePlayer->SetAlpha(1.0f);
@@ -75,5 +87,6 @@ void Game::Overseer::Update(float dt) {
        Hero::theEnemy      == nullptr ) {
     Hero::theEnemyIntro = new Hero::Enemy_Intro();
     theWorld.Add(Hero::theEnemyIntro);
+    Particles::Update(dt);
   }
 }

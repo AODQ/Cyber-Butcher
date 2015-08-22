@@ -50,3 +50,8 @@ BigSwordDamage = {
   type = "int",
   value = 5
 }
+
+BleedLifeTime = {
+  type = "int",
+  value = 1
+}
