@@ -8,9 +8,10 @@
 
 
 void Game::Initialize() {
-  theWorld.Initialize(utility::Window_height,
-                      utility::Window_width, "You Are The Monster", // gramr
+  theWorld.Initialize(utility::Window_width,
+                      utility::Window_height, "You Are The Monster", // gramr
                       0, 0, 1);
+  theWorld.SetupPhysics();
   Level::Initialize();
   new Game::Mouse(); // for mouse events
   
