@@ -16,12 +16,12 @@ namespace Level {
 
   extern std::vector<Platform*> platforms;
 
-  class Scroll_Background : public Actor {
-    float clip, clip_max;
-  public:
-    Scroll_Background(int pixel_width);
+  namespace BG_Scroll {
+    extern Actor* bg_scroll1, *bg_scroll2;
+    extern int clamp;
+
     void Update(float dt);
-  };
+  }
 }
 
 

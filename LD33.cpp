@@ -38,6 +38,15 @@ void Game::Initialize() {
   bg = new FullScreenActor();
   bg->SetSprite("Images\\YATM-layer1.png");
   theWorld.Add(bg);
+  
+  Level::BG_Scroll::bg_scroll1 = new Actor();
+  Level::BG_Scroll::bg_scroll2 = new Actor();
+  Level::BG_Scroll::bg_scroll1->SetSprite("Images\\YATM-clouds.png");
+  Level::BG_Scroll::bg_scroll1->SetSize(Vector2(MathUtil::PixelsToWorldUnits(829),
+                                                MathUtil::PixelsToWorldUnits(320)));
+  Level::BG_Scroll::bg_scroll2->SetSprite("Images\\YATM-clouds.png");
+  Level::BG_Scroll::bg_scroll2->SetSize(Vector2(MathUtil::PixelsToWorldUnits(829),
+                                                MathUtil::PixelsToWorldUnits(320)));
 
   thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
   theWorld.Add(thePlayer);
@@ -88,5 +97,6 @@ void Game::Overseer::Update(float dt) {
     Hero::theEnemyIntro = new Hero::Enemy_Intro();
     theWorld.Add(Hero::theEnemyIntro);
     Particles::Update(dt);
+    Level::BG_Scroll::Update(dt);
   }
 }

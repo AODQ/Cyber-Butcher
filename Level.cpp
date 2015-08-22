@@ -31,13 +31,17 @@ Level::Platform::Platform() {
 }
 
 
-Level::Scroll_Background::Scroll_Background(int pixel_width) {
-  clip = 0; clip_max = pixel_width;
-}
-void Level::Scroll_Background::Update(float dt) {
-  clip += dt;
 
-  // draw first cloud left right
+extern Actor* Level::BG_Scroll::bg_scroll1 = nullptr,* Level::BG_Scroll::bg_scroll2 = nullptr;
+extern int Level::BG_Scroll::clamp = 0;
+
+void Level::BG_Scroll::Update(float dt) {
+  if ( bg_scroll1 != nullptr && bg_scroll2 != nullptr ) {
+    clamp += dt;
+    bg_scroll1->SetPosition(MathUtil::ScreenToWorld(clamp-829/2,0));
+    bg_scroll2->SetPosition(MathUtil::ScreenToWorld(clamp+829/2,0));
+    if ( clamp > 829 ) clamp = 0;
+  }
 }
 
 std::vector<Level::Platform*> Level::platforms;

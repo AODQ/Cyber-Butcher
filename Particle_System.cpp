@@ -12,7 +12,7 @@ void Particles::Add_Bleed(const Vec2i Position, float angle) {
   pa->SetParticleLifetime(1);
   pa->SetPosition(Position);
   pa->SetMaxParticles(50);
-  pa->SetColor(Color(.3,.9,.9,.5));
+  pa->SetColor(Color(.9,.3,.3,.5));
   pa->SetSpread(angle);
   pa->SetParticlesPerSecond(40);
 }
