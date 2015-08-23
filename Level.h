@@ -25,7 +25,7 @@ namespace Level {
 
   namespace Leaves {
     extern float wind_speed;
-    
+    extern float wind_count;
     
     class Leaf : public PhysicsActor {
       float transparency;

@@ -15,7 +15,6 @@ void Game::Initialize() {
                       utility::Window_height, "You Are The Monster", // gramr
                       1, 0, 1);
   theWorld.SetupPhysics(Vector2(0, -40));
-  theWorld.SetSideBlockers(1);
 
   Level::Initialize();
   new Game::Mouse(); // for mouse events
@@ -89,6 +88,9 @@ void Game::Initialize() {
   gold = new TextActor();
   gold->SetPosition(50,50);
   gold->SetColor(.5,.5,0);
+
+  auto keep = new Augments::ShopKeep;
+  theWorld.Add(keep);
 }
 
 Player::Monster* Game::thePlayer = nullptr;
@@ -99,12 +101,16 @@ void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   auto world_coord = MathUtil::ScreenToWorld(screenCoord);
 }
 
-
+Game::Overseer::Overseer() {
+  first_enemy = 1;
+}
 void Game::Overseer::Update(float dt) {
+  // shopkeeper calls them from after the first enemy :)
   if ( Hero::theEnemyIntro == nullptr &&
-       Hero::theEnemy      == nullptr ) {
+       Hero::theEnemy      == nullptr && first_enemy ) {
     Hero::theEnemyIntro = new Hero::Enemy_Intro();
     theWorld.Add(Hero::theEnemyIntro);
+    first_enemy = 0;
   }
   Particles::Update(dt);
   Level::BG_Scroll::Update(dt);

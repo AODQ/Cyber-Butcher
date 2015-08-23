@@ -37,7 +37,7 @@ namespace Augments {
       Nothing, // waiting for enemy to die
       Dropping, // to ground
       Waiting, // for player to buy shit
-      Rising, // to air
+      Rising // to air
     };
     Stage stage;
     bool time_left;
