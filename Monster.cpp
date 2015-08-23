@@ -13,19 +13,21 @@ void Player::Monster::Update(float dt) {
     ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
   }
 
-  Vector2 target_velocity(dt, 0);
+  float player_speed = 1.5f;
+  Vector2 target_velocity(dt*player_speed, 0);
   b2Vec2 vel = GetBody()->GetLinearVelocity();
   float mass = GetBody()->GetMass();
+  
 
   // movement
   if ( theInput.IsKeyDown(GLFW_KEY_D) ^
        theInput.IsKeyDown(GLFW_KEY_A) ) {
     if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
-	    ApplyLinearImpulse(Vector2(dt*.5, 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2((target_velocity.X - vel.x), 0), Vector2(0, 0));
       direction = 0;
     }
     if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
-	    ApplyLinearImpulse(Vector2(-dt*.5, 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2((-target_velocity.X - vel.x), 0), Vector2(0, 0));
       direction = 1;
     }
   }
