@@ -36,7 +36,7 @@ Hero::Enemy_Intro::Enemy_Intro() {
 
 void Hero::Enemy::Update(float dt) {
   // just walk towards the enemy
-  ApplyForce(Vec2i(.02*(Game::thePlayer->GetPosition().X - GetPosition().X),
+  ApplyForce(Vec2i(10*(Game::thePlayer->GetPosition().X - GetPosition().X),
                    0),Vector2(0,0));
 
   // abilities
