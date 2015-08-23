@@ -55,6 +55,7 @@ void Hero::Enemy::Update(float dt) {
 
   if ( health <= 0 ) {
     Killed();
+    theEnemy = nullptr;
   }
 };
 

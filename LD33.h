@@ -23,7 +23,9 @@ namespace Game {
   
   // for general events. Just does whatever it feels like.
   class Overseer : public Actor {
+    bool first_enemy;
   public:
+    Overseer();
     void Update(float dt);
   };
 

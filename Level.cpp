@@ -52,24 +52,30 @@ namespace LLeaves = Level::Leaves;
 
 float LLeaves::rand_until_next_leave = -1;
 float LLeaves::wind_speed = 0;
+float LLeaves::wind_count = 0;
 
 void LLeaves::Update(float t) {
   if ( rand_until_next_leave == -1 ) {
     auto t = new LLeaves::Leaf();
     theWorld.Add(t);
-    rand_until_next_leave = utility::R_Rand()/70+1;
-    wind_speed = utility::R_Rand()-50;
+    rand_until_next_leave = utility::R_Rand()/40+5;
   }
   rand_until_next_leave -= t;
   if ( rand_until_next_leave - t <= 0 ) {
     rand_until_next_leave = -1; // gen next one
-    int amount_of_leaves = int(utility::R_Rand())%2+1;
+    int amount_of_leaves = int(utility::R_Rand())%2;
     while ( --amount_of_leaves != -1 ) {
       auto t = new LLeaves::Leaf();
       
       theWorld.Add(t);
     }
   }
+  wind_count -= t;
+  if ( wind_count <= 0 ) {
+    wind_count = utility::R_Rand()/70+0.2;
+    wind_speed = utility::R_Rand()-50;
+  }
+
 }
 
 
@@ -84,7 +90,6 @@ LLeaves::Leaf::Leaf() {
   SetDrawShape(ADS_Square);
   dip_up = 0;
   curr_anim = 0;
-  force = utility::R_Rand() / 250.0f - .05f;
   //return;
   switch( int(utility::R_Rand())%8 ) {
     case 0:
@@ -121,8 +126,11 @@ LLeaves::Leaf::Leaf() {
     break;
   }
   InitPhysics();
-  ApplyLinearImpulse(Vector2(force, 0), Vector2(0, 0));
-  GetBody()->SetGravityScale(.01f);
+  GetBody()->SetGravityScale(.05f);
+
+  auto fixture = GetBody()->GetFixtureList()->GetFilterData();
+  fixture.groupIndex = -8;
+  GetBody()->GetFixtureList()->SetFilterData(fixture);
 };
 
 
@@ -131,19 +139,37 @@ void LLeaves::Leaf::Update(float dt) {
 
   anim_speed -= dt;
   if ( anim_speed <= 0 ) {
-    anim_speed = 0.2;
+    anim_speed = 0.4;
     curr_anim = (curr_anim+1)%anims;
     SetSpriteFrame(curr_anim);
   }
-
+  ApplyForce(Vector2(wind_speed*dt,0),Vector2(0,0));
+  ApplyTorque(wind_speed*dt*dt);
   if (transparency < 1.0f && lifetime > 0.0f) {
     transparency += .004f;
   } else if (lifetime <= 0.0f) {
     transparency -= .008f;
+    if ( GetBody()->GetLinearVelocity().y > -0.4f &&
+         GetBody()->GetLinearVelocity().y <  0.4f   )
+      transparency -= .08f;
   }
   SetAlpha(transparency);
 
   if (transparency <= 0) {
     Destroy();
+  }
+  
+  // dip
+  if ( dip_down <= 0 ) {
+    dip_up -= dt;
+    if ( dip_up <= 0 ) {
+      dip_down = 25;
+    }
+    ApplyForce(Vector2(0,-dt),Vector2(0,0));
+  } else {
+    dip_down -= dt;
+    if ( dip_down <= 0 ) {
+      dip_up = 25;
+    }
   }
 }

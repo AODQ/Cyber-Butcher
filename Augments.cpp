@@ -105,5 +105,38 @@ Augments::ShopKeep::ShopKeep() {
 }
 
 void Augments::ShopKeep::Update(float dt) {
-  //if ( 
+  switch ( stage ) {
+    case Augments::ShopKeep::Stage::Nothing:
+      
+      if ( Hero::theEnemy == nullptr && Hero::theEnemyIntro == nullptr ) {
+        stage = Augments::ShopKeep::Stage::Dropping;
+        SetPosition(0,-100);
+        MoveTo(Vector2(0,0),5.0f);
+        this->_active = 1;
+      }
+    break;
+    case Augments::ShopKeep::Stage::Dropping:
+      SetPosition(0,GetPosition().Y+dt*5);
+      if ( this->GetPosition().Y > -1 ) {
+        SetPosition(0,0);
+        stage = ShopKeep::Stage::Waiting;
+        this->time_left = 10;
+      }
+    break;
+    case Augments::ShopKeep::Stage::Waiting:
+      time_left -= dt;
+      if ( time_left <= 0 ) {
+        MoveTo(0,-100);
+        stage = Stage::Rising;
+      }
+    break;
+    case Augments::ShopKeep::Stage::Rising:
+      if ( this->GetPosition().Y == -100 ) {
+        _active = 0;
+        stage = Stage::Nothing;
+        auto t = new Hero::Enemy_Intro;
+        theWorld.Add(t);
+      }
+    break;
+  }
 }

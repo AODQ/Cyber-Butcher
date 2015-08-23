@@ -96,6 +96,4 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   GetBody()->GetFixtureList()->SetFilterData(fixture);
   phys_jump_timer = 0;
   phys_jump_timer_max = 100000;
-  // set user data
-  GetBody()->SetUserData(this);
 }
