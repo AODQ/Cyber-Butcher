@@ -23,7 +23,7 @@ DaggerLifetime = {
 -- weapon
 BigSwordOffsetX = {
   type = "float",
-  value = 1
+  value = 2
 }
 
 BigSwordOffsetY = {
@@ -33,7 +33,7 @@ BigSwordOffsetY = {
 
 BigSwordAttackCooldown = {
   type = "int",
-  value = 1.5
+  value = 2
 }
 
 BigSwordAnimationLength = {
@@ -43,7 +43,7 @@ BigSwordAnimationLength = {
 
 BigSwordForce = {
   type = "float",
-  value = 500
+  value = 50
 }
 
 BigSwordDamage = {
@@ -53,10 +53,15 @@ BigSwordDamage = {
 
 BleedLifeTime = {
   type = "float",
-  value = 1.0f
+  value = 1.0
 }
 
 BG_Scroll = {
   type = "float",
-  value = .3f
+  value = .3
+}
+
+LeafPlaybackSpeed = {
+  type = "float",
+  value = .003
 }

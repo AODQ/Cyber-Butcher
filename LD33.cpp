@@ -103,4 +103,5 @@ void Game::Overseer::Update(float dt) {
   }
   Particles::Update(dt);
   Level::BG_Scroll::Update(dt);
+  Level::Leaves::Update(dt);
 }

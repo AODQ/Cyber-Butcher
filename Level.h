@@ -24,7 +24,22 @@ namespace Level {
   }
 
   namespace Leaves {
+    extern float wind_speed;
     
+    
+    class Leaf : public PhysicsActor {
+      float dip_up;
+      float dip_down;
+      float anim_speed;
+      int anims, curr_anim;
+    public:
+      Leaf();
+      void Update(float);
+    };
+
+    extern float rand_until_next_leave;
+
+    void Update(float);
   };
 }
 
