@@ -110,7 +110,7 @@ void Augments::ShopKeep::Update(float dt) {
       
       if ( Hero::theEnemy == nullptr && Hero::theEnemyIntro == nullptr ) {
         stage = Augments::ShopKeep::Stage::Dropping;
-        SetPosition(0,-100);
+        SetPosition(0,-30);
         MoveTo(Vector2(0,0),5.0f);
         this->_active = 1;
       }
@@ -126,12 +126,13 @@ void Augments::ShopKeep::Update(float dt) {
     case Augments::ShopKeep::Stage::Waiting:
       time_left -= dt;
       if ( time_left <= 0 ) {
-        MoveTo(0,-100);
         stage = Stage::Rising;
       }
     break;
     case Augments::ShopKeep::Stage::Rising:
-      if ( this->GetPosition().Y == -100 ) {
+      SetPosition(0,GetPosition().Y-dt*5);
+      if ( this->GetPosition().Y < -30 ) {
+        //SetPosition
         _active = 0;
         stage = Stage::Nothing;
         auto t = new Hero::Enemy_Intro;
