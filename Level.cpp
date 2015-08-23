@@ -58,7 +58,7 @@ void LLeaves::Update(float t) {
   if ( rand_until_next_leave == -1 ) {
     auto t = new LLeaves::Leaf();
     theWorld.Add(t);
-    rand_until_next_leave = utility::R_Rand()/40+5;
+    rand_until_next_leave = utility::R_Rand()/70+1;
   }
   rand_until_next_leave -= t;
   if ( rand_until_next_leave - t <= 0 ) {
@@ -91,7 +91,7 @@ LLeaves::Leaf::Leaf() {
   dip_up = 0;
   curr_anim = 0;
   //return;
-  switch( int(utility::R_Rand())%8 ) {
+  switch( int(utility::R_Rand())%4 ) {
     case 0:
       LoadSpriteFrames("Images\\leaf0r_000.png");
       anims = 6;
@@ -126,7 +126,7 @@ LLeaves::Leaf::Leaf() {
     break;
   }
   InitPhysics();
-  GetBody()->SetGravityScale(.05f);
+  GetBody()->SetGravityScale(.01f);
 
   auto fixture = GetBody()->GetFixtureList()->GetFilterData();
   fixture.groupIndex = -8;
