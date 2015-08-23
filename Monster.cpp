@@ -4,29 +4,35 @@
 #include "Angel.h"
 
 void Player::Monster::Update(float dt) {
-  dt *= 7000;
+  dt *= 300;
   if ( phys_jump_timer >= 0 ) phys_jump_timer -= dt;
   // jump
   if ( theInput.IsKeyDown(GLFW_KEY_W) &&
       phys_jump_timer < 0 ) {
-    ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
+    ApplyLinearImpulse(Vector2(0, 50), Vector2(0, 0));
+    //ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
     phys_jump_timer = theTuning.GetInt("JumpTimer"); 
   }
+
+  Vector2 target_velocity(dt, 0);
+  b2Vec2 vel = GetBody()->GetLinearVelocity();
+  float mass = GetBody()->GetMass();
+
   // movement
   if ( theInput.IsKeyDown(GLFW_KEY_D) ^
        theInput.IsKeyDown(GLFW_KEY_A) ) {
     if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
-      ApplyForce(Vec2i(dt, 0),Vec2i(0,0));
+	    ApplyLinearImpulse(Vector2(mass * target_velocity.X - vel.x, 0), Vector2(0, 0));
       direction = 0;
     }
     if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
-      ApplyForce(Vec2i(-dt,0),Vec2i(0,0));
+	    ApplyLinearImpulse(Vector2(mass * -target_velocity.X - vel.x, 0), Vector2(0, 0));
       direction = 1;
     }
   }
    
   // movement friction
-  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x/5,0),Vector2(0,0));
+  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x/.4),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else 

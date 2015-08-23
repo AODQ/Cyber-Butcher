@@ -13,8 +13,9 @@ void Game::Initialize() {
   theWorld.Initialize(utility::Window_width,
                       utility::Window_height, "You Are The Monster", // gramr
                       1, 0, 1);
-  theWorld.SetupPhysics();
+  theWorld.SetupPhysics(Vector2(0, -40));
   theWorld.SetSideBlockers(1);
+
   Level::Initialize();
   new Game::Mouse(); // for mouse events
   // enemy events
@@ -58,8 +59,8 @@ void Game::Initialize() {
   // left bottom corner wall
   auto t = new Level::Platform();
   theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(30,225));
-  t->SetSize(MathUtil::PixelsToWorldUnits(65),
+  t->SetPosition(MathUtil::ScreenToWorld(10,225));
+  t->SetSize(MathUtil::PixelsToWorldUnits(100),
              MathUtil::PixelsToWorldUnits(71));
   t->SetColor(.30,.30,0);
   t->InitPhysics();

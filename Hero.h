@@ -19,6 +19,7 @@ namespace Hero {
     Enemy();
     void Update(float dt);
     inline void Add_Health(int x) { health += x; }
+	void Killed();
   };
 
   void Cast_Ability(Ability);
@@ -46,6 +47,12 @@ namespace Hero {
   public:
     Dagger(float angle, Vec2i position);
     void Update(float dt);
+  };
+
+  class Gold : public PhysicsActor {
+    float amount;
+  public:
+	  Gold(Vector2 position);
   };
 };
 
