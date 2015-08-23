@@ -4,7 +4,6 @@
 #include "Angel.h"
 
 void Player::Monster::Update(float dt) {
-  dt *= 300;
   // jump
   phys_jump_timer -= dt;
   if ( theInput.IsKeyDown(GLFW_KEY_W) &&
@@ -36,15 +35,14 @@ void Player::Monster::Update(float dt) {
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*.7,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
-  else 
-  if ( theInput.IsKeyDown(GLFW_KEY_J) ) {
+  else if ( theInput.IsKeyDown(GLFW_KEY_J) ) {
     frame_weapon->Cast();
-    attack_cooldown = 7000*[&]()->float{
+    attack_cooldown = [&]()->float{
       switch( R_Frame_Weapon()->R_Type() ) {
         case Augments::Weapon_Type::Big_Sword:
           return theTuning.GetInt("BigSwordAttackCooldown");
       }
-      return 250.0f;
+      return 2.0f;
     }();
   }
 };
