@@ -13,8 +13,8 @@ void Player::Monster::Update(float dt) {
     ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
   }
 
-  float player_speed = 1.5f;
-  Vector2 target_velocity(dt*player_speed, 0);
+  float movement = 8;
+  Vector2 target_velocity(movement, 0);
   b2Vec2 vel = GetBody()->GetLinearVelocity();
   float mass = GetBody()->GetMass();
   
