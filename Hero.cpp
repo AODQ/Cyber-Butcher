@@ -7,59 +7,70 @@
 
 Hero::Enemy::Enemy() {
   theEnemy = this;
-  SetPosition(Vector2(-11.875, -1.5625));
+  target_location = Vector2(-10.8725, -1.5625);
+  SetPosition(Vector2(-14.5f, -1.5625));
   SetDrawShape(ADS_Square);
   SetSize(1,1);
   SetColor(.2,.2,.2);
+  SetFixedRotation(true);
+
   InitPhysics();
-  // avoid contact from player
+  // avoid contact with player
   auto fixture = GetBody()->GetFixtureList()->GetFilterData();
   fixture.groupIndex = -8;
   GetBody()->GetFixtureList()->SetFilterData(fixture);
   // set user data
   GetBody()->SetUserData(this);
 
-  health = 1;
+  intro = true;
+  speed = 3;
+  health = 5;
 };
-
-/*Hero::Enemy_Intro::Enemy_Intro() {
-  SetDrawShape(ADS_Square);
-  SetSize(1,1);
-  SetColor(.2,.2,.2);
-  // set position to left of screenby 100 and move into screen area
-  SetPosition(Vector2(-15, -1.5625));
-  MoveTo(Vector2(-11.875, -1.5625),
-          2.5f,1,"FinishedHeroMovement");
-  std::cout << GetPosition().X;
-}*/
 
 void Hero::Enemy::Update(float dt) {
+  int direction = 1;
+  int distance = Vector2::Distance(target_location, GetPosition());
 
-  //if (!intro) {
-    // just walk towards the enemy
-    ApplyForce(Vec2i(10*(Game::thePlayer->GetPosition().X - GetPosition().X),
-                     0),Vector2(0,0));
+  if (intro && distance == 0) {
+    intro = false;
+  } else if (!intro) {
+    DecideTarget();
+  }
 
-    // abilities
-    if ( ab1_cooldown >= 0 ) ab1_cooldown -= dt;
-    // basic attack (don't even worry about ab1/2 shit)
-    if ( int(utility::rand()) < 2 && ab1_cooldown <= 0 ) {
-      Cast_Ability(Ability::dagger_throw);
-      ab1_cooldown = 300;
-    }
-    if ( ab2_cooldown >= 0 ) ab2_cooldown -= dt;
-    if ( int(utility::rand()) < 5 && ab2_cooldown <= 0 ) {
-      ApplyForce(Vec2i(30*(Game::thePlayer->GetPosition().X - GetPosition().X),
-                       0),Vector2(0,0));
-      ab2_cooldown = 1500;
-    }
+  if (distance == 0) {
+    direction = 0;
+  } else if (target_location.X < GetPosition().X) {
+    direction = -1;
+  }
 
-    if ( health <= 0 ) {
-      Killed();
-    }
-  //}
+  ApplyLinearImpulse(Vector2(direction*speed - GetBody()->GetLinearVelocity().x, 0), Vector2(0, 0));
+
+  // abilities
+  if ( ab1_cooldown >= 0 ) ab1_cooldown -= dt;
+  // basic attack (don't even worry about ab1/2 shit)
+  if ( int(utility::rand()) < 2 && ab1_cooldown <= 0 ) {
+    Cast_Ability(Ability::dagger_throw);
+    ab1_cooldown = 300;
+  }
+  if ( ab2_cooldown >= 0 ) ab2_cooldown -= dt;
+  if ( int(utility::rand()) < 5 && ab2_cooldown <= 0 ) {
+    ApplyForce(Vec2i(30*(Game::thePlayer->GetPosition().X - GetPosition().X),
+                      0),Vector2(0,0));
+    ab2_cooldown = 1500;
+  }
+
+  if ( health <= 0 ) {
+    Killed();
+  }
 };
 
+void Hero::Enemy::Jump() {
+
+}
+
+void Hero::Enemy::DecideTarget() {
+  target_location = Game::thePlayer->GetPosition();
+}
 
 void Hero::Cast_Ability(Ability ab) {
   switch ( ab ) {
@@ -127,8 +138,8 @@ void Hero::Enemy_Listener::ReceiveMessage(Message* m) {
   if ( m->GetMessageName() == std::string("FinishedHeroMovement") ) {
     theEnemy = new Enemy();
     theWorld.Add(theEnemy);
-    theEnemyIntro->Destroy();
-    theEnemyIntro = nullptr;
+    //theEnemyIntro->Destroy();
+    //theEnemyIntro = nullptr;
   }
 }
 
@@ -142,7 +153,7 @@ void Hero::Gold::Update(float dt) {
 
 Hero::Enemy* Hero::theEnemy = nullptr;
 Hero::Enemy_Listener* Hero::e_listener = nullptr;
-Hero::Enemy_Intro* Hero::theEnemyIntro = nullptr;
+//Hero::Enemy_Intro* Hero::theEnemyIntro = nullptr;
 
 
 // enemy attacks

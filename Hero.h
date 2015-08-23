@@ -12,23 +12,29 @@ namespace Hero {
 
   };
   class Enemy : public PhysicsActor {
+    bool intro;
+    float intro_time;
+    float speed;
+    Vector2 target_location;
     int health;
     int ab1_cooldown, ab2_cooldown;
     Ability ab1, ab2; // 2 for now, maybe 3 in future? shrug
   public:
     Enemy();
     void Update(float dt);
+    void Jump();
+    virtual void DecideTarget();
     inline void Add_Health(int x) { health += x; }
-	void Killed();
+	  void Killed();
   };
 
   void Cast_Ability(Ability);
 
-  // just moves into the screen all cool and then spawns Enemy
+  /*// just moves into the screen all cool and then spawns Enemy
   class Enemy_Intro : public Actor {
   public:
     Enemy_Intro();
-  };
+  };*/
 
   // used for enemy AI
   class Enemy_Listener : public MessageListener {
@@ -37,7 +43,7 @@ namespace Hero {
   };
 
   extern Enemy* theEnemy;
-  extern Enemy_Intro* theEnemyIntro;
+  //extern Enemy_Intro* theEnemyIntro;
   extern Enemy_Listener* e_listener;
 
 

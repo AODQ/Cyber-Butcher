@@ -70,6 +70,9 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Particle_System.h" />
+    <ClInclude Include="Swordsman.h">
+      <Filter>Heroes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\defaults.lua">
