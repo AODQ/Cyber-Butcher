@@ -28,6 +28,9 @@ namespace Level {
     
     
     class Leaf : public PhysicsActor {
+      float transparency;
+      float force;
+      float lifetime;
       float dip_up;
       float dip_down;
       float anim_speed;

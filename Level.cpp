@@ -57,7 +57,7 @@ void LLeaves::Update(float t) {
   if ( rand_until_next_leave == -1 ) {
     auto t = new LLeaves::Leaf();
     theWorld.Add(t);
-    rand_until_next_leave = utility::R_Rand()/25+1;
+    rand_until_next_leave = utility::R_Rand()/70+1;
     wind_speed = utility::R_Rand()-50;
   }
   rand_until_next_leave -= t;
@@ -74,72 +74,76 @@ void LLeaves::Update(float t) {
 
 
 LLeaves::Leaf::Leaf() {
-  //this->SetFriction(0.8);
-  //this->SetRestitution(0.0);
+  transparency = 0.0f;
+  lifetime = 5.0f;
+  SetAlpha(transparency);
   anim_speed = 0.6;
-  this->SetPosition(MathUtil::ScreenToWorld(20,20));
-  this->SetSize(MathUtil::PixelsToWorldUnits(8),
-                MathUtil::PixelsToWorldUnits(8));
-  this->SetDrawShape(ADS_Square);
+  float x_offset = rand() % 8;
+  SetPosition(Vector2(-6 - x_offset, 9));
+  SetSize(.5f, .5f);
+  SetDrawShape(ADS_Square);
   dip_up = 0;
   curr_anim = 0;
+  force = utility::R_Rand() / 250.0f - .05f;
   //return;
   switch( int(utility::R_Rand())%8 ) {
     case 0:
-      this->LoadSpriteFrames("Images\\leaf0r_000.png");
+      LoadSpriteFrames("Images\\leaf0r_000.png");
       anims = 6;
     break;
     case 1:
-      this->LoadSpriteFrames("Images\\leaf1r_000.png");
+      LoadSpriteFrames("Images\\leaf1r_000.png");
       anims = 6;
     break;
     case 2:
-      this->LoadSpriteFrames("Images\\leaf2r_000.png");
+      LoadSpriteFrames("Images\\leaf2r_000.png");
       anims = 8;
     break;
     case 3:
-      this->LoadSpriteFrames("Images\\leaf3r_000.png");
+      LoadSpriteFrames("Images\\leaf3r_000.png");
       anims = 12;
     break;
     case 4:
-      this->LoadSpriteFrames("Images\\leaf0l_000.png");
+      LoadSpriteFrames("Images\\leaf0l_000.png");
       anims = 6;
     break;
     case 5:
-      this->LoadSpriteFrames("Images\\leaf1l_001.png");
+      LoadSpriteFrames("Images\\leaf1l_001.png");
       anims = 6;
     break;
     case 6:
-      this->LoadSpriteFrames("Images\\leaf2l_000.png");
+      LoadSpriteFrames("Images\\leaf2l_000.png");
       anims = 8;
     break;
     case 7:
-      this->LoadSpriteFrames("Images\\leaf3l_000.png");
+      LoadSpriteFrames("Images\\leaf3l_000.png");
       anims = 12;
     break;
   }
-  this->InitPhysics();
-  //this->GetBody()->SetGravityScale(0.1f);
+  InitPhysics();
+  ApplyLinearImpulse(Vector2(force, 0), Vector2(0, 0));
+  GetBody()->SetGravityScale(.01f);
 };
 
 
 void LLeaves::Leaf::Update(float dt) {
+  lifetime -= dt;
+
   anim_speed -= dt;
   if ( anim_speed <= 0 ) {
     anim_speed = 0.2;
     curr_anim = (curr_anim+1)%anims;
     SetSpriteFrame(curr_anim);
   }
-  /*ApplyForce(Vector2(wind_speed/10,dip_up?-10:0),0);
-  if ( dip_up  > 0 ) {
-    dip_up -= dt;
-  } else {
-    if ( dip_up != -100 ) { // reset
-      dip_up = -100;
-      dip_down = utility::R_Rand()/50;
-    } else {
-      dip_down -= dt;
-      if ( dip_down < 0 ) dip_up = utility::R_Rand()/50;
-    }
-  }*/
+
+  if (transparency < 1.0f && lifetime > 0.0f) {
+    transparency += .004f;
+  } else if (lifetime <= 0.0f) {
+    transparency -= .008f;
+  }
+  SetAlpha(transparency);
+
+  if (transparency <= 0) {
+    Destroy();
+  }
 }
