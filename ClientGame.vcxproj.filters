@@ -28,6 +28,9 @@
     <Filter Include="files\sources">
       <UniqueIdentifier>{48069c96-5671-4c4a-8bb2-277fd4f19155}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Heroes">
+      <UniqueIdentifier>{503ce1be-3bd4-44c3-8ab6-9b0a80b3222f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Angel\Scripting\Interfaces\AngelLuaWrapping.cpp">
@@ -44,6 +47,9 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Particle_System.cpp" />
+    <ClCompile Include="Swordsman.cpp">
+      <Filter>Heroes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">

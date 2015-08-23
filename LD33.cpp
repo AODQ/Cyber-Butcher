@@ -89,29 +89,28 @@ void Game::Initialize() {
   gold->SetPosition(50,50);
   gold->SetColor(.5,.5,0);
 
-  auto keep = new Augments::ShopKeep;
-  theWorld.Add(keep);
+  Game::theKeep = new Augments::ShopKeep;
+  theWorld.Add(theKeep);
 }
 
 Player::Monster* Game::thePlayer = nullptr;
 
+Augments::ShopKeep* Game::theKeep = nullptr;
 Game::Overseer* Game::theOverseer = nullptr;
 
 void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   auto world_coord = MathUtil::ScreenToWorld(screenCoord);
 }
 
-Game::Overseer::Overseer() {
-  first_enemy = 1;
-}
+Game::Overseer::Overseer() { }
+
 void Game::Overseer::Update(float dt) {
-  // shopkeeper calls them from after the first enemy :)
-  if ( Hero::theEnemyIntro == nullptr &&
-       Hero::theEnemy      == nullptr && first_enemy ) {
-    Hero::theEnemyIntro = new Hero::Enemy_Intro();
-    theWorld.Add(Hero::theEnemyIntro);
-    first_enemy = 0;
+  if (Hero::theEnemy == nullptr && theKeep->time_left <= 0) {
+    std::cout << "New Hero\n";
+    Hero::theEnemy = new Hero::Enemy();
+    theWorld.Add(Hero::theEnemy);
   }
+
   Particles::Update(dt);
   Level::BG_Scroll::Update(dt);
   Level::Leaves::Update(dt);

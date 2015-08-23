@@ -8,7 +8,6 @@
 Hero::Enemy::Enemy() {
   theEnemy = this;
   SetPosition(Vector2(-11.875, -1.5625));
-  //SetPosition(MathUtil::ScreenToWorld(0,185));
   SetDrawShape(ADS_Square);
   SetSize(1,1);
   SetColor(.2,.2,.2);
@@ -23,7 +22,7 @@ Hero::Enemy::Enemy() {
   health = 1;
 };
 
-Hero::Enemy_Intro::Enemy_Intro() {
+/*Hero::Enemy_Intro::Enemy_Intro() {
   SetDrawShape(ADS_Square);
   SetSize(1,1);
   SetColor(.2,.2,.2);
@@ -32,31 +31,33 @@ Hero::Enemy_Intro::Enemy_Intro() {
   MoveTo(Vector2(-11.875, -1.5625),
           2.5f,1,"FinishedHeroMovement");
   std::cout << GetPosition().X;
-}
+}*/
 
 void Hero::Enemy::Update(float dt) {
-  // just walk towards the enemy
-  ApplyForce(Vec2i(10*(Game::thePlayer->GetPosition().X - GetPosition().X),
-                   0),Vector2(0,0));
 
-  // abilities
-  if ( ab1_cooldown >= 0 ) ab1_cooldown -= dt;
-  // basic attack (don't even worry about ab1/2 shit)
-  if ( int(utility::rand()) < 2 && ab1_cooldown <= 0 ) {
-    Cast_Ability(Ability::dagger_throw);
-    ab1_cooldown = 300;
-  }
-  if ( ab2_cooldown >= 0 ) ab2_cooldown -= dt;
-  if ( int(utility::rand()) < 5 && ab2_cooldown <= 0 ) {
-    ApplyForce(Vec2i(30*(Game::thePlayer->GetPosition().X - GetPosition().X),
+  //if (!intro) {
+    // just walk towards the enemy
+    ApplyForce(Vec2i(10*(Game::thePlayer->GetPosition().X - GetPosition().X),
                      0),Vector2(0,0));
-    ab2_cooldown = 1500;
-  }
 
-  if ( health <= 0 ) {
-    Killed();
-    theEnemy = nullptr;
-  }
+    // abilities
+    if ( ab1_cooldown >= 0 ) ab1_cooldown -= dt;
+    // basic attack (don't even worry about ab1/2 shit)
+    if ( int(utility::rand()) < 2 && ab1_cooldown <= 0 ) {
+      Cast_Ability(Ability::dagger_throw);
+      ab1_cooldown = 300;
+    }
+    if ( ab2_cooldown >= 0 ) ab2_cooldown -= dt;
+    if ( int(utility::rand()) < 5 && ab2_cooldown <= 0 ) {
+      ApplyForce(Vec2i(30*(Game::thePlayer->GetPosition().X - GetPosition().X),
+                       0),Vector2(0,0));
+      ab2_cooldown = 1500;
+    }
+
+    if ( health <= 0 ) {
+      Killed();
+    }
+  //}
 };
 
 
@@ -99,6 +100,9 @@ void Hero::Enemy::Killed() {
   }
 
   this->Destroy();
+  Game::theOverseer->level++;
+  theEnemy = nullptr;
+  Game::theKeep->time_left = 10.0f;
 }
 
 Hero::Gold::Gold(Vector2 pos) {

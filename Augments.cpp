@@ -97,47 +97,30 @@ void Augments::Weapon::Cast() {
 
 // shop keep
 Augments::ShopKeep::ShopKeep() {
+  _active = false;
+  time_left = 0;
+
   SetSprite("Images\\shopkeep.png");
-  SetSize(MathUtil::PixelsToWorldUnits(240),
-          MathUtil::PixelsToWorldUnits(320));
-  SetPosition(-500,-500);
-  stage = Stage::Nothing;
+  SetSize(10, 10);
+  SetPosition(0, 20);
 }
 
 void Augments::ShopKeep::Update(float dt) {
-  switch ( stage ) {
-    case Augments::ShopKeep::Stage::Nothing:
-      
-      if ( Hero::theEnemy == nullptr && Hero::theEnemyIntro == nullptr ) {
-        stage = Augments::ShopKeep::Stage::Dropping;
-        SetPosition(0,-30);
-        MoveTo(Vector2(0,0),5.0f);
-        this->_active = 1;
-      }
-    break;
-    case Augments::ShopKeep::Stage::Dropping:
-      SetPosition(0,GetPosition().Y+dt*5);
-      if ( this->GetPosition().Y > -1 ) {
-        SetPosition(0,0);
-        stage = ShopKeep::Stage::Waiting;
-        this->time_left = 10;
-      }
-    break;
-    case Augments::ShopKeep::Stage::Waiting:
-      time_left -= dt;
-      if ( time_left <= 0 ) {
-        stage = Stage::Rising;
-      }
-    break;
-    case Augments::ShopKeep::Stage::Rising:
-      SetPosition(0,GetPosition().Y-dt*5);
-      if ( this->GetPosition().Y < -30 ) {
-        //SetPosition
-        _active = 0;
-        stage = Stage::Nothing;
-        auto t = new Hero::Enemy_Intro;
-        theWorld.Add(t);
-      }
-    break;
+  if (time_left > 0) {
+    time_left -= dt;
   }
+
+  if (time_left <= 0 && _active) {
+    // close shop
+    SetPosition(0, 20);
+    _active = false;
+  } else if (time_left > 0 && !_active) {
+    // open shop
+    SetPosition(0, 0);
+    _active = true;
+  }
+}
+
+void Augments::ShopKeep::NewItems() {
+  // get new items for shop (Game::theOverseer->level)
 }

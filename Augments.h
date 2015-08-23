@@ -33,17 +33,13 @@ namespace Augments {
 
   class ShopKeep : public Actor {
     bool _active;
-    enum class Stage {
-      Nothing, // waiting for enemy to die
-      Dropping, // to ground
-      Waiting, // for player to buy shit
-      Rising // to air
-    };
-    Stage stage;
-    float time_left;
+    
   public:
+    float time_left;
+
     ShopKeep();
     void Update(float dx);
+    void NewItems();
 
     inline bool R_Active() const { return _active; }
   };
