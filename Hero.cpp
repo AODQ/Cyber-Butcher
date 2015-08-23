@@ -7,7 +7,6 @@
 
 Hero::Enemy::Enemy() {
   theEnemy = this;
-  target_location = Vector2(-10.8725, -1.5625);
   SetPosition(Vector2(-14.5f, -1.5625));
   SetDrawShape(ADS_Square);
   SetSize(1,1);
@@ -29,61 +28,152 @@ Hero::Enemy::Enemy() {
 
 void Hero::Enemy::Update(float dt) {
   int direction = 1;
-  int distance = Vector2::Distance(target_location, GetPosition());
+  float distance_x = GetPosition().X - Game::thePlayer->GetPosition().X,
+        distance_y = GetPosition().Y - Game::thePlayer->GetPosition().Y;
 
-  if (intro && distance == 0) {
-    intro = false;
-  } else if (!intro) {
-    DecideTarget();
+  melee_cooldown -= dt;
+  range_cooldown -= dt;
+  movement_cooldown -= dt;
+  movement_attack_flinch -= dt;
+  select_ability_timer -= dt;
+
+  mood_switch_timer -= dt;
+
+  if ( mood_switch_timer <= 0 ) {
+    mood = (Mood)(int(utility::R_Rand())%int(Mood::Size));
+    mood_switch_timer = 20;
   }
 
-  if (distance == 0) {
-    direction = 0;
-  } else if (target_location.X < GetPosition().X) {
-    direction = -1;
+  // performing abilities
+
+  if ( ghost_timer > 0 ) {
+    ghost_timer -= dt;
+    // fade to alpha
+    float alpha = (ghost_timer-4)/4;
+    SetAlpha(alpha<.2?.2:alpha);
+    if ( ghost_timer < 0 )
+      SetAlpha(1);
   }
 
-  ApplyLinearImpulse(Vector2(direction*speed - GetBody()->GetLinearVelocity().x, 0), Vector2(0, 0));
-
-  // abilities
-  if ( ab1_cooldown >= 0 ) ab1_cooldown -= dt;
-  // basic attack (don't even worry about ab1/2 shit)
-  if ( int(utility::rand()) < 2 && ab1_cooldown <= 0 ) {
-    Cast_Ability(Ability::dagger_throw);
-    ab1_cooldown = 300;
-  }
-  if ( ab2_cooldown >= 0 ) ab2_cooldown -= dt;
-  if ( int(utility::rand()) < 5 && ab2_cooldown <= 0 ) {
-    ApplyForce(Vec2i(30*(Game::thePlayer->GetPosition().X - GetPosition().X),
-                      0),Vector2(0,0));
-    ab2_cooldown = 1500;
+  if ( slide_timer > 0 ) {
+    slide_timer -= dt;
+    ApplyForce(Vector2(slide_direction*dt,0),0);
+    return; // can't attack or move
   }
 
-  if ( health <= 0 ) {
-    Killed();
+  if ( jumping_to_platform > 0 ) {
+    if ( GetPosition().Y > 2 )  {
+      jumping_to_platform = 0;
+      platform = new Level::Platform();
+      on_platform_timer = utility::R_Rand()/20;
+    }
+    return; // can't attack or move
   }
-};
 
-void Hero::Enemy::Jump() {
+  if ( on_platform_timer > 0 ) {
+    on_platform_timer -= dt;
+    if ( on_platform_timer <= 0 ) {
+      platform->Destroy();
+    }
+    goto SKIP_MOVEMENT_PHASE;
+  }
 
-}
-
-void Hero::Enemy::DecideTarget() {
-  target_location = Game::thePlayer->GetPosition();
-}
-
-void Hero::Cast_Ability(Ability ab) {
-  switch ( ab ) {
-    case Ability::dagger_throw:
-      float dx = Game::thePlayer->GetPosition().X-theEnemy->GetPosition().X,
-            dy = Game::thePlayer->GetPosition().Y-theEnemy->GetPosition().Y;
-      
-      float ang = std::atan2f(dy,dx);
-      theWorld.Add(new Dagger(ang,Vec2i(theEnemy->GetPosition().X+std::cos(ang),
-                                        theEnemy->GetPosition().Y+std::sin(ang))
-                              ));
+  // decide to move
+  switch ( mood ) {
+    case Mood::Close: // up close and personal
+      if ( abs(distance_x) < 1 ) { // perfect
+        break;
+      }
+      if ( abs(distance_x) < 3 ) { // I can inch up a bit closer
+        ApplyForce(Vector2(distance_x*dt * .4,0),Vector2(0,0));
+        break;
+      }
+      // I'm too far away.
+      ApplyForce(Vector2(distance_x*dt * 2,0),Vector2(0,0));
+    break;
+    case Mood::Fair: // stab and throw
+      if ( abs(distance_x) < 1 ) { // Back up a bit
+        ApplyForce(Vector2(distance_x*dt * .6),Vector2(0,0));
+        break;
+      }
+      if ( abs(distance_x) < 3 ) { // perfect
+        break;
+      }
+      if ( abs(distance_x < 6 ) ) { // I can walk up
+        ApplyForce(Vector2(distance_x*dt * .5),Vector2(0,0));
+        break;
+      }
+      // I'm too far away
+      ApplyForce(Vector2(distance_x*dt * 4,0),Vector2(0,0));
+    break;
+    case Mood::Distant:
+      if ( abs(distance_x) < 3 ) { // I'm too close
+        ApplyForce(Vector2(distance_x*dt * 4.0),Vector2(0,0));
+        break;
+      }
+      if ( abs(distance_x) < 6 ) { // back up
+        ApplyForce(Vector2(distance_x*dt * 2.0),Vector2(0,0));
+        break;
+      }
+      // I'm at a good distance
     break;
   }
+
+  jump_timer -= dt;
+
+  if ( jump_timer < 0 ) {
+    jump_timer = 3;
+    ApplyForce(Vec2i(0,-15),Vec2i(0,0));
+  }
+
+  SKIP_MOVEMENT_PHASE:;
+
+  // attacks options
+  if ( movement_attack_flinch > 0 ) return; // hero just attacked
+  if ( melee_cooldown < 0 && abs(distance_x) <= 2 ) {
+    Attack_Melee();
+    return;
+  }
+  if ( range_cooldown < 0 && abs(distance_x) > 2 ) {
+    Attack_Range();
+    return;
+  }
+
+  // ability options
+  
+  if ( select_ability_timer < 0 && utility::R_Rand() < 10 ) {
+    select_ability_timer = 1;
+    // slide
+    if ( distance_x < 5 && utility::R_Rand() < 25 ) {
+      slide_timer = 2;
+      slide_direction = (distance_x < 0);
+    }
+    
+    // ghost
+    if ( utility::R_Rand() < 5 && ghost_timer > 0 ) {
+      ghost_timer = 5;
+    }
+
+    // jump to platform and player is under one of the platforms
+    if ( utility::R_Rand() < 20  &&
+          ( GetPosition().X > -10 && GetPosition().X < -8 ) ||
+          ( GetPosition().X <  10 && GetPosition().X >  8 ) ) {
+      jumping_to_platform = 1;
+      return;
+    }
+  }
+}
+
+void Hero::Enemy::Jump() {
+  
+}
+
+void Hero::Enemy::Attack_Melee() {
+
+}
+
+void Hero::Enemy::Attack_Range() {
+
 }
 
 void Hero::Enemy::Killed() {
@@ -114,6 +204,7 @@ void Hero::Enemy::Killed() {
   Game::theOverseer->level++;
   theEnemy = nullptr;
   Game::theKeep->time_left = 10.0f;
+  Game::theKeep->NewItems();
 }
 
 Hero::Gold::Gold(Vector2 pos) {

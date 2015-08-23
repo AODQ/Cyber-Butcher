@@ -19,7 +19,14 @@ namespace Player {
     float special_cooldown;
 
     int gold;
-
+    enum class Anim_Type {
+      idle, walk
+    };
+    float anim_frame;
+    Anim_Type current_anim;
+    bool anim_direction;
+    static const int idle_frame_max, walk_frame_max;
+    
     // physics
     int phys_jump_timer, phys_jump_timer_max;
   public:

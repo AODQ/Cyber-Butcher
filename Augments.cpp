@@ -59,7 +59,7 @@ void Augments::Weapon::Update(float dt) {
     SetRotation(0);
   }
 
-  if ( coll_check ) {
+  if ( coll_check && Hero::theEnemy != nullptr ) {
     auto z = coll_check;
     coll_check = nullptr;
     if ( z->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
@@ -101,6 +101,7 @@ Augments::ShopKeep::ShopKeep() {
   time_left = 0;
 
   SetSprite("Images\\shopkeep.png");
+  SetAlpha(0);
   SetSize(10, 10);
   SetPosition(0, 20);
 }
@@ -114,6 +115,10 @@ void Augments::ShopKeep::Update(float dt) {
     // close shop
     SetPosition(0, 20);
     _active = false;
+    for ( int i = 0; i != 3; ++ i )
+      if ( items[i] != nullptr )
+        items[i]->Destroy();
+    items[0] = items[1] = items[2] = nullptr;
   } else if (time_left > 0 && !_active) {
     // open shop
     SetPosition(0, 0);
@@ -122,5 +127,64 @@ void Augments::ShopKeep::Update(float dt) {
 }
 
 void Augments::ShopKeep::NewItems() {
-  // get new items for shop (Game::theOverseer->level)
+  for ( int i = 0; i != 3; ++ i ) {
+    auto z = new Shop_Item(Shop_Item_Type(int(utility::R_Rand())%int(Shop_Item_Type::Size)));
+    z->SetPosition(-8 + i*7, -1);
+    z->InitPhysics();
+    z->GetBody()->SetGravityScale(0.0f);
+    items[i] = z;
+    theWorld.Add(z);
+  }
+}
+
+Augments::Shop_Item::Shop_Item(Shop_Item_Type it) {
+  item_type = it;
+  SetSize(MathUtil::PixelsToWorldUnits(32),
+          MathUtil::PixelsToWorldUnits(32));
+  switch ( it ) {
+    case Shop_Item_Type::Attack_Speed:
+      SetSprite("Images\\item_attack_speed.png");
+      gold_cost = 50;
+    break;
+    case Shop_Item_Type::Damage:
+      SetSprite("Images\\item_damage.png");
+      gold_cost = 75;
+    break;
+    case Shop_Item_Type::Health:
+      SetSprite("Images\\item_health.png");
+      gold_cost = 25;
+    break;
+    case Shop_Item_Type::Jump:
+      SetSprite("Images\\item_jump.png");
+      gold_cost = 50;
+    break;
+    case Shop_Item_Type::Walk_Speed:
+      SetSprite("Images\\item_walk_speed.png");
+      gold_cost = 80;
+    break;
+  }
+  this->SetIsSensor(1);
+  gold_show = new TextActor();
+  theWorld.Add(gold_show);
+  gold_show->SetColor(Color(.4,.7,.3));
+  gold_show->SetDisplayString(std::to_string(gold_cost));
+}
+void Augments::Shop_Item::Update(float t) {
+  gold_show->SetPosition(GetPosition().X-0.5,GetPosition().Y-2);
+  if ( this->GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+    if ( theInput.IsKeyDown(GLFW_KEY_SPACE) ) {
+      if ( 1/*gold_cost <= Game::thePlayer->R_Gold()*/ ) {
+        Game::thePlayer->Add_Gold(-gold_cost);
+        Destroy();
+        for ( int i = 0; i != 3; ++ i )
+          if ( Game::theKeep->items[i] == this ) {
+            Game::theKeep->items[i] = nullptr; break;
+          }
+      }
+    }
+  }
+}
+
+Augments::Shop_Item::~Shop_Item() {
+  gold_show->Destroy();
 }

@@ -2,6 +2,9 @@
 #include "Monster.h"
 #include "Augments.h"
 #include "Angel.h"
+#include "Hero.h"
+
+const int Player::Monster::idle_frame_max = 7;
 
 void Player::Monster::Update(float dt) {
   // jump
@@ -29,14 +32,30 @@ void Player::Monster::Update(float dt) {
 	    ApplyLinearImpulse(Vector2((-target_velocity.X - vel.x), 0), Vector2(0, 0));
       direction = 1;
     }
+  } else {
+    if ( current_anim != Anim_Type::idle )
+      LoadSpriteFrames("Images\\monster_idle_001.png");
+    current_anim = Anim_Type::idle;
   }
-   
+  anim_frame += dt * 2 * (anim_direction?1:-1);
+  if ( anim_direction && anim_frame >= idle_frame_max ) {
+    anim_frame = idle_frame_max-1;
+    anim_direction = 0;
+  } else if ( !anim_direction && anim_frame < 0 ) {
+    anim_frame = 1;
+    anim_direction = 1;
+  }
+  SetSpriteFrame(anim_frame);
+  
+
+
   // movement friction
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*.7,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
-  else if ( theInput.IsKeyDown(GLFW_KEY_J) ) {
+  else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
     frame_weapon->Cast();
+    Hero::theEnemy->Add_Health(-1000);
     attack_cooldown = [&]()->float{
       switch( R_Frame_Weapon()->R_Type() ) {
         case Augments::Weapon_Type::Big_Sword:
@@ -78,14 +97,17 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   Set_Frame_Weapon(weapon);
   SetFriction(1);
   direction = 0;
-
+  
+  float anim_frame = 0;
+  Anim_Type current_anim = Anim_Type::walk;
+  LoadSpriteFrames("Images\\monster_idle_001.png");
+  bool anim_direction = 0;
   // physics related
   this->SetFixedRotation(1);
   this->SetPosition(MathUtil::ScreenToWorld(100,185));
-  this->SetSize(MathUtil::PixelsToWorldUnits(16),
-                MathUtil::PixelsToWorldUnits(32));
-  this->SetDrawShape(ADS_Square);
-  SetColor(0.3,0.2,0.6);
+  SetSize(MathUtil::PixelsToWorldUnits(40),MathUtil::PixelsToWorldUnits(86));
+  this->SetDrawSize(MathUtil::PixelsToWorldUnits(83),
+                    MathUtil::PixelsToWorldUnits(86));
   InitPhysics();
   this->SetDensity(0.5f);
   // to avoid collision with hero

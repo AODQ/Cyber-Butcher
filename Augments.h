@@ -9,15 +9,20 @@ namespace Augments {
   enum class Weapon_Type {
     Big_Sword
   };
-  // the player (Monster) has a head, body and weapon
-  // that augments his abilities. This will mostly
-  // be the thing that draws to the screen for each
-  // augmentation, but more importantly it contains
-  // specific statistics about each one.
   
-  // So if there was a body that was able to fly,
-  // there would be a bool that denotes this ability.
+  enum class Shop_Item_Type {
+    Health, Damage, Jump, Walk_Speed, Attack_Speed, Size
+  };
   
+  class Shop_Item : public PhysicsActor {
+    Shop_Item_Type item_type;
+    int gold_cost;
+    TextActor* gold_show;
+  public:
+    Shop_Item(Shop_Item_Type);
+    ~Shop_Item();
+    void Update(float t);
+  };
   
   class Weapon : public Actor {
     const Weapon_Type type;
@@ -33,7 +38,8 @@ namespace Augments {
 
   class ShopKeep : public Actor {
     bool _active;
-    
+    Shop_Item* items[3];
+    friend Shop_Item;
   public:
     float time_left;
 

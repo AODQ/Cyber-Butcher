@@ -102,10 +102,12 @@ void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   auto world_coord = MathUtil::ScreenToWorld(screenCoord);
 }
 
-Game::Overseer::Overseer() { }
+Game::Overseer::Overseer() {
+  level = 0;
+}
 
 void Game::Overseer::Update(float dt) {
-  if (Hero::theEnemy == nullptr && theKeep->time_left <= 0) {
+  if (Hero::theEnemy == nullptr && theKeep->time_left <= 0 ) {
     std::cout << "New Hero\n";
     Hero::theEnemy = new Hero::Enemy();
     theWorld.Add(Hero::theEnemy);
