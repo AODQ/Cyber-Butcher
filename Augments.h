@@ -40,7 +40,7 @@ namespace Augments {
       Rising // to air
     };
     Stage stage;
-    bool time_left;
+    float time_left;
   public:
     ShopKeep();
     void Update(float dx);
