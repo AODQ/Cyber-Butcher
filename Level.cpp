@@ -129,7 +129,6 @@ void LLeaves::Leaf::Update(float dt) {
     anim_speed = 0.2;
     curr_anim = (curr_anim+1)%anims;
     SetSpriteFrame(curr_anim);
-    GetBody()->SetTransform(b2Vec2(0,0),0);
   }
   /*ApplyForce(Vector2(wind_speed/10,dip_up?-10:0),0);
   if ( dip_up  > 0 ) {
