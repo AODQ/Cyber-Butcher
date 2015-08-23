@@ -45,14 +45,18 @@ namespace Hero {
     };
 
     Mood mood;
+    TextActor* mood_tester;
 
     float mood_switch_timer;
     float jump_timer; // every 5 seconds we get a chance to jump
+    float in_air_start, in_air_end; // used by attack. attack after start before end
 
     // takes care of cooldowns
     void Attack_Melee();
     // takes care of cooldowns
     void Attack_Range();
+
+    void Apply_Vel_X(float x, float d);
   public:
     Enemy();
     void Update(float dt);

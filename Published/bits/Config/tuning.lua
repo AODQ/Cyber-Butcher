@@ -1,12 +1,12 @@
 -- This file is used for tuning variables. 
 JumpTimer = {
-  type = "int",
-  value = 4500
+  type = "float",
+  value = 1
 }
 
 JumpVelocity = {
   type = "float",
-  value = 150
+  value = 40000
 }
 
 DaggerForce = {

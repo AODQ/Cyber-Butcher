@@ -7,13 +7,14 @@
 
 Hero::Enemy::Enemy() {
   theEnemy = this;
-  SetPosition(Vector2(-14.5f, -1.5625));
+  SetPosition(Vector2(0, 0));
   SetDrawShape(ADS_Square);
   SetSize(1,1);
   SetColor(.2,.2,.2);
   SetFixedRotation(true);
-
   InitPhysics();
+  mood_tester = new TextActor();
+  theWorld.Add(mood_tester);
   // avoid contact with player
   auto fixture = GetBody()->GetFixtureList()->GetFilterData();
   fixture.groupIndex = -8;
@@ -24,11 +25,24 @@ Hero::Enemy::Enemy() {
   intro = true;
   speed = 3;
   health = 5;
+
+  movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
+  movement_attack_flinch = select_ability_timer = slide_timer = slide_direction
+  = ghost_timer = on_platform_timer = jumping_to_platform = 0;
+
+  select_ability_timer = 3;
+
+  mood = Mood::Close;
+
+  mood_switch_timer = 0;
+  jump_timer = 5;
 };
 
 void Hero::Enemy::Update(float dt) {
+  if ( dt > .25 ) // throw this frame away
+    return;
   int direction = 1;
-  float distance_x = GetPosition().X - Game::thePlayer->GetPosition().X,
+  float distance_x = Game::thePlayer->GetPosition().X - GetPosition().X,
         distance_y = GetPosition().Y - Game::thePlayer->GetPosition().Y;
 
   melee_cooldown -= dt;
@@ -36,12 +50,29 @@ void Hero::Enemy::Update(float dt) {
   movement_cooldown -= dt;
   movement_attack_flinch -= dt;
   select_ability_timer -= dt;
+  in_air_start -= dt;
+  in_air_end -= dt;
 
   mood_switch_timer -= dt;
+  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
+
+  mood_tester->SetPosition(Vector2(GetPosition().X,GetPosition().Y+3.5));
+
 
   if ( mood_switch_timer <= 0 ) {
-    mood = (Mood)(int(utility::R_Rand())%int(Mood::Size));
-    mood_switch_timer = 20;
+    mood = (Mood)(int(utility::R_Rand())%(int(Mood::Size)));
+    mood_switch_timer = 2.5;
+    switch ( mood ) {
+      case Mood::Close:
+        SetColor(1,0,0);
+      break;
+      case Mood::Fair:
+        SetColor(0,1,0);
+      break;
+      case Mood::Distant:
+        SetColor(0,0,1);
+      break;
+    }
   }
 
   // performing abilities
@@ -49,7 +80,7 @@ void Hero::Enemy::Update(float dt) {
   if ( ghost_timer > 0 ) {
     ghost_timer -= dt;
     // fade to alpha
-    float alpha = (ghost_timer-4)/4;
+    float alpha = (ghost_timer-3)/3;
     SetAlpha(alpha<.2?.2:alpha);
     if ( ghost_timer < 0 )
       SetAlpha(1);
@@ -57,17 +88,23 @@ void Hero::Enemy::Update(float dt) {
 
   if ( slide_timer > 0 ) {
     slide_timer -= dt;
-    ApplyForce(Vector2(slide_direction*dt,0),0);
+    Apply_Vel_X(slide_direction?-.04:.04, dt);
     return; // can't attack or move
   }
 
   if ( jumping_to_platform > 0 ) {
-    if ( GetPosition().Y > 2 )  {
+    /*if ( GetPosition().Y > 2 )  {
       jumping_to_platform = 0;
-      platform = new Level::Platform();
-      on_platform_timer = utility::R_Rand()/20;
+      // in case he was swiped out of the air we check
+      if ( GetPosition().X > -10 && GetPosition().X < -8  ||
+          GetPosition().X <  10 && GetPosition().X >  8 ) {
+        platform = new Level::Platform();
+        on_platform_timer = utility::R_Rand()/20;
+      }
+    } else {
+      ApplyLinearImpulse(Vector2(0,dt*20),Vector2(0,0));
     }
-    return; // can't attack or move
+    return; // can't attack or move*/
   }
 
   if ( on_platform_timer > 0 ) {
@@ -78,66 +115,74 @@ void Hero::Enemy::Update(float dt) {
     goto SKIP_MOVEMENT_PHASE;
   }
 
-  // decide to move
-  switch ( mood ) {
-    case Mood::Close: // up close and personal
-      if ( abs(distance_x) < 1 ) { // perfect
-        break;
-      }
-      if ( abs(distance_x) < 3 ) { // I can inch up a bit closer
-        ApplyForce(Vector2(distance_x*dt * .4,0),Vector2(0,0));
-        break;
-      }
-      // I'm too far away.
-      ApplyForce(Vector2(distance_x*dt * 2,0),Vector2(0,0));
-    break;
-    case Mood::Fair: // stab and throw
-      if ( abs(distance_x) < 1 ) { // Back up a bit
-        ApplyForce(Vector2(distance_x*dt * .6),Vector2(0,0));
-        break;
-      }
-      if ( abs(distance_x) < 3 ) { // perfect
-        break;
-      }
-      if ( abs(distance_x < 6 ) ) { // I can walk up
-        ApplyForce(Vector2(distance_x*dt * .5),Vector2(0,0));
-        break;
-      }
-      // I'm too far away
-      ApplyForce(Vector2(distance_x*dt * 4,0),Vector2(0,0));
-    break;
-    case Mood::Distant:
-      if ( abs(distance_x) < 3 ) { // I'm too close
-        ApplyForce(Vector2(distance_x*dt * 4.0),Vector2(0,0));
-        break;
-      }
-      if ( abs(distance_x) < 6 ) { // back up
-        ApplyForce(Vector2(distance_x*dt * 2.0),Vector2(0,0));
-        break;
-      }
-      // I'm at a good distance
-    break;
-  }
-
+  
   jump_timer -= dt;
 
   if ( jump_timer < 0 ) {
-    jump_timer = 3;
-    ApplyForce(Vec2i(0,-15),Vec2i(0,0));
+    jump_timer = .7 + utility::R_Rand()/50;
+    in_air_start = .2;
+    in_air_end   = .4;
+    ApplyForce(Vec2i(0,1000),Vec2i(0,0));
+  }
+
+  // decide to move
+  float dir = distance_x > 0 ? 1 : -1;
+  switch ( mood ) {
+    case Mood::Close: // up close and personal
+      if ( abs(distance_x) < 1 ) { // maybe a bit too close
+        Apply_Vel_X(.042*dir,dt);
+        mood_tester->SetDisplayString("1");
+        break;
+      }
+      if ( abs(distance_x) < 2 && abs(distance_x > 3) ) { // perfect
+        mood_tester->SetDisplayString("2");
+        break;
+      }
+      if ( abs(distance_x) < 4 ) { // I can inch up a bit closer
+        Apply_Vel_X(.037*dir,dt);
+        mood_tester->SetDisplayString("3");
+        break;
+      }
+      // I'm too far away.
+      Apply_Vel_X(.048*dir,dt);
+      mood_tester->SetDisplayString("4");
+    break;
+    case Mood::Fair: // stab and throw
+      if ( abs(distance_x) < 6 ) { // Back up a bit
+        Apply_Vel_X(-0.037*dir,dt);
+        mood_tester->SetDisplayString("1");
+        break;
+      }
+      if ( abs(distance_x < 8 ) ) { // I can walk up
+        Apply_Vel_X(0.038*dir,dt);
+        mood_tester->SetDisplayString("2");
+        break;
+      }
+
+      // I'm too far away
+      mood_tester->SetDisplayString("3");
+      Apply_Vel_X(0.048*dir,dt);
+    break;
+    case Mood::Distant:
+      if ( abs(distance_x) < 3 ) { // I'm too close
+        Apply_Vel_X(0.05*-dir,dt);
+        mood_tester->SetDisplayString("1");
+        break;
+      }
+      if ( abs(distance_x) < 8 ) { // back up
+        Apply_Vel_X(0.042*-dir,dt);
+        mood_tester->SetDisplayString("2");
+        break;
+      }
+      if ( abs(distance_x) > 13 ) { // get close
+        Apply_Vel_X(0.0395*dir,dt);
+        mood_tester->SetDisplayString("3");
+        break;
+      }
+    break;
   }
 
   SKIP_MOVEMENT_PHASE:;
-
-  // attacks options
-  if ( movement_attack_flinch > 0 ) return; // hero just attacked
-  if ( melee_cooldown < 0 && abs(distance_x) <= 2 ) {
-    Attack_Melee();
-    return;
-  }
-  if ( range_cooldown < 0 && abs(distance_x) > 2 ) {
-    Attack_Range();
-    return;
-  }
 
   // ability options
   
@@ -145,12 +190,15 @@ void Hero::Enemy::Update(float dt) {
     select_ability_timer = 1;
     // slide
     if ( distance_x < 5 && utility::R_Rand() < 25 ) {
-      slide_timer = 2;
+      select_ability_timer = 5;
+      slide_timer = 1;
       slide_direction = (distance_x < 0);
+      return;
     }
     
     // ghost
-    if ( utility::R_Rand() < 5 && ghost_timer > 0 ) {
+    if ( utility::R_Rand() < 5 && ghost_timer <= 0 ) {
+      select_ability_timer = 5;
       ghost_timer = 5;
     }
 
@@ -159,9 +207,27 @@ void Hero::Enemy::Update(float dt) {
           ( GetPosition().X > -10 && GetPosition().X < -8 ) ||
           ( GetPosition().X <  10 && GetPosition().X >  8 ) ) {
       jumping_to_platform = 1;
+      select_ability_timer = 5;
+      GetBody()->SetLinearVelocity(b2Vec2(0,0));
       return;
     }
   }
+
+  // attacks options
+  if ( movement_attack_flinch > 0 ) return; // hero just attacked
+  if ( melee_cooldown < 0 && abs(distance_x) <= 4 &&
+        in_air_start < 0 && in_air_end > 0) {
+    Attack_Melee();
+    return;
+  }
+  if ( range_cooldown < 0 && abs(distance_x) > 2 ) {
+    Attack_Range();
+    return;
+  }
+}
+
+void Hero::Enemy::Apply_Vel_X(float x, float dt) {
+  ApplyLinearImpulse(Vector2(x*dt*500,0),Vector2(0,0));
 }
 
 void Hero::Enemy::Jump() {
@@ -169,11 +235,20 @@ void Hero::Enemy::Jump() {
 }
 
 void Hero::Enemy::Attack_Melee() {
-
+  melee_cooldown = 5;
+  auto z = new Dagger(std::atan2f(Game::thePlayer->GetPosition().Y-GetPosition().Y,
+                                  Game::thePlayer->GetPosition().X-GetPosition().X),
+                      Vec2i(GetPosition().X,GetPosition().Y));
+  z->SetColor(.5,.5,.5,.8);
+  theWorld.Add(z);
 }
 
 void Hero::Enemy::Attack_Range() {
-
+  range_cooldown = 7;
+  auto z = new Dagger(std::atan2f(Game::thePlayer->GetPosition().Y-GetPosition().Y,
+                                  Game::thePlayer->GetPosition().X-GetPosition().X),
+                      Vec2i(GetPosition().X,GetPosition().Y));
+  theWorld.Add(z);
 }
 
 void Hero::Enemy::Killed() {
@@ -252,19 +327,17 @@ Hero::Enemy_Listener* Hero::e_listener = nullptr;
 Hero::Dagger::Dagger(float angl, Vec2i pos) {
   SetPosition(pos);
   SetRotation(angl);
-  SetFixedRotation(angl);
   //SetSize(MathUtil::ScreenToWorld(Vec2i(100,0)).X,
   //        MathUtil::ScreenToWorld(Vec2i(0, 20)).Y);
-  SetSprite("Images\\Knive.png");
+  SetDrawShape(ADS_Square);
   SetDensity(0.01f);
-  this->SetRestitution(.6f);
   SetIsSensor(1);
   InitPhysics();
   //this->GetBody()->SetTransform(GetBody()->GetPosition(), angl );
-  ApplyForce(Vec2i(std::cos(angl)*theTuning.GetFloat("DaggerForce"),
-                   std::sin(angl)*theTuning.GetFloat("DaggerForce")),
+  ApplyForce(Vec2i(std::cos(angl)*5,
+                   std::sin(angl)*5),
                    Vector2(0,0));
-  lifetime = theTuning.GetInt("DaggerLifetime");
+  lifetime = 25;
   // set user data
   GetBody()->SetUserData(this);
 }
@@ -274,9 +347,4 @@ void Hero::Dagger::Update(float dt) {
   if ( lifetime < 0 ) {
     Destroy();
   }
-
-  if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
-    Destroy();
-  }
-
 }
