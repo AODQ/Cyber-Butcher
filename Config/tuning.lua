@@ -1,12 +1,12 @@
 -- This file is used for tuning variables. 
 JumpTimer = {
   type = "int",
-  value = 5700
+  value = 1000
 }
 
 JumpVelocity = {
   type = "float",
-  value = 450
+  value = 2500
 }
 
 DaggerForce = {
@@ -53,10 +53,10 @@ BigSwordDamage = {
 
 BleedLifeTime = {
   type = "float",
-  value = 1.0f
+  value = 1.0
 }
 
 BG_Scroll = {
   type = "float",
-  value = .3f
+  value = .3
 }
