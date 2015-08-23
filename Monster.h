@@ -20,12 +20,14 @@ namespace Player {
 
     int gold;
     enum class Anim_Type {
-      idle, walk
+      idle, walk, attack
     };
     float anim_frame;
     Anim_Type current_anim;
     bool anim_direction;
-    static const int idle_frame_max, walk_frame_max;
+    static const int idle_frame_max, walk_frame_max, attack_frame_max;
+
+    bool is_attacking;
     
     // physics
     int phys_jump_timer, phys_jump_timer_max;

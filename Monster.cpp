@@ -5,6 +5,7 @@
 #include "Hero.h"
 
 const int Player::Monster::idle_frame_max = 7;
+const int Player::Monster::attack_frame_max = 9;
 
 void Player::Monster::Update(float dt) {
   // jump
@@ -15,42 +16,58 @@ void Player::Monster::Update(float dt) {
     ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
   }
 
-  float movement = 8;
+  float movement = 10;
   Vector2 target_velocity(movement, 0);
   b2Vec2 vel = GetBody()->GetLinearVelocity();
   float mass = GetBody()->GetMass();
-  
 
   // movement
   if ( theInput.IsKeyDown(GLFW_KEY_D) ^
-       theInput.IsKeyDown(GLFW_KEY_A) ) {
+       theInput.IsKeyDown(GLFW_KEY_A) ^ 
+       is_attacking ) {
     if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
-	    ApplyLinearImpulse(Vector2((target_velocity.X - vel.x), 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2((target_velocity.X - vel.x)*dt*100, 0), Vector2(0, 0));
       direction = 0;
     }
     if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
-	    ApplyLinearImpulse(Vector2((-target_velocity.X - vel.x), 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2((-target_velocity.X - vel.x)*dt*100, 0), Vector2(0, 0));
       direction = 1;
     }
   } else {
-    if ( current_anim != Anim_Type::idle )
-      LoadSpriteFrames("Images\\monster_idle_001.png");
-    current_anim = Anim_Type::idle;
+    if ( !is_attacking ) {
+      if ( current_anim != Anim_Type::idle )
+        LoadSpriteFrames("Images\\monster_idle_001.png");
+      current_anim = Anim_Type::idle;
+    }
   }
-  anim_frame += dt * 2 * (anim_direction?1:-1);
-  if ( anim_direction && anim_frame >= idle_frame_max ) {
-    anim_frame = idle_frame_max-1;
-    anim_direction = 0;
-  } else if ( !anim_direction && anim_frame < 0 ) {
-    anim_frame = 1;
-    anim_direction = 1;
+
+  
+  switch ( current_anim ) {
+  case Anim_Type::idle:
+    anim_frame += dt * 10 * (anim_direction?1:-1);
+    if ( anim_direction && anim_frame >= idle_frame_max ) {
+      anim_frame = idle_frame_max-1;
+      anim_direction = 0;
+    } else if ( !anim_direction && anim_frame < 0 ) {
+      anim_frame = 1;
+      anim_direction = 1;
+    }
+    break;
+  case Anim_Type::attack:
+    anim_frame += dt * 10;
+    if ( anim_frame >= attack_frame_max ) {
+      anim_frame = 1;
+      anim_direction = 0;
+      is_attacking = false;
+      LoadSpriteFrames("Images\\monster_idle_001.png");
+      current_anim = Anim_Type::idle;
+    }
+    break;
   }
   SetSpriteFrame(anim_frame);
   
-
-
   // movement friction
-  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*.7,0),Vector2(0,0));
+  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
@@ -63,6 +80,11 @@ void Player::Monster::Update(float dt) {
       }
       return 2.0f;
     }();
+
+    LoadSpriteFrames("Images\\monster_attack_001.png");
+    current_anim = Anim_Type::attack;
+    anim_frame = 1;
+    is_attacking = true;
   }
 };
 
@@ -97,6 +119,9 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   Set_Frame_Weapon(weapon);
   SetFriction(1);
   direction = 0;
+  anim_frame = 1;
+
+  is_attacking = false;
   
   float anim_frame = 0;
   Anim_Type current_anim = Anim_Type::walk;
