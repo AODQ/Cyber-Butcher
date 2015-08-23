@@ -1,4 +1,4 @@
-﻿Build started 8/23/2015 2:32:28 PM.
+﻿Build started 8/23/2015 4:45:15 PM.
      1>Project "C:\Users\Frank\Desktop\Code\GameJam33LD\ClientGame.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Circle_Test.vcxproj, LD33.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>PreBuildEvent:
@@ -25,8 +25,6 @@
          Debug\stdafx.obj
          Debug\Swordsman.obj
          Debug\utility.obj
-     1>AngelLuaWrapping.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-            Creating library Debug\ClientGame.lib and object Debug\ClientGame.exp
          ClientGame.vcxproj -> C:\Users\Frank\Desktop\Code\GameJam33LD\Debug\ClientGame.exe
        PostBuildEvent:
          copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\DevIL.dll . /y > nul
@@ -40,4 +38,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.68
+Time Elapsed 00:00:01.99

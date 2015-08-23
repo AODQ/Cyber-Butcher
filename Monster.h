@@ -20,7 +20,7 @@ namespace Player {
 
     int gold;
     enum class Anim_Type {
-      idle, walk, attack
+      idle, walk, attack, jump
     };
     float anim_frame;
     Anim_Type current_anim;
@@ -30,7 +30,7 @@ namespace Player {
     bool is_attacking;
     
     // physics
-    int phys_jump_timer, phys_jump_timer_max;
+    float phys_jump_timer, phys_jump_timer_max;
   public:
     void Update(float dt);
     

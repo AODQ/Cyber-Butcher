@@ -6,14 +6,25 @@
 
 const int Player::Monster::idle_frame_max = 7;
 const int Player::Monster::attack_frame_max = 9;
+const int Player::Monster::walk_frame_max = 4;
 
 void Player::Monster::Update(float dt) {
+  // mirror according to direction
+  if (direction == 1) {
+    SetUVs(Vector2(0.f, 0.f), Vector2(1.f, 1.f));
+  } else if (direction == 0) {
+    SetUVs(Vector2(1.f, 0.f), Vector2(0.f, 1.f));
+  }
+
   // jump
-  phys_jump_timer -= dt;
+  if (phys_jump_timer > 0) {
+    phys_jump_timer -= dt;
+  }
+
   if ( theInput.IsKeyDown(GLFW_KEY_W) &&
-      phys_jump_timer < 0 ) {
+      phys_jump_timer <= 0 ) {
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
-    ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
+    ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
   }
 
   float movement = 10;
@@ -22,23 +33,40 @@ void Player::Monster::Update(float dt) {
   float mass = GetBody()->GetMass();
 
   // movement
-  if ( theInput.IsKeyDown(GLFW_KEY_D) ^
-       theInput.IsKeyDown(GLFW_KEY_A) ^ 
-       is_attacking ) {
-    if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
-	    ApplyLinearImpulse(Vector2((target_velocity.X - vel.x)*dt*100, 0), Vector2(0, 0));
-      direction = 0;
+  if ( !is_attacking ) {
+    if ( theInput.IsKeyDown(GLFW_KEY_D) ^
+         theInput.IsKeyDown(GLFW_KEY_A) ) {
+      if ( current_anim != Anim_Type::walk) {
+        LoadSpriteFrames("Images\\monster_walk_001.png");
+        anim_frame = 0;
+      }
+      
+      current_anim = Anim_Type::walk;
+
+      if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
+	      ApplyLinearImpulse(Vector2(mass*(target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
+        direction = 0;
+      }
+      if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
+	      ApplyLinearImpulse(Vector2(mass*(-target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
+        direction = 1;
+      }
+    } else {
+      if ( !is_attacking ) {
+        if ( current_anim != Anim_Type::idle )
+          LoadSpriteFrames("Images\\monster_idle_001.png");
+        current_anim = Anim_Type::idle;
+      }
     }
-    if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
-	    ApplyLinearImpulse(Vector2((-target_velocity.X - vel.x)*dt*100, 0), Vector2(0, 0));
-      direction = 1;
+  }
+
+
+  if (GetBody()->GetLinearVelocity().y != 0) {
+    if ( current_anim != Anim_Type::jump) {
+      LoadSpriteFrames("Images\\monster_jump.png");
     }
-  } else {
-    if ( !is_attacking ) {
-      if ( current_anim != Anim_Type::idle )
-        LoadSpriteFrames("Images\\monster_idle_001.png");
-      current_anim = Anim_Type::idle;
-    }
+    current_anim = Anim_Type::jump;
+    anim_frame = 0;
   }
 
   
@@ -49,20 +77,29 @@ void Player::Monster::Update(float dt) {
       anim_frame = idle_frame_max-1;
       anim_direction = 0;
     } else if ( !anim_direction && anim_frame < 0 ) {
-      anim_frame = 1;
+      anim_frame = 0;
       anim_direction = 1;
     }
     break;
   case Anim_Type::attack:
     anim_frame += dt * 10;
     if ( anim_frame >= attack_frame_max ) {
-      anim_frame = 1;
+      anim_frame = 0;
       anim_direction = 0;
       is_attacking = false;
       LoadSpriteFrames("Images\\monster_idle_001.png");
       current_anim = Anim_Type::idle;
     }
     break;
+  case Anim_Type::walk:
+    anim_frame += dt * 5;
+    if ( anim_frame >= walk_frame_max ) {
+      LoadSpriteFrames("Images\\monster_walk_001.png");
+      anim_frame = 0;
+    }
+    break;
+  case Anim_Type::jump:
+    anim_frame = 0;
   }
   SetSpriteFrame(anim_frame);
   
@@ -130,9 +167,9 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   // physics related
   this->SetFixedRotation(1);
   this->SetPosition(MathUtil::ScreenToWorld(100,185));
-  SetSize(MathUtil::PixelsToWorldUnits(40),MathUtil::PixelsToWorldUnits(86));
-  this->SetDrawSize(MathUtil::PixelsToWorldUnits(83),
-                    MathUtil::PixelsToWorldUnits(86));
+  SetSize(MathUtil::PixelsToWorldUnits(96),MathUtil::PixelsToWorldUnits(86));
+  this->SetDrawSize(MathUtil::PixelsToWorldUnits(96),
+                    MathUtil::PixelsToWorldUnits(96));
   InitPhysics();
   this->SetDensity(0.5f);
   // to avoid collision with hero
