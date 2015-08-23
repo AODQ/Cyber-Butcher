@@ -8,6 +8,7 @@
 #include "Particle_System.h"
 #include "Hero.h"
 
+TextActor* gold;
 
 void Game::Initialize() {
   theWorld.Initialize(utility::Window_width,
@@ -83,12 +84,16 @@ void Game::Initialize() {
   t->SetColor(.30,.30,0);
   t->InitPhysics();
   t->SetAlpha(0);
+
+  // text actors
+  gold = new TextActor();
+  gold->SetPosition(50,50);
+  gold->SetColor(.5,.5,0);
 }
 
 Player::Monster* Game::thePlayer = nullptr;
 
 Game::Overseer* Game::theOverseer = nullptr;
-
 
 void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   auto world_coord = MathUtil::ScreenToWorld(screenCoord);
@@ -104,4 +109,6 @@ void Game::Overseer::Update(float dt) {
   Particles::Update(dt);
   Level::BG_Scroll::Update(dt);
   Level::Leaves::Update(dt);
+  
+  gold->SetDisplayString("Gold: " + std::to_string(Game::thePlayer->R_Gold()));
 }

@@ -93,3 +93,17 @@ void Augments::Weapon::Cast() {
     break;
   }
 }
+
+
+// shop keep
+Augments::ShopKeep::ShopKeep() {
+  SetSprite("Images\\shopkeep.png");
+  SetSize(MathUtil::PixelsToWorldUnits(240),
+          MathUtil::PixelsToWorldUnits(320));
+  SetPosition(-500,-500);
+  stage = Stage::Nothing;
+}
+
+void Augments::ShopKeep::Update(float dt) {
+  //if ( 
+}

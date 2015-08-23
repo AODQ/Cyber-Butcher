@@ -26,7 +26,6 @@ Particles::Bleed_Container Particles::bleed_particles;
 
 
 void Particles::Update(float dt) {
-
 	for (int i = 0; i < bleed_particles.size(); ++i) {
 		bleed_particles[i].second -= dt;
 		if (bleed_particles[i].second <= 0) { // ran out of time remove

@@ -30,6 +30,23 @@ namespace Augments {
     void Cast();
     inline const Weapon_Type R_Type() const { return type; }
   };
+
+  class ShopKeep : public Actor {
+    bool _active;
+    enum class Stage {
+      Nothing, // waiting for enemy to die
+      Dropping, // to ground
+      Waiting, // for player to buy shit
+      Rising, // to air
+    };
+    Stage stage;
+    bool time_left;
+  public:
+    ShopKeep();
+    void Update(float dx);
+
+    inline bool R_Active() const { return _active; }
+  };
 }
 using AugWep  = Augments::Weapon;
 

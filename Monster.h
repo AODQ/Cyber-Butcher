@@ -13,10 +13,12 @@ namespace Player {
     int max_health, curr_health;
     int attack_damage;
     Augments::Weapon* frame_weapon;
-    bool direction;
+    bool direction, inair;
 
     float attack_cooldown;
     float special_cooldown;
+
+    int gold;
 
     // physics
     int phys_jump_timer, phys_jump_timer_max;
@@ -27,6 +29,7 @@ namespace Player {
     int R_Curr_Health() const;
     int R_Attack_Damage() const;
     bool R_Direction() const;
+    inline int R_Gold() const { return gold; }
     
     Augments::Weapon* R_Frame_Weapon();
     
@@ -35,6 +38,7 @@ namespace Player {
     void Set_Curr_Health(int);
     void Add_Curr_Health(int);
     void Set_Attack_Damage(int);
+    inline void Add_Gold(int x) { gold = x; }
     // will automatically remove old
     // actors from the stage and deallocate
     void Set_Frame_Weapon(Augments::Weapon_Type);

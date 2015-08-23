@@ -91,8 +91,11 @@ void Hero::Enemy::Killed() {
   killed_effect->SetEndColor(Color(.4f, .4f, .4f, 0.0f));
   theWorld.Add(killed_effect);
 
-  Hero::Gold* dropped_gold = new Hero::Gold(this->GetPosition());
-  theWorld.Add(dropped_gold);
+  for ( int i = 0; i != 15; ++ i ) {
+    Hero::Gold* dropped_gold = new Hero::Gold(this->GetPosition());
+    theWorld.Add(dropped_gold);
+    dropped_gold->ApplyForce(Vector2((std::rand()-50)/20,std::rand()/25),Vector2(0,0));
+  }
 
   this->Destroy();
 }
@@ -106,6 +109,13 @@ Hero::Gold::Gold(Vector2 pos) {
   SetColor(Color(1.0f, 0.72549f, 0.0f));
 
   InitPhysics();
+  
+  // avoid contact from player
+  auto fixture = GetBody()->GetFixtureList()->GetFilterData();
+  fixture.groupIndex = -8;
+  GetBody()->GetFixtureList()->SetFilterData(fixture);
+  // set user data
+  GetBody()->SetUserData(this);
 }
 
 void Hero::Enemy_Listener::ReceiveMessage(Message* m) {
@@ -115,6 +125,13 @@ void Hero::Enemy_Listener::ReceiveMessage(Message* m) {
     theEnemyIntro->Destroy();
     theEnemyIntro = nullptr;
   }
+}
+
+void Hero::Gold::Update(float dt) {
+  if ( this->GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+    Game::thePlayer->Add_Gold(utility::R_Rand()/25);
+    Destroy();
+  }  
 }
 
 
