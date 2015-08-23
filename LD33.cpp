@@ -23,7 +23,7 @@ void Game::Initialize() {
 
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
-  
+  theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
   
   Level::BG_Scroll::bg_scroll1 = new Actor();
   Level::BG_Scroll::bg_scroll2 = new Actor();
