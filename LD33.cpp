@@ -60,7 +60,7 @@ void Game::Initialize() {
   // left bottom corner wall
   auto t = new Level::Platform();
   theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(10,225));
+  t->SetPosition(MathUtil::ScreenToWorld(10,228));
   t->SetSize(MathUtil::PixelsToWorldUnits(100),
              MathUtil::PixelsToWorldUnits(71));
   t->SetColor(.30,.30,0);
@@ -78,7 +78,7 @@ void Game::Initialize() {
   // right bottom corner wall
   t = new Level::Platform();
   theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(450,225));
+  t->SetPosition(MathUtil::ScreenToWorld(450,228));
   t->SetSize(MathUtil::PixelsToWorldUnits(65),
              MathUtil::PixelsToWorldUnits(71));
   t->SetColor(.30,.30,0);
