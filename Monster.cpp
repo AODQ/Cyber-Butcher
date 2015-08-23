@@ -5,13 +5,12 @@
 
 void Player::Monster::Update(float dt) {
   dt *= 300;
-  if ( phys_jump_timer >= 0 ) phys_jump_timer -= dt;
   // jump
+  phys_jump_timer -= dt;
   if ( theInput.IsKeyDown(GLFW_KEY_W) &&
       phys_jump_timer < 0 ) {
-    ApplyLinearImpulse(Vector2(0, 50), Vector2(0, 0));
-    //ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
-    phys_jump_timer = theTuning.GetInt("JumpTimer"); 
+    phys_jump_timer = theTuning.GetFloat("JumpTimer");
+    ApplyForce(Vec2i(0, theTuning.GetFloat("JumpVelocity")),Vec2i(0,0));
   }
 
   Vector2 target_velocity(dt, 0);
@@ -22,17 +21,17 @@ void Player::Monster::Update(float dt) {
   if ( theInput.IsKeyDown(GLFW_KEY_D) ^
        theInput.IsKeyDown(GLFW_KEY_A) ) {
     if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
-	    ApplyLinearImpulse(Vector2(mass * target_velocity.X - vel.x, 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2(dt*.5, 0), Vector2(0, 0));
       direction = 0;
     }
     if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
-	    ApplyLinearImpulse(Vector2(mass * -target_velocity.X - vel.x, 0), Vector2(0, 0));
+	    ApplyLinearImpulse(Vector2(-dt*.5, 0), Vector2(0, 0));
       direction = 1;
     }
   }
    
   // movement friction
-  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x/.4),Vector2(0,0));
+  ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*.7,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else 
@@ -74,6 +73,7 @@ void Player::Monster::Set_Frame_Weapon(Augments::Weapon_Type x) {
   
   
 Player::Monster::Monster(Augments::Weapon_Type weapon) {
+  inair = 1;
   frame_weapon = nullptr;
   Set_Frame_Weapon(weapon);
   SetFriction(1);

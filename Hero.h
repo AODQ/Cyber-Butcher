@@ -53,6 +53,7 @@ namespace Hero {
     float amount;
   public:
 	  Gold(Vector2 position);
+    void Update(float dt);
   };
 };
 
