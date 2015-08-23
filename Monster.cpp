@@ -70,7 +70,7 @@ void Player::Monster::Set_Frame_Weapon(Augments::Weapon_Type x) {
 Player::Monster::Monster(Augments::Weapon_Type weapon) {
   frame_weapon = nullptr;
   Set_Frame_Weapon(weapon);
-
+  SetFriction(1);
   direction = 0;
 
   // physics related

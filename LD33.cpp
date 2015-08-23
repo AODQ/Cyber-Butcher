@@ -12,7 +12,7 @@
 void Game::Initialize() {
   theWorld.Initialize(utility::Window_width,
                       utility::Window_height, "You Are The Monster", // gramr
-                      1, 0, 0);
+                      1, 0, 1);
   theWorld.SetupPhysics();
   theWorld.SetSideBlockers(1);
   Level::Initialize();
@@ -102,4 +102,5 @@ void Game::Overseer::Update(float dt) {
   }
   Particles::Update(dt);
   Level::BG_Scroll::Update(dt);
+  Level::Leaves::Update(dt);
 }
