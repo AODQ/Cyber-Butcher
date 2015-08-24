@@ -15,6 +15,8 @@ namespace utility {
 
   extern const int Window_width;
   extern const int Window_height;
+  extern int True_width;
+  extern int True_height;
   
   // returns a random float from 0 to 100
   float R_Rand();

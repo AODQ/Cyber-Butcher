@@ -10,6 +10,8 @@ std::uniform_real_distribution<> utility::dist(0, 100);
 const int utility::Window_width  = 480,
           utility::Window_height = 320;
 
+int utility::True_width = 480,
+    utility::True_height = 320;
 
 
 float utility::R_Rand() { return dist(rgen); }

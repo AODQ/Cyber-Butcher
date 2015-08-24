@@ -20,6 +20,7 @@ void Game::Initialize() {
                       1, 0, 1);
   theWorld.SetupPhysics(Vector2(0, -40));
   theWorld.SetSideBlockers(1);
+
   Level::Initialize();
   Level::BG_Scroll::bg_scroll1 = new Actor();
   Level::BG_Scroll::bg_scroll2 = new Actor();
@@ -45,7 +46,7 @@ void Game::Initialize() {
   bg = new FullScreenActor();
   bg->SetSprite("Images\\YATM-layer1.png");
   theWorld.Add(bg);
-  new Game::Mouse(); // for mouse events
+
   // enemy events
   Hero::e_listener = new Hero::Enemy_Listener(); // for enemy events
   theSwitchboard.SubscribeTo(Hero::e_listener,"FinishedHeroMovement");
@@ -53,10 +54,20 @@ void Game::Initialize() {
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
   theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
+
+  Game::theMouse = new Mouse();
+
+  glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height);
 }
 
 void Game::Initialize_Game() {
   in_menu = 0;
+
+  ActorSet menu = theTagList.GetObjectsTagged("menu");
+  for ( Actor* actor : menu ) {
+    actor->Destroy();
+  }
+
   thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
   theWorld.Add(thePlayer);
   thePlayer->SetAlpha(1.0f);
@@ -98,16 +109,41 @@ void Game::Initialize_Game() {
   theWorld.Add(theKeep);
   // sounds
   Sounds::Load_Sounds();
-
 }
 
 Player::Monster* Game::thePlayer = nullptr;
 
 Augments::ShopKeep* Game::theKeep = nullptr;
 Game::Overseer* Game::theOverseer = nullptr;
+Game::Mouse* Game::theMouse = nullptr;
+
+Game::Mouse::Mouse() {
+  std::cout << "new mouse\n";
+  mouse_position = &Vector2::Zero;
+}
 
 void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   auto world_coord = MathUtil::ScreenToWorld(screenCoord);
+
+  ActorSet buttons = theTagList.GetObjectsTagged("button");
+  Vector2* current_position = theMouse->R_Mouse_Position();
+  for ( Actor* button : buttons ) {
+    if ( theMouse != nullptr && button->GetBoundingBox().Contains( MathUtil::ScreenToWorld(current_position->X, current_position->Y) ) ) {
+      Game:theOverseer->pressed_button = button;
+    }
+  }
+}
+
+void Game::Mouse::MouseMotionEvent(Vec2i screenCoord) {
+  // get border
+  float true_width = utility::True_height*1.5f;
+  float border = utility::True_width - true_width;
+
+  mouse_position = new Vector2(screenCoord.X - border/2, screenCoord.Y);
+}
+
+Vector2* Game::Mouse::R_Mouse_Position() const {
+  return mouse_position;
 }
 
 Game::Overseer::Overseer() {
@@ -124,21 +160,69 @@ Game::Overseer::Overseer() {
                       MathUtil::PixelsToWorldUnits(50));
   menu_select->SetSize(MathUtil::PixelsToWorldUnits(150),
                         MathUtil::PixelsToWorldUnits(50));
-  menu_start->SetPosition(0,0);
-  menu_controls->SetPosition(0,MathUtil::PixelsToWorldUnits(60));
-  menu_exit->SetPosition(0,MathUtil::PixelsToWorldUnits(120));
+  menu_start->SetPosition(0,MathUtil::PixelsToWorldUnits(60));
+  menu_controls->SetPosition(0,0);
+  menu_exit->SetPosition(0,-MathUtil::PixelsToWorldUnits(60));
   menu_select->SetPosition(0,0);
 
+  menu_start->SetSprite("Images\\menu_start.png");
+  menu_controls->SetSprite("Images\\menu_controls.png");
+  menu_exit->SetSprite("Images\\menu_exit.png");
+  menu_select->SetSprite("Images\\menu_select.png");
+  menu_select->SetAlpha(0.0f);
+
+  theWorld.Add(menu_start);
+  theWorld.Add(menu_controls);
+  theWorld.Add(menu_exit);
+  theWorld.Add(menu_select);
+  menu_start->Tag("button, menu");
+  menu_controls->Tag("button, menu");
+  menu_exit->Tag("button, menu");
+  menu_select->Tag("menu");
 }
 
 void Game::Overseer::Update(float dt) {
+  glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height); // update true width/height
+
   if ( in_menu ) {
-    switch ( selected_icon ) {
-      case 0: // menu start
-        menu_select->SetPosition(0,0);
-      break;
+    selected_icon = nullptr;
+
+    ActorSet buttons = theTagList.GetObjectsTagged("button");
+    Vector2* current_position = theMouse->R_Mouse_Position();
+    for ( Actor* button : buttons ) {
+      if ( theMouse != nullptr && button->GetBoundingBox().Contains( MathUtil::ScreenToWorld(current_position->X, current_position->Y) ) ) {
+        selected_icon = button;
+        break;
+      }
     }
-  } else { 
+
+    if ( selected_icon == nullptr ) {
+      menu_select->SetAlpha(0.0f);
+    } else {
+      menu_select->SetAlpha(1.0f);
+      menu_select->SetPosition(selected_icon->GetPosition());
+    }
+
+    if ( pressed_button != nullptr ) {
+      if ( pressed_button == menu_start ) {
+        // start
+        std::cout << "started\n";
+        Game::Initialize_Game();
+      } else if ( pressed_button == menu_controls ) {
+        // controls
+        std::cout << "controls\n";
+       
+      } else if ( pressed_button == menu_exit ) {
+        // exit
+        std::cout << "exited\n";
+        theWorld.StopGame();
+      }
+
+      pressed_button = nullptr;
+    }
+
+  } else {
+
     if (Hero::theEnemy == nullptr && theKeep->time_left <= 0 ) {
       std::cout << "New Hero\n";
       Hero::theEnemy = new Hero::Enemy();

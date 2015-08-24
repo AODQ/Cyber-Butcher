@@ -19,18 +19,26 @@ namespace Game {
   extern Player::Monster* thePlayer;
   
   class Mouse : public MouseListener {
+    Vector2* mouse_position;
   public:
+    Mouse();
     void MouseDownEvent(Vec2i, MouseButtonInput);
+    void MouseMotionEvent(Vec2i);
+
+    Vector2* R_Mouse_Position() const;
   };
+  
+  extern Mouse* theMouse;
   
   // for general events. Just does whatever it feels like.
   class Overseer : public Actor {
     Actor* menu_start,
          * menu_controls,
          * menu_exit,
-         * menu_select;
-    int selected_icon;
+         * menu_select,
+         * selected_icon;
   public:
+    Actor* pressed_button;
     int level;
 
     Overseer();
