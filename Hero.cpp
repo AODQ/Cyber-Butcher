@@ -301,7 +301,7 @@ void Hero::Enemy::Update(float dt) {
 
   if ( jump_timer < 0 ) {
     jump_timer = .6 + utility::R_Rand()/(25 + (distance_x>3?0:25));
-
+    theSound.PlaySound(Sounds::hero_jump, .1);
     in_air_start = .2;
     in_air_end   = .4;
     ApplyForce(Vec2i(0,1200),Vec2i(0,0));
@@ -317,6 +317,7 @@ void Hero::Enemy::Update(float dt) {
       (abs(distance_x) < 3 && (GetPosition().X > 8 || GetPosition().X < -8))) ) {
     slide_cooldown = .8 + utility::R_Rand()/33;
     slide_timer = .6;
+    theSound.PlaySound( Sounds::hero_slide, .1 );
     SetColor(.7,.7,.7);
     slide_direction = (distance_x < 0); // random
     if ( GetPosition().X >  8 ) // too close to right wall
@@ -339,6 +340,7 @@ void Hero::Enemy::Update(float dt) {
     if ( on_platform_timer <= 0 &&
           (( GetPosition().X > -9 && GetPosition().X < -7 ) ||
            ( GetPosition().X <  9 && GetPosition().X >  7 )) ) {
+      theSound.PlaySound(Sounds::hero_jump, .1);
       jumping_to_platform = 1;
       platform_cooldown = 5;
       on_platform_timer = 13;
@@ -354,9 +356,11 @@ void Hero::Enemy::Update(float dt) {
   if ( melee_cooldown < 0 && abs(distance_x) <= 4 &&
         in_air_start < 0 && in_air_end > 0) {
     Attack_Melee();
+    theSound.PlaySound( Sounds::hero_attack, .1 );
     return;
   }
   if ( range_cooldown < 0 && abs(distance_x) > 2.3 ) {
+    theSound.PlaySound( Sounds::hero_throw, .1 );
     Attack_Range();
     return;
   }
@@ -395,6 +399,14 @@ Hero::Enemy::~Enemy() {
   if ( platform )
     this->platform->Destroy();
   mood_tester->Destroy();
+}
+
+void Hero::Enemy::Add_Health(int x) {
+  if ( x < 0 && (health + x > 0) )
+    theSound.PlaySound( Sounds::hero_damaged, .1 );
+ health += x;
+ if ( health <= 0 )
+   theSound.PlaySound( Sounds::hero_death );
 }
 
 void Hero::Enemy::Killed() {

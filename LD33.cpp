@@ -181,6 +181,14 @@ Game::Overseer::Overseer() {
   menu_select->Tag("menu");
 }
 
+void Game::Overseer::Start_Game() {
+  menu_select->Destroy();
+  menu_exit->Destroy();
+  menu_controls->Destroy();
+  menu_start->Destroy();
+  in_menu = 0;
+}
+
 void Game::Overseer::Update(float dt) {
   glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height); // update true width/height
 

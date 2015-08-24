@@ -40,7 +40,7 @@ namespace Game {
   public:
     Actor* pressed_button;
     int level;
-
+    void Start_Game();
     Overseer();
     void Update(float dt);
   };
