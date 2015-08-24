@@ -62,7 +62,6 @@ void Game::Initialize() {
   auto t = new Level::Platform();
   theWorld.Add(t);
   t->SetPosition(MathUtil::ScreenToWorld(10,228));
-  std::cout << "t1: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
   t->SetSize(MathUtil::PixelsToWorldUnits(100),
              MathUtil::PixelsToWorldUnits(71));
   t->SetColor(.30,.30,0);
@@ -72,7 +71,6 @@ void Game::Initialize() {
   t = new Level::Platform();
   theWorld.Add(t);
   t->SetPosition(MathUtil::ScreenToWorld(230,264));
-  std::cout << "t2: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
   t->SetSize(MathUtil::PixelsToWorldUnits(570),
              MathUtil::PixelsToWorldUnits(15));
   t->SetColor(.30,.30,0);
@@ -82,7 +80,6 @@ void Game::Initialize() {
   t = new Level::Platform();
   theWorld.Add(t);
   t->SetPosition(MathUtil::ScreenToWorld(450,228));
-  std::cout << "t2: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
   t->SetSize(MathUtil::PixelsToWorldUnits(65),
              MathUtil::PixelsToWorldUnits(71));
   t->SetColor(.30,.30,0);
