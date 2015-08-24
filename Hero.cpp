@@ -57,7 +57,7 @@ Hero::Enemy::Enemy() {
 
   intro = true;
   speed = 3;
-  health = 5;
+  health = 20;
 
   weapon = nullptr;
 
@@ -346,6 +346,10 @@ void Hero::Enemy::Update(float dt) {
   if ( range_cooldown < 0 && abs(distance_x) > 2.3 ) {
     Attack_Range();
     return;
+  }
+
+  if ( health <= 0 ) {
+    Killed();
   }
 }
 
