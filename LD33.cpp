@@ -8,6 +8,7 @@
 #include "Particle_System.h"
 #include "Sounds.h"
 #include "Hero.h"
+#include <string>
 
 TextActor* gold;
 
@@ -193,6 +194,10 @@ Game::Overseer::Overseer() {
   punch_key = new Actor();
   jump_key = new Actor();
   back_arrow = new Actor();
+  right_text = new TextActor();
+  left_text = new TextActor();
+  punch_text = new TextActor();
+  jump_text = new TextActor();
 
   title_logo->SetSize(MathUtil::PixelsToWorldUnits(224), MathUtil::PixelsToWorldUnits(102));
   menu_background->SetSize(MathUtil::PixelsToWorldUnits(224), MathUtil::PixelsToWorldUnits(128));
@@ -217,6 +222,10 @@ Game::Overseer::Overseer() {
   punch_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(49));
   jump_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(63));
   back_arrow->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(77));
+  right_text->SetPosition(-MathUtil::PixelsToWorldUnits(30), -MathUtil::PixelsToWorldUnits(25));
+  left_text->SetPosition(-MathUtil::PixelsToWorldUnits(30), -MathUtil::PixelsToWorldUnits(39));
+  punch_text->SetPosition(-MathUtil::PixelsToWorldUnits(30), -MathUtil::PixelsToWorldUnits(53));
+  jump_text->SetPosition(-MathUtil::PixelsToWorldUnits(30), -MathUtil::PixelsToWorldUnits(67));
 
   title_logo->SetSprite("Images\\title_logo.png");
   menu_background->SetSprite("Images\\menu_background.png");
@@ -241,6 +250,10 @@ Game::Overseer::Overseer() {
   theWorld.Add(punch_key);
   theWorld.Add(jump_key);
   theWorld.Add(back_arrow);
+  theWorld.Add(right_text);
+  theWorld.Add(left_text);
+  theWorld.Add(punch_text);
+  theWorld.Add(jump_text);
 
   title_logo->Tag("menu");
   menu_background->Tag("menu");
@@ -253,6 +266,11 @@ Game::Overseer::Overseer() {
   punch_key->Tag("button, menu, control_button");
   jump_key->Tag("button, menu, control_button");
   back_arrow->Tag("button, menu, control_button");
+
+  right_text->Tag("menu, control_button");
+  left_text->Tag("menu, control_button");
+  punch_text->Tag("menu, control_button");
+  jump_text->Tag("menu, control_button");
 
   glfwSetKeyCallback(theWorld.GetMainWindow(), InputCallback);
 }
