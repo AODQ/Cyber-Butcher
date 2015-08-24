@@ -190,7 +190,7 @@ void Game::Overseer::Start_Game() {
 }
 
 void Game::Overseer::Update(float dt) {
-  glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height); // update true width/height
+  glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height); // update true window width/height
 
   if ( in_menu ) {
     selected_icon = nullptr;

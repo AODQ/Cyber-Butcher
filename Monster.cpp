@@ -30,6 +30,7 @@ void Player::Monster::Update(float dt) {
       phys_jump_timer <= 0 ) {
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
     ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
+    //theSound.PlaySound(Sounds::boss_jump);
   }
 
   float movement = 10;

@@ -69,7 +69,7 @@ void Sounds::Load_Sounds() {
 // includes WTF
 void Sounds::Play_Gibberish() {
   gibberish_count = 0;
-  gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36]);
+  gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], .3);
 }
 void Sounds::Play_Inventory() {
   theSound.PlaySound(Inventory[int(utility::R_Rand())%17]);
@@ -83,7 +83,7 @@ void Sounds::Update(float dt) {
     monster_gibber_timer -= dt;
     if ( monster_gibber_timer <= 0 ) {
       monster_gibber_timer = 0;
-      theSound.PlaySound(WTF[int(utility::R_Rand())%17]);
+      theSound.PlaySound(WTF[int(utility::R_Rand())%17], .5);
     }
   }
   if ( gibberish_handle == nullptr ) return;
@@ -94,7 +94,7 @@ void Sounds::Update(float dt) {
     if ( ++gibberish_count <= 2 ) {
       // if 1..2(50%) play another sound 
       if ( gibberish_count != 2 || (gibberish_count == 2 && utility::R_Rand()<50) ) {
-        gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36]);
+        gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], .5);
       }
     }
 
