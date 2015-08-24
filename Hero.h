@@ -66,6 +66,8 @@ namespace Hero {
     void Attack_Range();
 
     void Apply_Vel_X(float x, float d);
+
+    float gibber_timer;
   public:
 
     E_Weapon* weapon;

@@ -6,26 +6,21 @@
 #include "Level.h"
 #include "Angel.h"
 #include "Particle_System.h"
+#include "Sounds.h"
 #include "Hero.h"
 
 TextActor* gold;
 
+bool Game::in_menu = 0;
+
 void Game::Initialize() {
+  in_menu = 1;
   theWorld.Initialize(utility::Window_width,
                       utility::Window_height, "You Are The Monster", // gramr
                       1, 0, 1);
   theWorld.SetupPhysics(Vector2(0, -40));
   theWorld.SetSideBlockers(1);
   Level::Initialize();
-  new Game::Mouse(); // for mouse events
-  // enemy events
-  Hero::e_listener = new Hero::Enemy_Listener(); // for enemy events
-  theSwitchboard.SubscribeTo(Hero::e_listener,"FinishedHeroMovement");
-
-  theOverseer = new Overseer();
-  theWorld.Add(theOverseer);
-  theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
-  
   Level::BG_Scroll::bg_scroll1 = new Actor();
   Level::BG_Scroll::bg_scroll2 = new Actor();
   Level::BG_Scroll::bg_scroll1->SetSprite("Images\\YATM-clouds.png");
@@ -50,8 +45,18 @@ void Game::Initialize() {
   bg = new FullScreenActor();
   bg->SetSprite("Images\\YATM-layer1.png");
   theWorld.Add(bg);
-  
+  new Game::Mouse(); // for mouse events
+  // enemy events
+  Hero::e_listener = new Hero::Enemy_Listener(); // for enemy events
+  theSwitchboard.SubscribeTo(Hero::e_listener,"FinishedHeroMovement");
 
+  theOverseer = new Overseer();
+  theWorld.Add(theOverseer);
+  theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
+}
+
+void Game::Initialize_Game() {
+  in_menu = 0;
   thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
   theWorld.Add(thePlayer);
   thePlayer->SetAlpha(1.0f);
@@ -91,6 +96,9 @@ void Game::Initialize() {
 
   Game::theKeep = new Augments::ShopKeep;
   theWorld.Add(theKeep);
+  // sounds
+  Sounds::Load_Sounds();
+
 }
 
 Player::Monster* Game::thePlayer = nullptr;
@@ -104,19 +112,46 @@ void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
 
 Game::Overseer::Overseer() {
   level = 0;
+  menu_start = new Actor();
+  menu_controls = new Actor();
+  menu_exit = new Actor();
+  menu_select = new Actor();
+  menu_start->SetSize(MathUtil::PixelsToWorldUnits(150),
+                      MathUtil::PixelsToWorldUnits(50));
+  menu_controls->SetSize(MathUtil::PixelsToWorldUnits(150),
+                      MathUtil::PixelsToWorldUnits(50));
+  menu_exit->SetSize(MathUtil::PixelsToWorldUnits(150),
+                      MathUtil::PixelsToWorldUnits(50));
+  menu_select->SetSize(MathUtil::PixelsToWorldUnits(150),
+                        MathUtil::PixelsToWorldUnits(50));
+  menu_start->SetPosition(0,0);
+  menu_controls->SetPosition(0,MathUtil::PixelsToWorldUnits(60));
+  menu_exit->SetPosition(0,MathUtil::PixelsToWorldUnits(120));
+  menu_select->SetPosition(0,0);
+
 }
 
 void Game::Overseer::Update(float dt) {
-  if (Hero::theEnemy == nullptr && theKeep->time_left <= 0 ) {
-    std::cout << "New Hero\n";
-    Hero::theEnemy = new Hero::Enemy();
-    Hero::theEnemy->Add_Health(level*20);
-    theWorld.Add(Hero::theEnemy);
-  }
+  if ( in_menu ) {
+    switch ( selected_icon ) {
+      case 0: // menu start
+        menu_select->SetPosition(0,0);
+      break;
+    }
+  } else { 
+    if (Hero::theEnemy == nullptr && theKeep->time_left <= 0 ) {
+      std::cout << "New Hero\n";
+      Hero::theEnemy = new Hero::Enemy();
+      Hero::theEnemy->Add_Health(level*20);
+      theWorld.Add(Hero::theEnemy);
+    }
 
-  Particles::Update(dt);
-  Level::BG_Scroll::Update(dt);
-  Level::Leaves::Update(dt);
+    Particles::Update(dt);
+    Level::BG_Scroll::Update(dt);
+    Level::Leaves::Update(dt);
   
-  gold->SetDisplayString("Gold: " + std::to_string(Game::thePlayer->R_Gold()));
+    gold->SetDisplayString("Gold: " + std::to_string(Game::thePlayer->R_Gold()));
+
+    Sounds::Update(dt);
+  }
 }

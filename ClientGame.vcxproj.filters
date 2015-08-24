@@ -44,6 +44,7 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Particle_System.cpp" />
+    <ClCompile Include="Sounds.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="platforms\win\ClientGame.rc">
@@ -64,6 +65,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Particle_System.h" />
+    <ClInclude Include="Sounds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\defaults.lua">

@@ -66,8 +66,7 @@ void Player::Monster::Update(float dt) {
 
   if (Hero::theEnemy != nullptr &&
     Hero::theEnemy->GetBoundingBox().Intersects(GetBoundingBox()) &&
-    previous_y_velocity != 0 && 
-    GetBody()->GetLinearVelocity().y > 0 && !hit_ground_after_stomp ) {
+    GetBody()->GetLinearVelocity().y < 0 && !hit_ground_after_stomp ) {
 
     Hero::theEnemy->Add_Health(-stomp_damage);
     hit_ground_after_stomp = 1;
@@ -78,13 +77,15 @@ void Player::Monster::Update(float dt) {
       std::_Pi + std::_Pi/2);
   }
 
+  if ( GetBody()->GetLinearVelocity().y == 0 )
+      hit_ground_after_stomp = 0;
+
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
       SetSprite("Images\\monster_jump_001.png");
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
-    hit_ground_after_stomp = 0;
   }
   
   switch ( current_anim ) {
@@ -137,7 +138,7 @@ void Player::Monster::Update(float dt) {
     tz->GetBody()->SetGravityScale(0);
     if ( tz->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
       // send that fucker FLYINGGGGGGGGGGGGGGG!!!!!!!!!!!!!!!!!!!!
-      //Hero::theEnemy->Add_Health(0);
+      Hero::theEnemy->Add_Health(-attack_damage);
       Hero::theEnemy->ApplyForce(Vector2(direction?-1200:1200,0),Vector2(0,0));
       ++anim_frame;
       Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
@@ -204,7 +205,7 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   direction = 0;
   previous_direction = 0;
   anim_frame = 1;
-  Set_Attack_Damage(5);
+  Set_Attack_Damage(12);
   Set_Stomp_Damage(3);
   SetColor(Color(1.0f, 1.0f, 1.0f));
 

@@ -1,4 +1,4 @@
-﻿Build started 8/24/2015 4:02:56 AM.
+﻿Build started 8/24/2015 11:59:18 AM.
      1>Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (Circle_Test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>PreBuildEvent:
@@ -10,23 +10,29 @@
          :VCEnd
          Interface files are up to date.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt Hero.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt Hero.cpp LD33.cpp Sounds.cpp
          Hero.cpp
      1>Hero.cpp(49): warning C4305: 'argument' : truncation from 'double' to 'float'
      1>Hero.cpp(70): warning C4800: 'float' : forcing value to bool 'true' or 'false' (performance warning)
-     1>Hero.cpp(133): warning C4804: '>' : unsafe use of type 'bool' in operation
-     1>Hero.cpp(177): warning C4804: '>' : unsafe use of type 'bool' in operation
-     1>Hero.cpp(181): warning C4305: '=' : truncation from 'double' to 'float'
-     1>Hero.cpp(187): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>Hero.cpp(188): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>Hero.cpp(197): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>Hero.cpp(198): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>Hero.cpp(297): warning C4305: '=' : truncation from 'double' to 'float'
-     1>Hero.cpp(298): warning C4305: '=' : truncation from 'double' to 'float'
-     1>Hero.cpp(307): warning C4804: '<=' : unsafe use of type 'bool' in operation
-     1>Hero.cpp(311): warning C4305: '=' : truncation from 'double' to 'float'
-     1>Hero.cpp(312): warning C4305: 'argument' : truncation from 'double' to 'float'
-     1>Hero.cpp(362): warning C4305: '*=' : truncation from 'double' to 'float'
+     1>Hero.cpp(141): warning C4804: '>' : unsafe use of type 'bool' in operation
+     1>Hero.cpp(185): warning C4804: '>' : unsafe use of type 'bool' in operation
+     1>Hero.cpp(189): warning C4305: '=' : truncation from 'double' to 'float'
+     1>Hero.cpp(195): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Hero.cpp(196): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Hero.cpp(205): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Hero.cpp(206): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Hero.cpp(305): warning C4305: '=' : truncation from 'double' to 'float'
+     1>Hero.cpp(306): warning C4305: '=' : truncation from 'double' to 'float'
+     1>Hero.cpp(315): warning C4804: '<=' : unsafe use of type 'bool' in operation
+     1>Hero.cpp(319): warning C4305: '=' : truncation from 'double' to 'float'
+     1>Hero.cpp(320): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Hero.cpp(370): warning C4305: '*=' : truncation from 'double' to 'float'
+         LD33.cpp
+     1>LD33.cpp(66): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>LD33.cpp(75): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>LD33.cpp(84): warning C4305: 'argument' : truncation from 'double' to 'float'
+         Sounds.cpp
+     1>Sounds.cpp(56): warning C4553: '==' : operator has no effect; did you intend '='?
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\ClientGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:lib\x86 /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\win32_vcpp\build\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\objs\win32\vc2010\\" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1\Build\vs2010\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\lib\Win32" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\win32\VS2010\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbis\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbisfile\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\gwen\lib\windows\vs2010" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Release" /LIBPATH:"C:\Program Files (x86)\Visual Leak Detector\lib\Win32" libpng.lib zlib.lib DevIL.lib ILU.lib ILUT.lib opengl32.lib glu32.lib fmodex_vc.lib _GLFW.lib _FTGL.lib freetype248.lib Box2D.lib Angel.lib Lua.lib libOpenAL32.dll.a _libogg.lib _libvorbis.lib _libvorbisfile.lib gwen_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Delayimp.lib /NODEFAULTLIB:LIBCMT.LIB /DELAYLOAD:DevIL.dll /DELAYLOAD:ILU.dll /DELAYLOAD:ILUT.dll /DELAYLOAD:fmodex.dll /DELAYLOAD:OpenAL32.dll /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\ClientGame.pdb" /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /LTCG /TLBID:1 /ENTRY:"mainCRTStartup" /DYNAMICBASE:NO /IMPLIB:"Release\ClientGame.lib" /MACHINE:X86 /SAFESEH Release\ClientGame.res
          Release\AngelLuaWrapping.obj
@@ -36,6 +42,7 @@
          Release\Level.obj
          Release\Monster.obj
          Release\Particle_System.obj
+         Release\Sounds.obj
          Release\source.obj
          Release\stdafx.obj
          Release\utility.obj
@@ -61,4 +68,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:12.80
+Time Elapsed 00:00:09.22

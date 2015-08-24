@@ -9,10 +9,12 @@
 
 // main game stuff goes here
 namespace Game {
-  void Initialize();
+  void Initialize(); // for menu
+  void Initialize_Game(); // rest
   
   void Clear();
 
+  extern bool in_menu;
 
   extern Player::Monster* thePlayer;
   
@@ -23,6 +25,11 @@ namespace Game {
   
   // for general events. Just does whatever it feels like.
   class Overseer : public Actor {
+    Actor* menu_start,
+         * menu_controls,
+         * menu_exit,
+         * menu_select;
+    int selected_icon;
   public:
     int level;
 

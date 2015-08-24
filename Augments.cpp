@@ -81,7 +81,7 @@ Augments::ShopKeep::ShopKeep() {
   _active = false;
   time_left = 0;
 
-  SetSprite("Images\\shopkeep.png");
+  //SetSprite("Images\\shopkeep.png");
   SetAlpha(0);
   SetSize(10, 10);
   SetPosition(0, 20);

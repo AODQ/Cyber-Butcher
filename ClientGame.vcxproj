@@ -182,6 +182,7 @@ cd ..\Tools\BuildScripts\
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Particle_System.cpp" />
+    <ClCompile Include="Sounds.cpp" />
     <ClCompile Include="source.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -200,6 +201,7 @@ cd ..\Tools\BuildScripts\
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Particle_System.h" />
     <ClInclude Include="platforms\win\resource.h" />
+    <ClInclude Include="Sounds.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>

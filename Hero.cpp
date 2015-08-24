@@ -5,7 +5,7 @@
 #include "Monster.h"
 #include "Particle_System.h"
 #include "LD33.h"
-
+#include "Sounds.h"
 
 Hero::E_Weapon::E_Weapon(Weapon wep) {
   weapon = wep;
@@ -34,7 +34,7 @@ void Hero::E_Weapon::Update(float dt) {
       hit = 1;
     }
   cooldown -= dt;
-  if ( cooldown <= 0 ) {
+  if ( cooldown <= 0 && theEnemy != nullptr ) {
     theEnemy->weapon = nullptr;
     Destroy();
   }
@@ -68,6 +68,7 @@ Hero::Enemy::Enemy() {
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
   movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
   = ghost_timer = on_platform_timer = jumping_to_platform = slide_cooldown = 0;
+  gibber_timer = utility::R_Rand()/25 + 2;
 
   mood = Mood::Close;
 
@@ -109,6 +110,13 @@ void Hero::Enemy::Update(float dt) {
 
   if ( weapon ) {
     weapon->SetPosition(GetPosition());
+  }
+
+  gibber_timer -= dt;
+
+  if ( gibber_timer <= 0 ) {
+    gibber_timer = utility::R_Rand()/25 + 2;
+    Sounds::Play_Gibberish();
   }
 
   melee_cooldown -= dt;
