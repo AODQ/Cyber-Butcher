@@ -24,7 +24,7 @@ Hero::Enemy::Enemy() {
 
   intro = true;
   speed = 3;
-  health = 5;
+  health = 20;
 
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
   movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
@@ -307,6 +307,10 @@ void Hero::Enemy::Update(float dt) {
   if ( range_cooldown < 0 && abs(distance_x) > 2.3 ) {
     Attack_Range();
     return;
+  }
+
+  if ( health <= 0 ) {
+    Killed();
   }
 }
 
