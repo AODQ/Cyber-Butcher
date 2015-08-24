@@ -3,6 +3,7 @@
 #include "Augments.h"
 #include "Angel.h"
 #include "Hero.h"
+#include "Particle_System.h"
 
 const int Player::Monster::idle_frame_max = 6;
 const int Player::Monster::attack_frame_max = 8;
@@ -66,11 +67,15 @@ void Player::Monster::Update(float dt) {
   if (Hero::theEnemy != nullptr &&
     Hero::theEnemy->GetBoundingBox().Intersects(GetBoundingBox()) &&
     previous_y_velocity != 0 && 
-    GetBody()->GetLinearVelocity().y == 0) {
+    GetBody()->GetLinearVelocity().y > 0 && !hit_ground_after_stomp ) {
 
     Hero::theEnemy->Add_Health(-stomp_damage);
+    hit_ground_after_stomp = 1;
     Hero::theEnemy->ApplyForce(Vector2(0, 250), Vector2(0, 0));
-    std::cout << "stomped enemy\n";
+    // cause bleed at top of middle of the enemy direction downwards
+    Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+      Hero::theEnemy->GetPosition().Y-Hero::theEnemy->GetSize().Y/2),
+      std::_Pi + std::_Pi/2);
   }
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
@@ -79,6 +84,7 @@ void Player::Monster::Update(float dt) {
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
+    hit_ground_after_stomp = 0;
   }
   
   switch ( current_anim ) {
@@ -93,7 +99,7 @@ void Player::Monster::Update(float dt) {
     }
   break;
   case Anim_Type::attack:
-    anim_frame += dt * 13;
+    anim_frame += dt * 15;
     if ( anim_frame >= attack_frame_max ) {
       anim_frame = 0;
       anim_direction = 0;
@@ -115,21 +121,42 @@ void Player::Monster::Update(float dt) {
   break;
   }
   SetSpriteFrame(int(anim_frame));
+
+  // while punching check at frame 7 for collision
+
+  if ( current_anim == Anim_Type::attack &&
+        int(anim_frame) == 7 ) {
+    // create hitbox and check
+    auto tz = new PhysicsActor;
+    tz->SetPosition(GetPosition().X + (direction?-2:2),GetPosition().Y+0.85);
+    tz->SetSize(MathUtil::PixelsToWorldUnits(35),
+                MathUtil::PixelsToWorldUnits(15));
+    tz->SetColor(.3,.3,.3);
+    tz->SetIsSensor(1);
+    tz->InitPhysics();
+    tz->GetBody()->SetGravityScale(0);
+    if ( tz->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
+      // send that fucker FLYINGGGGGGGGGGGGGGG!!!!!!!!!!!!!!!!!!!!
+      //Hero::theEnemy->Add_Health(0);
+      Hero::theEnemy->ApplyForce(Vector2(direction?-1200:1200,0),Vector2(0,0));
+      ++anim_frame;
+      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+                                 Hero::theEnemy->GetPosition().Y),
+      direction?std::_Pi:0,1500);
+      // recoil
+      ApplyForce(Vector2(direction?-750:750,0),Vector2(0,0));
+    }
+    tz->Destroy();
+  }
   
   // movement friction
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
-    frame_weapon->Cast();
+    //frame_weapon->Cast();
 
-    attack_cooldown = [&]()->float{
-      switch( R_Frame_Weapon()->R_Type() ) {
-        case Augments::Weapon_Type::Big_Sword:
-          return theTuning.GetInt("BigSwordAttackCooldown");
-      }
-      return 2.0f;
-    }();
+    attack_cooldown = .7f;
 
     LoadSpriteFrames("Images\\monster_attack_001.png");
     current_anim = Anim_Type::attack;

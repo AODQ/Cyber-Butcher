@@ -11,24 +11,27 @@ Hero::E_Weapon::E_Weapon(Weapon wep) {
   weapon = wep;
   switch ( weapon ) {
   case Weapon::sword:
-    SetSprite("Big_Sword.png");
+    SetSprite("Images\\Big_Sword.png");
     cooldown = 2;
+    SetSize(MathUtil::PixelsToWorldUnits(20),
+            MathUtil::PixelsToWorldUnits(43));
   break;
   }
+  SetRotation(theEnemy->GetBody()->GetLinearVelocity().x>0?std::_Pi/2:std::_Pi+std::_Pi/2);
   hit = 0;
+  SetIsSensor(1);
   InitPhysics();
   GetBody()->SetGravityScale(0);
-  SetIsSensor(1);
 }
 
 void Hero::E_Weapon::Update(float dt) {
   if ( !hit )
     if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
       Game::thePlayer->Add_Curr_Health(-10);
-      Particles::Add_Bleed(Vec2i(theEnemy->GetPosition().X,theEnemy->GetPosition().Y),
-        std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
-                    Game::thePlayer->GetPosition().X - GetPosition().X));
-      hit = 0;
+      Particles::Add_Bleed(Vec2i(Game::thePlayer->GetPosition().X,Game::thePlayer->GetPosition().Y),
+        std::atan2f(GetPosition().Y - Game::thePlayer->GetPosition().Y,
+                    GetPosition().X - Game::thePlayer->GetPosition().X));
+      hit = 1;
     }
   cooldown -= dt;
   if ( cooldown <= 0 ) {
@@ -60,6 +63,7 @@ Hero::Enemy::Enemy() {
   health = 20;
 
   weapon = nullptr;
+  weapon_type = Weapon::sword;
 
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
   movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
@@ -68,7 +72,7 @@ Hero::Enemy::Enemy() {
   mood = Mood::Close;
 
   mood_switch_timer = 0;
-  jump_timer = 5;
+  jump_timer = 0;
 
   const int word_count = 15;
   std::string rand_words[] = {
@@ -153,6 +157,7 @@ void Hero::Enemy::Update(float dt) {
 
   if ( slide_timer > 0 ) {
     slide_timer -= dt;
+    Apply_Vel_X(slide_direction?-.06:.06, dt);
     if ( slide_timer < 0 ) {
       switch ( mood ) {
         case Mood::Close:
@@ -166,7 +171,6 @@ void Hero::Enemy::Update(float dt) {
         break;
       }
     }
-    Apply_Vel_X(slide_direction?-.07:.07, dt);
     return; // can't attack or move
   }
 
@@ -288,10 +292,11 @@ void Hero::Enemy::Update(float dt) {
   jump_timer -= dt;
 
   if ( jump_timer < 0 ) {
-    jump_timer = .7 + utility::R_Rand()/50;
+    jump_timer = .6 + utility::R_Rand()/(25 + (distance_x>3?0:25));
+
     in_air_start = .2;
     in_air_end   = .4;
-    ApplyForce(Vec2i(0,1000),Vec2i(0,0));
+    ApplyForce(Vec2i(0,1200),Vec2i(0,0));
   }
 
   // speed up 
@@ -324,8 +329,8 @@ void Hero::Enemy::Update(float dt) {
   if ( platform_cooldown < 0 ) {
     // jump to platform and player is under one of the platforms
     if ( on_platform_timer <= 0 &&
-          (( GetPosition().X > -9.5 && GetPosition().X < -7.5 ) ||
-           ( GetPosition().X <  9.5 && GetPosition().X >  7.5 )) ) {
+          (( GetPosition().X > -9 && GetPosition().X < -7 ) ||
+           ( GetPosition().X <  9 && GetPosition().X >  7 )) ) {
       jumping_to_platform = 1;
       platform_cooldown = 5;
       on_platform_timer = 13;
@@ -354,6 +359,7 @@ void Hero::Enemy::Update(float dt) {
 }
 
 void Hero::Enemy::Apply_Vel_X(float x, float dt) {
+  x *= .96;
   ApplyLinearImpulse(Vector2(x*dt*500,0),Vector2(0,0));
 }
 
@@ -375,6 +381,12 @@ void Hero::Enemy::Attack_Range() {
                                   Game::thePlayer->GetPosition().X-GetPosition().X),
                       Vec2i(GetPosition().X,GetPosition().Y));
   theWorld.Add(z);
+}
+
+Hero::Enemy::~Enemy() {
+  if ( platform )
+    this->platform->Destroy();
+  mood_tester->Destroy();
 }
 
 void Hero::Enemy::Killed() {
@@ -466,19 +478,21 @@ Hero::Dagger::Dagger(float angl, Vec2i pos) {
   lifetime = 25;
   // set user data
   GetBody()->SetUserData(this);
+  hit = 0;
 }
 
 void Hero::Dagger::Update(float dt) {
   lifetime -= dt;
-  if ( lifetime < 0 ) {
+  if ( lifetime < 0 || Hero::theEnemy == nullptr ) {
     Destroy();
   }
 
-  if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
-    Game::thePlayer->Add_Curr_Health(-10);
-    Particles::Add_Bleed(Vec2i(theEnemy->GetPosition().X,theEnemy->GetPosition().Y),
-      std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
-                  Game::thePlayer->GetPosition().X - GetPosition().X));
-
-  }
+  if ( !hit )
+    if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+      Game::thePlayer->Add_Curr_Health(-10);
+      Particles::Add_Bleed(Vec2i(theEnemy->GetPosition().X,theEnemy->GetPosition().Y),
+        std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
+                    Game::thePlayer->GetPosition().X - GetPosition().X));
+      hit = 1;
+    }
 }

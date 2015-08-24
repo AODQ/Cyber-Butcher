@@ -15,7 +15,7 @@ void Game::Initialize() {
                       utility::Window_height, "You Are The Monster", // gramr
                       1, 0, 1);
   theWorld.SetupPhysics(Vector2(0, -40));
-
+  theWorld.SetSideBlockers(1);
   Level::Initialize();
   new Game::Mouse(); // for mouse events
   // enemy events
@@ -110,6 +110,7 @@ void Game::Overseer::Update(float dt) {
   if (Hero::theEnemy == nullptr && theKeep->time_left <= 0 ) {
     std::cout << "New Hero\n";
     Hero::theEnemy = new Hero::Enemy();
+    Hero::theEnemy->Add_Health(level*20);
     theWorld.Add(Hero::theEnemy);
   }
 

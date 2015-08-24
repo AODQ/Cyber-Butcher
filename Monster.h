@@ -30,6 +30,7 @@ namespace Player {
     static const int idle_frame_max, walk_frame_max, attack_frame_max;
 
     bool is_attacking;
+    bool hit_ground_after_stomp;
     
     // physics
     float phys_jump_timer, phys_jump_timer_max;

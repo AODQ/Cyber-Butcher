@@ -71,6 +71,7 @@ namespace Hero {
     E_Weapon* weapon;
     Weapon weapon_type;
     Enemy();
+    ~Enemy();
     void Update(float dt);
     void Jump();
     inline void Add_Health(int x) { health += x; }
@@ -97,6 +98,7 @@ namespace Hero {
   // enemy attacks
   class Dagger : public PhysicsActor {
     float lifetime;
+    bool hit;
   public:
     Dagger(float angle, Vec2i position);
     void Update(float dt);

@@ -4,7 +4,7 @@
 #include <utility>
 #include "Particle_System.h"
 
-void Particles::Add_Bleed(const Vec2i Position, float angle) {
+void Particles::Add_Bleed(const Vec2i Position, float angle, int max_particles) {
 	float bleed_time = (float)theTuning.GetFloat("BleedLifeTime");
 
 	ParticleActor* pa = new ParticleActor();
