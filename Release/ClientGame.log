@@ -1,5 +1,48 @@
-﻿Build started 8/23/2015 7:56:22 PM.
+﻿Build started 8/23/2015 10:38:48 PM.
+     1>Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (Circle_Test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>PreBuildEvent:
+         xcopy ..\Angel\Scripting\EngineScripts\* Resources\Scripts /y /e > nul
+         
+         cd ..\Tools\BuildScripts
+         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe swig_wrap.lua -p "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\"
+         
+         :VCEnd
+         Interface files are up to date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt Monster.cpp
+         Monster.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\ClientGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:lib\x86 /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\win32_vcpp\build\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\objs\win32\vc2010\\" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1\Build\vs2010\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\lib\Win32" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\win32\VS2010\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbis\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbisfile\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\gwen\lib\windows\vs2010" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Release" /LIBPATH:"C:\Program Files (x86)\Visual Leak Detector\lib\Win32" libpng.lib zlib.lib DevIL.lib ILU.lib ILUT.lib opengl32.lib glu32.lib fmodex_vc.lib _GLFW.lib _FTGL.lib freetype248.lib Box2D.lib Angel.lib Lua.lib libOpenAL32.dll.a _libogg.lib _libvorbis.lib _libvorbisfile.lib gwen_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Delayimp.lib /NODEFAULTLIB:LIBCMT.LIB /DELAYLOAD:DevIL.dll /DELAYLOAD:ILU.dll /DELAYLOAD:ILUT.dll /DELAYLOAD:fmodex.dll /DELAYLOAD:OpenAL32.dll /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\ClientGame.pdb" /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /LTCG /TLBID:1 /ENTRY:"mainCRTStartup" /DYNAMICBASE:NO /IMPLIB:"Release\ClientGame.lib" /MACHINE:X86 /SAFESEH Release\ClientGame.res
+         Release\AngelLuaWrapping.obj
+         Release\Augments.obj
+         Release\Hero.obj
+         Release\LD33.obj
+         Release\Level.obj
+         Release\Monster.obj
+         Release\Particle_System.obj
+         Release\source.obj
+         Release\stdafx.obj
+         Release\Swordsman.obj
+         Release\utility.obj
+            Creating library Release\ClientGame.lib and object Release\ClientGame.exp
+         Generating code
+         Finished generating code
+     1>LINK : warning LNK4199: /DELAYLOAD:OpenAL32.dll ignored; no imports found from OpenAL32.dll
+         ClientGame.vcxproj -> C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\Release\ClientGame.exe
+       PostBuildEvent:
+         copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\DevIL.dll . /y > nul
+         copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\ILU.dll . /y > nul
+         copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\ILUT.dll . /y > nul
+         xcopy ..\Angel\Libraries\FMOD\*.dll . /y > nul
+         copy ..\Angel\Libraries\openal-soft-1.15-bin\Win32\soft_oal.dll .\OpenAL32.dll /y > nul
+         
+         cd ..\Tools\BuildScripts\
+         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\..\Tools\BuildScripts\publish.lua" -o "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\Published" -i "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\" -v "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\"
+         
+         :VCEnd
+     1>Done Building Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.03
+Time Elapsed 00:00:10.22

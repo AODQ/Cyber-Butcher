@@ -64,7 +64,7 @@ void Player::Monster::Update(float dt) {
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
-      LoadSpriteFrames("Images\\monster_jump_001.png");
+      LoadSpriteFrames("Images\\monster_jump.png");
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
@@ -80,27 +80,30 @@ void Player::Monster::Update(float dt) {
       anim_frame = 0;
       anim_direction = 1;
     }
-    break;
+  break;
   case Anim_Type::attack:
     anim_frame += dt * 10;
     if ( anim_frame >= attack_frame_max ) {
       anim_frame = 0;
       anim_direction = 0;
-      is_attacking = false;
-      LoadSpriteFrames("Images\\monster_idle_001.png");
+      is_attacking = 0;
       current_anim = Anim_Type::idle;
+      LoadSpriteFrames("Images\\monster_idle_001.png");
     }
     break;
+  case Anim_Type::jump:
+    anim_frame = 0;
+  break;
   case Anim_Type::walk:
     anim_frame += dt * 5;
     if ( anim_frame >= walk_frame_max ) {
       anim_frame = 0;
     }
     break;
-  case Anim_Type::jump:
-    anim_frame = 0;
+  default:
+  break;
   }
-  SetSpriteFrame(anim_frame);
+  SetSpriteFrame(int(anim_frame));
   
   // movement friction
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));

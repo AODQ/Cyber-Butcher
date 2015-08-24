@@ -87,17 +87,18 @@ void Hero::Enemy::Update(float dt) {
   if ( mood_switch_timer <= 0 ) {
     mood = (Mood)(int(utility::R_Rand())%(int(Mood::Size)));
     mood_switch_timer = 2.5;
-    switch ( mood ) {
-      case Mood::Close:
-        SetColor(1,0,0);
-      break;
-      case Mood::Fair:
-        SetColor(0,1,0);
-      break;
-      case Mood::Distant:
-        SetColor(0,0,1);
-      break;
-    }
+    if ( !slide_direction > 0 && !jumping_to_platform > 0 )
+      switch ( mood ) {
+        case Mood::Close:
+          SetColor(1,0,0);
+        break;
+        case Mood::Fair:
+          SetColor(0,1,0);
+        break;
+        case Mood::Distant:
+          SetColor(0,0,1);
+        break;
+      }
   }
 
   // performing abilities
@@ -113,29 +114,65 @@ void Hero::Enemy::Update(float dt) {
 
   if ( slide_timer > 0 ) {
     slide_timer -= dt;
-    Apply_Vel_X(slide_direction?-.04:.04, dt);
+    if ( slide_timer < 0 ) {
+      switch ( mood ) {
+        case Mood::Close:
+          SetColor(1,0,0);
+        break;
+        case Mood::Fair:
+          SetColor(0,1,0);
+        break;
+        case Mood::Distant:
+          SetColor(0,0,1);
+        break;
+      }
+    }
+    Apply_Vel_X(slide_direction?-.07:.07, dt);
     return; // can't attack or move
   }
 
   if ( jumping_to_platform > 0 ) {
-    /*if ( GetPosition().Y > 2 )  {
+    if ( GetPosition().Y > 2 )  {
       jumping_to_platform = 0;
+      on_platform_timer = .001;
       // in case he was swiped out of the air we check
-      if ( GetPosition().X > -10 && GetPosition().X < -8  ||
-          GetPosition().X <  10 && GetPosition().X >  8 ) {
-        platform = new Level::Platform();
+      if ( GetPosition().X > -10 && GetPosition().X < -8  ) {
         on_platform_timer = utility::R_Rand()/20;
+        platform = new Level::Platform();
+        platform->SetSize(2,2);
+        platform->SetPosition(-10,1);
+        theWorld.Add(platform);
       }
+      if ( GetPosition().X <  10 && GetPosition().X >  8 ) {
+        on_platform_timer = utility::R_Rand()/20;
+        platform = new Level::Platform();
+        platform->SetSize(2,2);
+        platform->SetPosition(-10,1);
+        theWorld.Add(platform);
+      }
+      
     } else {
       ApplyLinearImpulse(Vector2(0,dt*20),Vector2(0,0));
     }
-    return; // can't attack or move*/
+    return; // can't attack or move
   }
 
   if ( on_platform_timer > 0 ) {
     on_platform_timer -= dt;
     if ( on_platform_timer <= 0 ) {
-      platform->Destroy();
+      if ( platform )
+        platform->Destroy();
+      switch ( mood ) {
+        case Mood::Close:
+          SetColor(1,0,0);
+        break;
+        case Mood::Fair:
+          SetColor(0,1,0);
+        break;
+        case Mood::Distant:
+          SetColor(0,0,1);
+        break;
+      }
     }
     goto SKIP_MOVEMENT_PHASE;
   }
@@ -212,13 +249,21 @@ void Hero::Enemy::Update(float dt) {
   // ability options
   
   if ( select_ability_timer < 0 && utility::R_Rand() < 10 ) {
-    select_ability_timer = 1;
+    select_ability_timer = .5;
     // slide
-    if ( distance_x < 5 && utility::R_Rand() < 25 ) {
-      select_ability_timer = 5;
-      slide_timer = 1;
-      slide_direction = (distance_x < 0);
-      return;
+     // first is random the one below is to prevent spam jump by monster
+    if ( utility::R_Rand() < 50 ||
+      (abs(distance_x) < 3 && (GetPosition().X > 8 || GetPosition().X < -8)) ) {
+      select_ability_timer = .7;
+      slide_timer = .6;
+      SetColor(.7,.7,.7);
+      slide_direction = (distance_x < 0); // random
+      if ( GetPosition().X >  8 ) // too close to right wall
+        slide_direction = 1;
+      else if ( GetPosition().X < -8 ) // too close to left wall
+        slide_direction = 0;
+      else
+        SetColor(0,0,0);
     }
     
     // ghost
@@ -228,12 +273,13 @@ void Hero::Enemy::Update(float dt) {
     }
 
     // jump to platform and player is under one of the platforms
-    if ( utility::R_Rand() < 20  &&
+    if ( //utility::R_Rand() < 20  &&
           ( GetPosition().X > -10 && GetPosition().X < -8 ) ||
           ( GetPosition().X <  10 && GetPosition().X >  8 ) ) {
       jumping_to_platform = 1;
       select_ability_timer = 5;
       GetBody()->SetLinearVelocity(b2Vec2(0,0));
+      SetColor(1,1,0);
       return;
     }
   }
@@ -245,7 +291,7 @@ void Hero::Enemy::Update(float dt) {
     Attack_Melee();
     return;
   }
-  if ( range_cooldown < 0 && abs(distance_x) > 2 ) {
+  if ( range_cooldown < 0 && abs(distance_x) > 2.3 ) {
     Attack_Range();
     return;
   }
