@@ -33,39 +33,20 @@ Augments::Weapon::Weapon(Augments::Weapon_Type x ) : type(x) {
   coll_check = 0;
   switch ( x ) {
     case Weapon_Type::Big_Sword:
-      this->SetSize(MathUtil::PixelsToWorldUnits(20),
-                    MathUtil::PixelsToWorldUnits(43));
-      SetSprite("Images\\Big_Sword.png");
+      this->SetSize(MathUtil::PixelsToWorldUnits(50),
+                    MathUtil::PixelsToWorldUnits(50));
+      SetAlpha(0.0f);
     break;
   }
 }
   
 void Augments::Weapon::Update(float dt) {
-  SetPosition(Game::thePlayer->GetPosition().X -
-    (animation_timer != -100?origin_direction?1:-1:
-            Game::thePlayer->R_Direction()?   1:-1)*R_Off_X(type),
-              Game::thePlayer->GetPosition().Y - R_Off_Y(type));
-  if ( animation_timer-dt > 0 ) {
-    animation_timer -= dt;
-    switch ( type ) {
-      case Weapon_Type::Big_Sword:
-        SetRotation(origin_direction?90 - // left
-          abs(animation_timer-theTuning.GetFloat("BigSwordAnimationLength"))*90 :
-          90+abs(animation_timer-theTuning.GetFloat("BigSwordAnimationLength"))*90);
-      break;
-    }
-  } else if ( animation_timer != -100 ){
-    animation_timer = -100;
-    SetRotation(0);
-  }
-
   if ( coll_check && Hero::theEnemy != nullptr ) {
     auto z = coll_check;
     coll_check = nullptr;
     if ( z->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
-      Hero::theEnemy->ApplyForce(Vector2((origin_direction?-1:1)*
-        theTuning.GetFloat("BigSwordForce"), 2), Vector2(0,0));
-      Hero::theEnemy->Add_Health(-theTuning.GetFloat("BigSwordDamage"));
+      Hero::theEnemy->ApplyForce(Vector2((origin_direction?-1:1)*theTuning.GetFloat("BigSwordForce"), 2), Vector2(0,0));
+      Hero::theEnemy->Add_Health(-Game::thePlayer->R_Attack_Damage());
       Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
                                  Hero::theEnemy->GetPosition().Y),origin_direction);
     }
@@ -83,9 +64,9 @@ void Augments::Weapon::Cast() {
         auto z = coll_check;
         theWorld.Add(z);
         z->SetIsSensor(1);
-        z->SetSize(MathUtil::PixelsToWorldUnits(20),
-                   MathUtil::PixelsToWorldUnits(13));
-        z->SetRotation(origin_direction ? 0 /*right*/ : 180);
+        z->SetAlpha(0);
+        z->SetSize(MathUtil::PixelsToWorldUnits(40),
+                   MathUtil::PixelsToWorldUnits(40));
         z->SetPosition(this->GetPosition());
         z->InitPhysics();
         origin_direction = Game::thePlayer->R_Direction();

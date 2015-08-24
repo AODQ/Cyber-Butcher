@@ -10,6 +10,8 @@ const int Player::Monster::walk_frame_max = 3;
 
 void Player::Monster::Update(float dt) {
 
+  chest_hitbox->GetBody()->SetTransform(b2Vec2(GetPosition().X, GetPosition().Y + .5f), 0.0f);
+
   // mirror according to direction
   if (direction == 1) {
     SetUVs(Vector2(0.f, 0.f), Vector2(1.f, 1.f));
@@ -61,6 +63,15 @@ void Player::Monster::Update(float dt) {
     }
   }
 
+  if (Hero::theEnemy != nullptr &&
+    Hero::theEnemy->GetBoundingBox().Intersects(GetBoundingBox()) &&
+    previous_y_velocity != 0 && 
+    GetBody()->GetLinearVelocity().y == 0) {
+
+    Hero::theEnemy->Add_Health(-stomp_damage);
+    Hero::theEnemy->ApplyForce(Vector2(0, 250), Vector2(0, 0));
+    std::cout << "stomped enemy\n";
+  }
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
@@ -82,7 +93,7 @@ void Player::Monster::Update(float dt) {
     }
   break;
   case Anim_Type::attack:
-    anim_frame += dt * 10;
+    anim_frame += dt * 13;
     if ( anim_frame >= attack_frame_max ) {
       anim_frame = 0;
       anim_direction = 0;
@@ -111,7 +122,7 @@ void Player::Monster::Update(float dt) {
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
     frame_weapon->Cast();
-    Hero::theEnemy->Add_Health(-1000);
+
     attack_cooldown = [&]()->float{
       switch( R_Frame_Weapon()->R_Type() ) {
         case Augments::Weapon_Type::Big_Sword:
@@ -122,17 +133,20 @@ void Player::Monster::Update(float dt) {
 
     LoadSpriteFrames("Images\\monster_attack_001.png");
     current_anim = Anim_Type::attack;
-    anim_frame = 1;
+    anim_frame = 0;
     is_attacking = true;
   }
 
   previous_direction = direction;
+  previous_y_velocity = GetBody()->GetLinearVelocity().y;
 };
 
 int Player::Monster::R_Max_Health()    const { return max_health; }
 int Player::Monster::R_Curr_Health()   const { return curr_health; }
 int Player::Monster::R_Attack_Damage() const { return attack_damage; }
+int Player::Monster::R_Stomp_Damage() const { return stomp_damage; }
 bool Player::Monster::R_Direction()    const { return direction; }
+PhysicsActor* Player::Monster::R_Chest_Hitbox() { return chest_hitbox; }
 
 Augments::Weapon* Player::Monster::R_Frame_Weapon()  { return frame_weapon; }
 
@@ -141,6 +155,7 @@ void Player::Monster::Set_Max_Health(int x)  { max_health = x; }
 void Player::Monster::Set_Curr_Health(int x) { curr_health = x; }
 void Player::Monster::Add_Curr_Health(int x) { curr_health += x; }
 void Player::Monster::Set_Attack_Damage(int x) { attack_damage = x; }
+void Player::Monster::Set_Stomp_Damage(int x) { stomp_damage = x; }
 
 void Player::Monster::Set_Frame_Weapon(Augments::Weapon_Type x) {
   if ( frame_weapon != nullptr ) {
@@ -162,7 +177,8 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   direction = 0;
   previous_direction = 0;
   anim_frame = 1;
-
+  Set_Attack_Damage(5);
+  Set_Stomp_Damage(3);
   SetColor(Color(1.0f, 1.0f, 1.0f));
 
   is_attacking = false;
@@ -185,4 +201,15 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   GetBody()->GetFixtureList()->SetFilterData(fixture);
   phys_jump_timer = 0;
   phys_jump_timer_max = 100000;
+
+  chest_hitbox = new PhysicsActor();
+  chest_hitbox->SetIsSensor(1);
+  chest_hitbox->SetPosition(GetPosition());
+  chest_hitbox->SetSize(MathUtil::PixelsToWorldUnits(40), MathUtil::PixelsToWorldUnits(30));
+  chest_hitbox->SetColor(Color(1.0f, 0.f, 0.f));
+  chest_hitbox->SetAlpha(0.0f);
+  chest_hitbox->InitPhysics();
+  chest_hitbox->GetBody()->SetGravityScale(0.0f);
+  theWorld.Add(chest_hitbox, 5);
+  chest_hitbox->GetBody()->SetTransform(b2Vec2(GetPosition().X, GetPosition().Y - 1), 0.0f);
 }

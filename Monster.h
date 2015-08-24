@@ -10,10 +10,12 @@ namespace Player {
   // contains information like health attack etc
   // but more important body types
   class Monster : public PhysicsActor {
+    PhysicsActor* chest_hitbox;
     int max_health, curr_health;
-    int attack_damage;
+    int attack_damage, stomp_damage;
     Augments::Weapon* frame_weapon;
     bool direction, previous_direction, inair;
+    float previous_y_velocity;
 
     float attack_cooldown;
     float special_cooldown;
@@ -37,8 +39,10 @@ namespace Player {
     int R_Max_Health() const;
     int R_Curr_Health() const;
     int R_Attack_Damage() const;
+    int R_Stomp_Damage() const;
     bool R_Direction() const;
     inline int R_Gold() const { return gold; }
+    PhysicsActor* R_Chest_Hitbox();
     
     Augments::Weapon* R_Frame_Weapon();
     
@@ -47,6 +51,7 @@ namespace Player {
     void Set_Curr_Health(int);
     void Add_Curr_Health(int);
     void Set_Attack_Damage(int);
+    void Set_Stomp_Damage(int);
     inline void Add_Gold(int x) { gold = x; }
     // will automatically remove old
     // actors from the stage and deallocate
