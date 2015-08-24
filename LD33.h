@@ -15,8 +15,17 @@ namespace Game {
   void Clear();
 
   extern bool in_menu;
+  extern bool controls_open;
 
   extern Player::Monster* thePlayer;
+
+  extern bool input_polling;
+  extern int key_polled;
+
+  extern int right_key;
+  extern int left_key;
+  extern int punch_key;
+  extern int jump_key;
   
   class Mouse : public MouseListener {
     Vector2* mouse_position;
@@ -32,12 +41,21 @@ namespace Game {
   
   // for general events. Just does whatever it feels like.
   class Overseer : public Actor {
-    Actor* menu_start,
+  public:
+    Actor* title_logo,
+         * menu_background,
+         * menu_start,
          * menu_controls,
          * menu_exit,
-         * menu_select,
-         * selected_icon;
-  public:
+         * right_key,
+         * left_key,
+         * punch_key,
+         * jump_key,
+         * back_arrow,
+         * change_key;
+
+    void ChangeKey(int key);
+
     Actor* pressed_button;
     int level;
     void Start_Game();
@@ -47,7 +65,6 @@ namespace Game {
 
   extern Overseer* theOverseer;
   extern Augments::ShopKeep* theKeep;
-
 };
 
 #endif

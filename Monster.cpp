@@ -26,7 +26,7 @@ void Player::Monster::Update(float dt) {
     phys_jump_timer -= dt;
   }
 
-  if ( theInput.IsKeyDown(GLFW_KEY_W) &&
+  if ( theInput.IsKeyDown(Game::jump_key) &&
       phys_jump_timer <= 0 ) {
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
     ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
@@ -40,8 +40,8 @@ void Player::Monster::Update(float dt) {
 
   // movement
   if ( !is_attacking && current_anim != Anim_Type::jump ) {
-    if ( theInput.IsKeyDown(GLFW_KEY_D) ^
-         theInput.IsKeyDown(GLFW_KEY_A) ) {
+    if ( theInput.IsKeyDown(Game::right_key) ^
+         theInput.IsKeyDown(Game::left_key) ) {
       if ( current_anim != Anim_Type::walk) {
         LoadSpriteFrames("Images\\monster_walk_001.png");
         anim_frame = 0;
@@ -49,11 +49,11 @@ void Player::Monster::Update(float dt) {
       
       current_anim = Anim_Type::walk;
 
-      if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
+      if ( theInput.IsKeyDown(Game::right_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 0;
       }
-      if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
+      if ( theInput.IsKeyDown(Game::left_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(-target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 1;
       }
@@ -162,7 +162,7 @@ void Player::Monster::Update(float dt) {
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
-  else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
+  else if ( theInput.IsKeyDown(Game::punch_key) && Hero::theEnemy ) {
     //frame_weapon->Cast();
     theSound.PlaySound(Sounds::boss_punch, .1);
     attack_cooldown = .7f;

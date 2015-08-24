@@ -11,7 +11,15 @@
 
 TextActor* gold;
 
+// input key presses
+int Game::right_key = 65;
+int Game::left_key = 68;
+int Game::punch_key = 74;
+int Game::jump_key = 87;
+
 bool Game::in_menu = 0;
+bool Game::controls_open = false;
+bool Game::input_polling = false;
 
 void Game::Initialize() {
   in_menu = 1;
@@ -119,8 +127,29 @@ Game::Overseer* Game::theOverseer = nullptr;
 Game::Mouse* Game::theMouse = nullptr;
 
 Game::Mouse::Mouse() {
-  std::cout << "new mouse\n";
   mouse_position = &Vector2::Zero;
+}
+
+static void InputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  std::cout << "inputted key: " << key << '\n';
+  if ( Game::input_polling && action == 1 ) {
+    Game::input_polling = false;
+    
+    Game::theOverseer->ChangeKey(key);
+  }
+}
+
+void Game::Overseer::ChangeKey(int key) {
+  if ( Game::Overseer::change_key == Game::Overseer::right_key ) {
+    Game::right_key = key;
+    std::cout << "changed right_key to " << key << '\n';
+  } else if ( Game::Overseer::change_key == Game::Overseer::left_key ) {
+    Game::left_key = key;
+  } else if ( Game::Overseer::change_key == Game::Overseer::punch_key ) {
+    Game::punch_key = key;
+  } else if ( Game::Overseer::change_key == Game::Overseer::jump_key ) {
+    Game::jump_key = key;
+  }
 }
 
 void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
@@ -129,7 +158,7 @@ void Game::Mouse::MouseDownEvent(Vec2i screenCoord, MouseButtonInput button) {
   ActorSet buttons = theTagList.GetObjectsTagged("button");
   Vector2* current_position = theMouse->R_Mouse_Position();
   for ( Actor* button : buttons ) {
-    if ( theMouse != nullptr && button->GetBoundingBox().Contains( MathUtil::ScreenToWorld(current_position->X, current_position->Y) ) ) {
+    if ( theMouse != nullptr && button->GetBoundingBox().Contains( MathUtil::ScreenToWorld(current_position->X, current_position->Y)) && button->GetAlpha() > 0.f ) {
       Game:theOverseer->pressed_button = button;
     }
   }
@@ -149,44 +178,90 @@ Vector2* Game::Mouse::R_Mouse_Position() const {
 
 Game::Overseer::Overseer() {
   level = 0;
+
+  // base menu
+  title_logo = new Actor();
+  menu_background = new Actor();
   menu_start = new Actor();
   menu_controls = new Actor();
   menu_exit = new Actor();
-  menu_select = new Actor();
-  menu_start->SetSize(MathUtil::PixelsToWorldUnits(150),
-                      MathUtil::PixelsToWorldUnits(50));
-  menu_controls->SetSize(MathUtil::PixelsToWorldUnits(150),
-                      MathUtil::PixelsToWorldUnits(50));
-  menu_exit->SetSize(MathUtil::PixelsToWorldUnits(150),
-                      MathUtil::PixelsToWorldUnits(50));
-  menu_select->SetSize(MathUtil::PixelsToWorldUnits(150),
-                        MathUtil::PixelsToWorldUnits(50));
-  menu_start->SetPosition(0,MathUtil::PixelsToWorldUnits(60));
-  menu_controls->SetPosition(0,0);
-  menu_exit->SetPosition(0,-MathUtil::PixelsToWorldUnits(60));
-  menu_select->SetPosition(0,0);
 
-  menu_start->SetSprite("Images\\menu_start.png");
-  menu_controls->SetSprite("Images\\menu_controls.png");
-  menu_exit->SetSprite("Images\\menu_exit.png");
-  menu_select->SetSprite("Images\\menu_select.png");
-  menu_select->SetAlpha(0.0f);
+  // control menu
+  right_key = new Actor();
+  left_key = new Actor();
+  punch_key = new Actor();
+  jump_key = new Actor();
+  back_arrow = new Actor();
 
+  title_logo->SetSize(MathUtil::PixelsToWorldUnits(224), MathUtil::PixelsToWorldUnits(102));
+  menu_background->SetSize(MathUtil::PixelsToWorldUnits(224), MathUtil::PixelsToWorldUnits(128));
+  menu_start->SetSize(MathUtil::PixelsToWorldUnits(128), MathUtil::PixelsToWorldUnits(32));
+  menu_controls->SetSize(MathUtil::PixelsToWorldUnits(128), MathUtil::PixelsToWorldUnits(32));
+  menu_exit->SetSize(MathUtil::PixelsToWorldUnits(128), MathUtil::PixelsToWorldUnits(32));
+
+  right_key->SetSize(MathUtil::PixelsToWorldUnits(68), MathUtil::PixelsToWorldUnits(10));
+  left_key->SetSize(MathUtil::PixelsToWorldUnits(68), MathUtil::PixelsToWorldUnits(10));
+  punch_key->SetSize(MathUtil::PixelsToWorldUnits(68), MathUtil::PixelsToWorldUnits(10));
+  jump_key->SetSize(MathUtil::PixelsToWorldUnits(68), MathUtil::PixelsToWorldUnits(10));
+  back_arrow->SetSize(MathUtil::PixelsToWorldUnits(68), MathUtil::PixelsToWorldUnits(13));
+
+  title_logo->SetPosition(0, MathUtil::PixelsToWorldUnits(85));
+  menu_background->SetPosition(0, -MathUtil::PixelsToWorldUnits(55));
+  menu_start->SetPosition(0,-MathUtil::PixelsToWorldUnits(20));
+  menu_controls->SetPosition(0,-MathUtil::PixelsToWorldUnits(55));
+  menu_exit->SetPosition(0,-MathUtil::PixelsToWorldUnits(90));
+
+  right_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(21));
+  left_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(36));
+  punch_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(49));
+  jump_key->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(63));
+  back_arrow->SetPosition(MathUtil::PixelsToWorldUnits(35), -MathUtil::PixelsToWorldUnits(77));
+
+  title_logo->SetSprite("Images\\title_logo.png");
+  menu_background->SetSprite("Images\\menu_background.png");
+  menu_start->LoadSpriteFrames("Images\\start_001.png");
+  menu_controls->LoadSpriteFrames("Images\\controls_001.png");
+  menu_exit->LoadSpriteFrames("Images\\exit_001.png");
+
+  right_key->LoadSpriteFrames("Images\\right_key_001.png");
+  left_key->LoadSpriteFrames("Images\\left_key_001.png");
+  punch_key->LoadSpriteFrames("Images\\punch_key_001.png");
+  jump_key->LoadSpriteFrames("Images\\jump_key_001.png");
+  back_arrow->LoadSpriteFrames("Images\\back_arrow_001.png");
+
+  theWorld.Add(title_logo);
+  theWorld.Add(menu_background);
   theWorld.Add(menu_start);
   theWorld.Add(menu_controls);
   theWorld.Add(menu_exit);
-  theWorld.Add(menu_select);
-  menu_start->Tag("button, menu");
-  menu_controls->Tag("button, menu");
-  menu_exit->Tag("button, menu");
-  menu_select->Tag("menu");
+
+  theWorld.Add(right_key);
+  theWorld.Add(left_key);
+  theWorld.Add(punch_key);
+  theWorld.Add(jump_key);
+  theWorld.Add(back_arrow);
+
+  title_logo->Tag("menu");
+  menu_background->Tag("menu");
+  menu_start->Tag("button, menu, menu_button");
+  menu_controls->Tag("button, menu, menu_button");
+  menu_exit->Tag("button, menu, menu_button");
+
+  right_key->Tag("button, menu, control_button");
+  left_key->Tag("button, menu, control_button");
+  punch_key->Tag("button, menu, control_button");
+  jump_key->Tag("button, menu, control_button");
+  back_arrow->Tag("button, menu, control_button");
+
+  glfwSetKeyCallback(theWorld.GetMainWindow(), InputCallback);
 }
 
 void Game::Overseer::Start_Game() {
-  menu_select->Destroy();
-  menu_exit->Destroy();
-  menu_controls->Destroy();
-  menu_start->Destroy();
+  ActorSet menu = theTagList.GetObjectsTagged("button");
+  for ( Actor* menu_actor : menu ) {
+    menu_actor->Destroy();
+    delete menu_actor;
+  }
   in_menu = 0;
 }
 
@@ -194,39 +269,56 @@ void Game::Overseer::Update(float dt) {
   glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height); // update true window width/height
 
   if ( in_menu ) {
-    selected_icon = nullptr;
-
     ActorSet buttons = theTagList.GetObjectsTagged("button");
     Vector2* current_position = theMouse->R_Mouse_Position();
     for ( Actor* button : buttons ) {
       if ( theMouse != nullptr && button->GetBoundingBox().Contains( MathUtil::ScreenToWorld(current_position->X, current_position->Y) ) ) {
-        selected_icon = button;
-        break;
+        button->SetSpriteFrame(1);
+      } else {
+        button->SetSpriteFrame(0);
       }
     }
 
-    if ( selected_icon == nullptr ) {
-      menu_select->SetAlpha(0.0f);
-    } else {
-      menu_select->SetAlpha(1.0f);
-      menu_select->SetPosition(selected_icon->GetPosition());
+    ActorSet menus = theTagList.GetObjectsTagged("menu_button");
+    for ( Actor* actor : menus ) {
+      if ( Game::controls_open ) {
+        actor->SetAlpha(0.f);
+      } else {
+        actor->SetAlpha(1.f);
+      }
+    }
+
+    ActorSet controls = theTagList.GetObjectsTagged("control_button");
+    for ( Actor* actor : controls ) {
+      if ( !Game::controls_open ) {
+        actor->SetAlpha(0.f);
+      } else {
+        actor->SetAlpha(1.f);
+      }
     }
 
     if ( pressed_button != nullptr ) {
-      if ( pressed_button == menu_start ) {
-        // start
-        std::cout << "started\n";
-        Game::Initialize_Game();
-      } else if ( pressed_button == menu_controls ) {
-        // controls
-        std::cout << "controls\n";
-       
-      } else if ( pressed_button == menu_exit ) {
-        // exit
-        std::cout << "exited\n";
-        theWorld.StopGame();
+      if ( !controls_open ) {
+        if ( pressed_button == menu_start ) {
+          // start
+          Game::Initialize_Game();
+        } else if ( pressed_button == menu_controls ) {
+          // controls
+          menu_background->SetSprite("Images\\menu_background_controls.png");
+          controls_open = true;
+        } else if ( pressed_button == menu_exit ) {
+          // exit
+          theWorld.StopGame();
+        }
+      } else {
+        if ( pressed_button == back_arrow ) {
+          menu_background->SetSprite("Images\\menu_background.png");
+          controls_open = false;
+        } else { 
+          input_polling = true;
+          change_key = pressed_button;
+        }
       }
-
       pressed_button = nullptr;
     }
 
