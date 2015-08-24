@@ -17,6 +17,15 @@ namespace Hero {
     dagger
   };
 
+  class E_Weapon : public PhysicsActor {
+    Weapon weapon;
+    float cooldown;
+    bool hit;
+  public:
+    E_Weapon(Weapon);
+    void Update(float);
+  };
+
   class Enemy : public PhysicsActor {
     bool intro;
     float intro_time;
@@ -36,7 +45,6 @@ namespace Hero {
     bool jumping_to_platform;    // hero is jumping up on top of the platform
 
     Level::Platform* platform;
-
 
     enum class Mood { // mood for how far they want to be
       Close, // only melee
@@ -59,6 +67,9 @@ namespace Hero {
 
     void Apply_Vel_X(float x, float d);
   public:
+
+    E_Weapon* weapon;
+    Weapon weapon_type;
     Enemy();
     void Update(float dt);
     void Jump();

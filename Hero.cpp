@@ -3,7 +3,40 @@
 #include "Angel.h"
 #include "utility.h"
 #include "Monster.h"
+#include "Particle_System.h"
 #include "LD33.h"
+
+
+Hero::E_Weapon::E_Weapon(Weapon wep) {
+  weapon = wep;
+  switch ( weapon ) {
+  case Weapon::sword:
+    SetSprite("Big_Sword.png");
+    cooldown = 2;
+  break;
+  }
+  hit = 0;
+  InitPhysics();
+  GetBody()->SetGravityScale(0);
+  SetIsSensor(1);
+}
+
+void Hero::E_Weapon::Update(float dt) {
+  if ( !hit )
+    if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+      Game::thePlayer->Add_Curr_Health(-10);
+      Particles::Add_Bleed(Vec2i(theEnemy->GetPosition().X,theEnemy->GetPosition().Y),
+        std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
+                    Game::thePlayer->GetPosition().X - GetPosition().X));
+      hit = 0;
+    }
+  cooldown -= dt;
+  if ( cooldown <= 0 ) {
+    theEnemy->weapon = nullptr;
+    Destroy();
+  }
+}
+
 
 Hero::Enemy::Enemy() {
   theEnemy = this;
@@ -25,6 +58,8 @@ Hero::Enemy::Enemy() {
   intro = true;
   speed = 3;
   health = 5;
+
+  weapon = nullptr;
 
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
   movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
@@ -67,6 +102,10 @@ void Hero::Enemy::Update(float dt) {
   int direction = 1;
   float distance_x = Game::thePlayer->GetPosition().X - GetPosition().X,
         distance_y = GetPosition().Y - Game::thePlayer->GetPosition().Y;
+
+  if ( weapon ) {
+    weapon->SetPosition(GetPosition());
+  }
 
   melee_cooldown -= dt;
   range_cooldown -= dt;
@@ -320,10 +359,9 @@ void Hero::Enemy::Jump() {
 
 void Hero::Enemy::Attack_Melee() {
   melee_cooldown = 5;
-  auto z = new Dagger(std::atan2f(Game::thePlayer->GetPosition().Y-GetPosition().Y,
-                                  Game::thePlayer->GetPosition().X-GetPosition().X),
-                      Vec2i(GetPosition().X,GetPosition().Y));
-  z->SetColor(.5,.5,.5,.8);
+  auto z = new E_Weapon(weapon_type);//new Dagger(std::atan2f(Game::thePlayer->GetPosition().Y-GetPosition().Y,
+           //                       Game::thePlayer->GetPosition().X-GetPosition().X),
+           //           Vec2i(GetPosition().X,GetPosition().Y));
   theWorld.Add(z);
 }
 
@@ -430,5 +468,13 @@ void Hero::Dagger::Update(float dt) {
   lifetime -= dt;
   if ( lifetime < 0 ) {
     Destroy();
+  }
+
+  if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+    Game::thePlayer->Add_Curr_Health(-10);
+    Particles::Add_Bleed(Vec2i(theEnemy->GetPosition().X,theEnemy->GetPosition().Y),
+      std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
+                  Game::thePlayer->GetPosition().X - GetPosition().X));
+
   }
 }
