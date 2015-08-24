@@ -10,6 +10,26 @@ AngelSampleHandle Sounds::Inventory[17];
 AngelSampleHandle Sounds::WTF[17];
 AngelSampleHandle Sounds::Monster_Death;
 
+namespace Sounds {
+ AngelSampleHandle boss_damaged,
+                           boss_explode,
+                           boss_footstep,
+                           boss_jump,
+                           boss_land,
+                           boss_punch,
+                           boss_special,
+                           hero_attack,
+                           hero_damaged,
+                           hero_death,
+                           hero_jump,
+                           hero_slide,
+                           hero_throw,
+                           menu_press,
+                           menu_select,
+                           teleport;
+
+};
+
 int Sounds::gibberish_count = 0;
 AngelSoundHandle Sounds::gibberish_handle;
 int Sounds::monster_gibber_timer = 0;
@@ -28,6 +48,23 @@ void Sounds::Load_Sounds() {
   }
 
   Monster_Death = theSound.LoadSample("Sounds\\Boss\\Death.ogg", 1);
+
+  boss_damaged   = theSound.LoadSample("Sounds\\Effects\\boss-damaged.ogg", 1);
+  boss_explode   = theSound.LoadSample("Sounds\\Effects\\boss-explode.ogg", 1);
+  boss_footstep  = theSound.LoadSample("Sounds\\Effects\\boss-footstep.ogg", 1);
+  boss_jump      = theSound.LoadSample("Sounds\\Effects\\boss-jump.ogg", 1);
+  boss_land      = theSound.LoadSample("Sounds\\Effects\\boss-land.ogg", 1);
+  boss_punch     = theSound.LoadSample("Sounds\\Effects\\boss-punch.ogg", 1);
+  boss_special   = theSound.LoadSample("Sounds\\Effects\\boss-special.ogg", 1);
+  hero_attack    = theSound.LoadSample("Sounds\\Effects\\hero-attack.ogg", 1);
+  hero_damaged   = theSound.LoadSample("Sounds\\Effects\\hero-damaged.ogg", 1);
+  hero_death     = theSound.LoadSample("Sounds\\Effects\\hero-death.ogg", 1);
+  hero_jump      = theSound.LoadSample("Sounds\\Effects\\hero-jump.ogg", 1);
+  hero_slide     = theSound.LoadSample("Sounds\\Effects\\hero-slide.ogg", 1);
+  hero_throw     = theSound.LoadSample("Sounds\\Effects\\hero-throw.ogg", 1);
+  menu_press     = theSound.LoadSample("Sounds\\Effects\\menu-press.ogg", 1);
+  menu_select    = theSound.LoadSample("Sounds\\Effects\\menu-select.ogg", 1);
+  teleport       = theSound.LoadSample("Sounds\\Effects\\teleport.ogg", 1);
 }
 // includes WTF
 void Sounds::Play_Gibberish() {

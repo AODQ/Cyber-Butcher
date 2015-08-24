@@ -3,6 +3,7 @@
 #include "Augments.h"
 #include "Angel.h"
 #include "Hero.h"
+#include "Sounds.h"
 #include "Particle_System.h"
 
 const int Player::Monster::idle_frame_max = 6;
@@ -37,7 +38,7 @@ void Player::Monster::Update(float dt) {
   float mass = GetBody()->GetMass();
 
   // movement
-  if ( !is_attacking ) {
+  if ( !is_attacking && current_anim != Anim_Type::jump ) {
     if ( theInput.IsKeyDown(GLFW_KEY_D) ^
          theInput.IsKeyDown(GLFW_KEY_A) ) {
       if ( current_anim != Anim_Type::walk) {
@@ -77,12 +78,16 @@ void Player::Monster::Update(float dt) {
       std::_Pi + std::_Pi/2);
   }
 
-  if ( GetBody()->GetLinearVelocity().y == 0 )
-      hit_ground_after_stomp = 0;
+  if ( GetBody()->GetLinearVelocity().y == 0 && current_anim == Anim_Type::jump ) {
+    current_anim = Anim_Type::idle;
+    hit_ground_after_stomp = 0;
+    theSound.PlaySound( Sounds::boss_land, .1 );
+  }
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
       SetSprite("Images\\monster_jump_001.png");
+      theSound.PlaySound( Sounds::boss_jump, .1 );
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
@@ -116,6 +121,7 @@ void Player::Monster::Update(float dt) {
     anim_frame += dt * 5;
     if ( anim_frame >= walk_frame_max ) {
       anim_frame = 0;
+      theSound.PlaySound(Sounds::boss_footstep, .1);
     }
     break;
   default:
@@ -136,6 +142,7 @@ void Player::Monster::Update(float dt) {
     tz->SetIsSensor(1);
     tz->InitPhysics();
     tz->GetBody()->SetGravityScale(0);
+
     if ( tz->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
       // send that fucker FLYINGGGGGGGGGGGGGGG!!!!!!!!!!!!!!!!!!!!
       Hero::theEnemy->Add_Health(-attack_damage);
@@ -156,7 +163,7 @@ void Player::Monster::Update(float dt) {
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
   else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
     //frame_weapon->Cast();
-
+    theSound.PlaySound(Sounds::boss_punch, .1);
     attack_cooldown = .7f;
 
     LoadSpriteFrames("Images\\monster_attack_001.png");
@@ -181,7 +188,12 @@ Augments::Weapon* Player::Monster::R_Frame_Weapon()  { return frame_weapon; }
 
 void Player::Monster::Set_Max_Health(int x)  { max_health = x; }
 void Player::Monster::Set_Curr_Health(int x) { curr_health = x; }
-void Player::Monster::Add_Curr_Health(int x) { curr_health += x; }
+void Player::Monster::Add_Curr_Health(int x) {
+  if ( x < 0 ) {
+    theSound.PlaySound(Sounds::boss_damaged);
+  }
+  curr_health += x;
+}
 void Player::Monster::Set_Attack_Damage(int x) { attack_damage = x; }
 void Player::Monster::Set_Stomp_Damage(int x) { stomp_damage = x; }
 

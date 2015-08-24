@@ -76,7 +76,7 @@ namespace Hero {
     ~Enemy();
     void Update(float dt);
     void Jump();
-    inline void Add_Health(int x) { health += x; }
+    void Add_Health(int x);
 	  void Killed();
   };
 

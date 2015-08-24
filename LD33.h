@@ -32,7 +32,7 @@ namespace Game {
     int selected_icon;
   public:
     int level;
-
+    void Start_Game();
     Overseer();
     void Update(float dt);
   };

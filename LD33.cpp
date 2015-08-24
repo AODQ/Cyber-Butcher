@@ -53,6 +53,7 @@ void Game::Initialize() {
   theOverseer = new Overseer();
   theWorld.Add(theOverseer);
   theWorld.SetBackgroundColor(Color(0.0117647f, 0.1098039f, 0.04313725f));
+  Initialize_Game();
 }
 
 void Game::Initialize_Game() {
@@ -129,6 +130,14 @@ Game::Overseer::Overseer() {
   menu_exit->SetPosition(0,MathUtil::PixelsToWorldUnits(120));
   menu_select->SetPosition(0,0);
 
+}
+
+void Game::Overseer::Start_Game() {
+  menu_select->Destroy();
+  menu_exit->Destroy();
+  menu_controls->Destroy();
+  menu_start->Destroy();
+  in_menu = 0;
 }
 
 void Game::Overseer::Update(float dt) {
