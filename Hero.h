@@ -4,11 +4,11 @@
 #include "Angel.h"
 #include "LD33.h"
 #include "Level.h"
+#include <string>
 
 namespace Hero {
 
   // abilities used by enemy heroes
-
   enum class Weapon { // 
     sword
   };
@@ -22,6 +22,7 @@ namespace Hero {
     float intro_time;
     float speed;
     int health;
+    std::string name;
     float movement_cooldown, melee_cooldown, range_cooldown;
     float movement_attack_flinch; // stops movement altogether after an attack
     

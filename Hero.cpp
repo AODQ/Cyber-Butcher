@@ -36,6 +36,31 @@ Hero::Enemy::Enemy() {
 
   mood_switch_timer = 0;
   jump_timer = 5;
+
+  const int word_count = 15;
+  std::string rand_words[] = {
+    "ass", "catcher", "asdf", "fasdf", "haksdjf", "kas", "sniff", "what", "okay", "bleh", "aklsdafsadfasdf", "deez_nutz", "what", "Your_Name_Here", "fuck",
+    
+  };
+
+  // random name generation
+  int num_words = utility::rand()%2+1; // 1-3 words
+  for (int i = 0; i < num_words; i++) {
+    int word_index = utility::rand()%word_count;
+    int space = utility::rand()%2;
+    if (space == 1 && i != 0) {
+      name += "_";
+    }
+
+    name += rand_words[word_index];
+  }
+
+  int numbers = utility::rand()%4;
+  if (numbers == 2) {
+    name += std::to_string(utility::rand()%127);
+  }
+
+  std::cout << name << '\n';
 };
 
 void Hero::Enemy::Update(float dt) {

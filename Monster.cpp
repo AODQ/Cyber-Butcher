@@ -4,11 +4,12 @@
 #include "Angel.h"
 #include "Hero.h"
 
-const int Player::Monster::idle_frame_max = 7;
-const int Player::Monster::attack_frame_max = 9;
-const int Player::Monster::walk_frame_max = 4;
+const int Player::Monster::idle_frame_max = 6;
+const int Player::Monster::attack_frame_max = 8;
+const int Player::Monster::walk_frame_max = 3;
 
 void Player::Monster::Update(float dt) {
+
   // mirror according to direction
   if (direction == 1) {
     SetUVs(Vector2(0.f, 0.f), Vector2(1.f, 1.f));
@@ -61,14 +62,13 @@ void Player::Monster::Update(float dt) {
   }
 
 
-  if (GetBody()->GetLinearVelocity().y != 0) {
+  if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
-      LoadSpriteFrames("Images\\monster_jump.png");
+      LoadSpriteFrames("Images\\monster_jump_001.png");
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
   }
-
   
   switch ( current_anim ) {
   case Anim_Type::idle:
@@ -94,7 +94,6 @@ void Player::Monster::Update(float dt) {
   case Anim_Type::walk:
     anim_frame += dt * 5;
     if ( anim_frame >= walk_frame_max ) {
-      LoadSpriteFrames("Images\\monster_walk_001.png");
       anim_frame = 0;
     }
     break;
@@ -123,6 +122,8 @@ void Player::Monster::Update(float dt) {
     anim_frame = 1;
     is_attacking = true;
   }
+
+  previous_direction = direction;
 };
 
 int Player::Monster::R_Max_Health()    const { return max_health; }
@@ -156,7 +157,10 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   Set_Frame_Weapon(weapon);
   SetFriction(1);
   direction = 0;
+  previous_direction = 0;
   anim_frame = 1;
+
+  SetColor(Color(1.0f, 1.0f, 1.0f));
 
   is_attacking = false;
   

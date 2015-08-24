@@ -13,7 +13,7 @@ namespace Player {
     int max_health, curr_health;
     int attack_damage;
     Augments::Weapon* frame_weapon;
-    bool direction, inair;
+    bool direction, previous_direction, inair;
 
     float attack_cooldown;
     float special_cooldown;
