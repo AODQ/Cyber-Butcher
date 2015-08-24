@@ -27,10 +27,8 @@ Hero::Enemy::Enemy() {
   health = 5;
 
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
-  movement_attack_flinch = select_ability_timer = slide_timer = slide_direction
-  = ghost_timer = on_platform_timer = jumping_to_platform = 0;
-
-  select_ability_timer = 3;
+  movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
+  = ghost_timer = on_platform_timer = jumping_to_platform = slide_cooldown = 0;
 
   mood = Mood::Close;
 
@@ -65,7 +63,7 @@ Hero::Enemy::Enemy() {
 
 void Hero::Enemy::Update(float dt) {
   if ( dt > .25 ) // throw this frame away
-    return;
+    dt = .25;
   int direction = 1;
   float distance_x = Game::thePlayer->GetPosition().X - GetPosition().X,
         distance_y = GetPosition().Y - Game::thePlayer->GetPosition().Y;
@@ -74,9 +72,11 @@ void Hero::Enemy::Update(float dt) {
   range_cooldown -= dt;
   movement_cooldown -= dt;
   movement_attack_flinch -= dt;
-  select_ability_timer -= dt;
+  platform_cooldown -= dt;
+  ghost_cooldown -= dt;
   in_air_start -= dt;
   in_air_end -= dt;
+  slide_cooldown -= dt;
 
   mood_switch_timer -= dt;
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
@@ -132,27 +132,34 @@ void Hero::Enemy::Update(float dt) {
   }
 
   if ( jumping_to_platform > 0 ) {
-    if ( GetPosition().Y > 2 )  {
+    if ( GetPosition().Y > 3 ) {
+      GetBody()->SetLinearVelocity(b2Vec2(0,0));
       jumping_to_platform = 0;
       on_platform_timer = .001;
+      platform = nullptr;
       // in case he was swiped out of the air we check
-      if ( GetPosition().X > -10 && GetPosition().X < -8  ) {
-        on_platform_timer = utility::R_Rand()/20;
+      if ( GetPosition().X < -7.5 && GetPosition().X > -9.5  ) {
+        on_platform_timer = 5 + utility::R_Rand()/20;
         platform = new Level::Platform();
-        platform->SetSize(2,2);
-        platform->SetPosition(-10,1);
+        platform->SetSize(1.5,.1);
+        platform->SetPosition(-8,.7);
+        platform->InitPhysics();
+        platform->SetAlpha(0);
+        platform->GetBody()->SetGravityScale(0);
         theWorld.Add(platform);
       }
-      if ( GetPosition().X <  10 && GetPosition().X >  8 ) {
-        on_platform_timer = utility::R_Rand()/20;
+      if ( GetPosition().X <  9.5 && GetPosition().X > 7.5 ) {
+        on_platform_timer = 5 + utility::R_Rand()/20;
         platform = new Level::Platform();
-        platform->SetSize(2,2);
-        platform->SetPosition(-10,1);
+        platform->SetSize(1.5,.1);
+        platform->SetPosition( 8,.7);
+        platform->InitPhysics();
+        platform->GetBody()->SetGravityScale(0);
+        platform->SetAlpha(0);
         theWorld.Add(platform);
       }
-      
     } else {
-      ApplyLinearImpulse(Vector2(0,dt*20),Vector2(0,0));
+      ApplyForce(Vec2i(0,20),Vec2i(0,0));
     }
     return; // can't attack or move
   }
@@ -173,18 +180,9 @@ void Hero::Enemy::Update(float dt) {
           SetColor(0,0,1);
         break;
       }
+      platform_cooldown = 6;
     }
     goto SKIP_MOVEMENT_PHASE;
-  }
-
-  
-  jump_timer -= dt;
-
-  if ( jump_timer < 0 ) {
-    jump_timer = .7 + utility::R_Rand()/50;
-    in_air_start = .2;
-    in_air_end   = .4;
-    ApplyForce(Vec2i(0,1000),Vec2i(0,0));
   }
 
   // decide to move
@@ -248,38 +246,53 @@ void Hero::Enemy::Update(float dt) {
 
   // ability options
   
-  if ( select_ability_timer < 0 && utility::R_Rand() < 10 ) {
-    select_ability_timer = .5;
-    // slide
-     // first is random the one below is to prevent spam jump by monster
-    if ( utility::R_Rand() < 50 ||
-      (abs(distance_x) < 3 && (GetPosition().X > 8 || GetPosition().X < -8)) ) {
-      select_ability_timer = .7;
-      slide_timer = .6;
-      SetColor(.7,.7,.7);
-      slide_direction = (distance_x < 0); // random
-      if ( GetPosition().X >  8 ) // too close to right wall
-        slide_direction = 1;
-      else if ( GetPosition().X < -8 ) // too close to left wall
-        slide_direction = 0;
-      else
-        SetColor(0,0,0);
-    }
-    
+  jump_timer -= dt;
+
+  if ( jump_timer < 0 ) {
+    jump_timer = .7 + utility::R_Rand()/50;
+    in_air_start = .2;
+    in_air_end   = .4;
+    ApplyForce(Vec2i(0,1000),Vec2i(0,0));
+  }
+
+  // speed up 
+  if ( (abs(distance_x) < 3 && (GetPosition().X > 8 || GetPosition().X < -8)) ) {
+    slide_cooldown -= dt*2;
+  }
+
+  if ((jumping_to_platform <=  0 && slide_cooldown < 0) &&
+      (utility::R_Rand() < 50 ||
+      (abs(distance_x) < 3 && (GetPosition().X > 8 || GetPosition().X < -8))) ) {
+    slide_cooldown = .8 + utility::R_Rand()/33;
+    slide_timer = .6;
+    SetColor(.7,.7,.7);
+    slide_direction = (distance_x < 0); // random
+    if ( GetPosition().X >  8 ) // too close to right wall
+      slide_direction = 1;
+    else if ( GetPosition().X < -8 ) // too close to left wall
+      slide_direction = 0;
+    else
+      SetColor(0,0,0);
+  }
+
+  if ( ghost_cooldown < 0 ) {
     // ghost
     if ( utility::R_Rand() < 5 && ghost_timer <= 0 ) {
-      select_ability_timer = 5;
-      ghost_timer = 5;
+      ghost_cooldown = 2;
+      ghost_timer = 5 + utility::R_Rand()/10;
     }
-
+  }
+  if ( platform_cooldown < 0 ) {
     // jump to platform and player is under one of the platforms
-    if ( //utility::R_Rand() < 20  &&
-          ( GetPosition().X > -10 && GetPosition().X < -8 ) ||
-          ( GetPosition().X <  10 && GetPosition().X >  8 ) ) {
+    if ( on_platform_timer <= 0 &&
+          (( GetPosition().X > -9.5 && GetPosition().X < -7.5 ) ||
+           ( GetPosition().X <  9.5 && GetPosition().X >  7.5 )) ) {
       jumping_to_platform = 1;
-      select_ability_timer = 5;
+      platform_cooldown = 5;
+      on_platform_timer = 13;
       GetBody()->SetLinearVelocity(b2Vec2(0,0));
       SetColor(1,1,0);
+      slide_timer = -1;
       return;
     }
   }

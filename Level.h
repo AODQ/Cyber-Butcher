@@ -11,6 +11,7 @@ namespace Level {
   
   class Platform : public PhysicsActor {
   public:
+    // you need to initPhysics on your own!
     Platform();
   };
 

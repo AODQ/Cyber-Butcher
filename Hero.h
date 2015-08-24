@@ -22,16 +22,16 @@ namespace Hero {
     float intro_time;
     float speed;
     int health;
+    float slide_cooldown;
     std::string name;
     float movement_cooldown, melee_cooldown, range_cooldown;
     float movement_attack_flinch; // stops movement altogether after an attack
-    
-    float select_ability_timer; // hero can have a 10% chance to perform an
-                                //  ability every second
 
     float slide_timer;
     bool slide_direction;
     float ghost_timer;
+    float ghost_cooldown;
+    float platform_cooldown;
     float on_platform_timer;
     bool jumping_to_platform;    // hero is jumping up on top of the platform
 

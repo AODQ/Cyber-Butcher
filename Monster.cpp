@@ -64,7 +64,7 @@ void Player::Monster::Update(float dt) {
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
     if ( current_anim != Anim_Type::jump) {
-      LoadSpriteFrames("Images\\monster_jump.png");
+      SetSprite("Images\\monster_jump_001.png");
     }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
