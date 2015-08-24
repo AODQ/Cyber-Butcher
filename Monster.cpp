@@ -230,10 +230,8 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   bool anim_direction = 0;
   // physics related
   this->SetFixedRotation(1);
-  this->SetPosition(MathUtil::ScreenToWorld(100,185));
-  SetSize(MathUtil::PixelsToWorldUnits(96),MathUtil::PixelsToWorldUnits(86));
-  this->SetDrawSize(MathUtil::PixelsToWorldUnits(96),
-                    MathUtil::PixelsToWorldUnits(96));
+  this->SetPosition(0, -2);
+  this->SetDrawSize(6, 6);
   InitPhysics();
   this->SetDensity(0.5f);
   // to avoid collision with hero

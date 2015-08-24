@@ -57,6 +57,38 @@ void Game::Initialize() {
 
   Game::theMouse = new Mouse();
 
+  // collision
+  // left bottom corner wall
+  auto t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(10,228));
+  std::cout << "t1: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
+  t->SetSize(MathUtil::PixelsToWorldUnits(100),
+             MathUtil::PixelsToWorldUnits(71));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
+  // bottom floor
+  t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(230,264));
+  std::cout << "t2: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
+  t->SetSize(MathUtil::PixelsToWorldUnits(570),
+             MathUtil::PixelsToWorldUnits(15));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
+  // right bottom corner wall
+  t = new Level::Platform();
+  theWorld.Add(t);
+  t->SetPosition(MathUtil::ScreenToWorld(450,228));
+  std::cout << "t2: " << t->GetPosition().X << " " << t->GetPosition().Y << '\n';
+  t->SetSize(MathUtil::PixelsToWorldUnits(65),
+             MathUtil::PixelsToWorldUnits(71));
+  t->SetColor(.30,.30,0);
+  t->InitPhysics();
+  t->SetAlpha(0);
+
   glfwGetWindowSize(theWorld.GetMainWindow(), &utility::True_width, &utility::True_height);
 }
 
@@ -71,34 +103,6 @@ void Game::Initialize_Game() {
   thePlayer = new Player::Monster(Augments::Weapon_Type::Big_Sword);
   theWorld.Add(thePlayer);
   thePlayer->SetAlpha(1.0f);
-  // collision system
-  // left bottom corner wall
-  auto t = new Level::Platform();
-  theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(10,228));
-  t->SetSize(MathUtil::PixelsToWorldUnits(100),
-             MathUtil::PixelsToWorldUnits(71));
-  t->SetColor(.30,.30,0);
-  t->InitPhysics();
-  t->SetAlpha(0);
-  // bottom floor
-  t = new Level::Platform();
-  theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(230,264));
-  t->SetSize(MathUtil::PixelsToWorldUnits(570),
-             MathUtil::PixelsToWorldUnits(15));
-  t->SetColor(.30,.30,0);
-  t->InitPhysics();
-  t->SetAlpha(0);
-  // right bottom corner wall
-  t = new Level::Platform();
-  theWorld.Add(t);
-  t->SetPosition(MathUtil::ScreenToWorld(450,228));
-  t->SetSize(MathUtil::PixelsToWorldUnits(65),
-             MathUtil::PixelsToWorldUnits(71));
-  t->SetColor(.30,.30,0);
-  t->InitPhysics();
-  t->SetAlpha(0);
 
   // text actors
   gold = new TextActor();
