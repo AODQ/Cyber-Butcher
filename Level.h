@@ -24,6 +24,17 @@ namespace Level {
     void Update(float dt);
   }
 
+  namespace _HUD {
+    extern Actor* hud_bottom,
+                * hud_bitch,
+                * hud_hero,
+                * hud_monster;
+    extern TextActor* hero_health,
+                   *  monster_health;
+    void Init();
+    void Apply();
+  };
+
   namespace Leaves {
     extern float wind_speed;
     extern float wind_count;
@@ -45,7 +56,7 @@ namespace Level {
 
     void Update(float);
   };
-}
+};
 
 
 

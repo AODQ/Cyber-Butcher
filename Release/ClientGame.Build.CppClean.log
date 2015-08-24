@@ -16,6 +16,7 @@ c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\client
 c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.exe
 c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.pdb
 c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.res
+<<<<<<< HEAD
 c:\users\frank\desktop\code\gamejam33ld\release\angelluawrapping.obj
 c:\users\frank\desktop\code\gamejam33ld\release\augments.obj
 c:\users\frank\desktop\code\gamejam33ld\release\hero.obj
@@ -42,3 +43,15 @@ c:\users\frank\desktop\code\gamejam33ld\release\clientgame.tlog\link.write.1.tlo
 c:\users\frank\desktop\code\gamejam33ld\release\clientgame.tlog\rc.command.1.tlog
 c:\users\frank\desktop\code\gamejam33ld\release\clientgame.tlog\rc.read.1.tlog
 c:\users\frank\desktop\code\gamejam33ld\release\clientgame.tlog\rc.write.1.tlog
+=======
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\cl.command.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\cl.read.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\cl.write.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\clientgame.write.1u.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\link.command.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\link.read.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\link.write.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\rc.command.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\rc.read.1.tlog
+c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\release\clientgame.tlog\rc.write.1.tlog
+>>>>>>> 7e67edf7fa84610d7752857f472884056cc537a0

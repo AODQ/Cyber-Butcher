@@ -10,11 +10,11 @@ namespace Hero {
 
   // abilities used by enemy heroes
   enum class Weapon { // 
-    sword
+    dagger, sword, broadsword, miniaxe, axe, bigaxe, spear, size
   };
 
   enum class Throwable { // 
-    dagger
+    knife, cross, axe, ball, size
   };
 
   class E_Weapon : public PhysicsActor {
@@ -23,6 +23,24 @@ namespace Hero {
     bool hit;
   public:
     E_Weapon(Weapon);
+    void Update(float);
+  };
+
+  class E_Throw : public PhysicsActor {
+    Throwable type;
+    float  cooldown;
+    bool hit;
+    Vector2 origin;
+    bool recoiled;
+  public:
+    E_Throw(Throwable, float ang = 0);
+    void Update(float);
+  };
+
+  class Enemy_Death : public PhysicsActor {
+    float time;
+  public:
+    Enemy_Death();
     void Update(float);
   };
 
@@ -68,16 +86,34 @@ namespace Hero {
     void Apply_Vel_X(float x, float d);
 
     float gibber_timer;
+
+    float walk_animation;
+
+    enum class Anim_State {
+      idle, jump, walk, slide, attack
+    };
+
+    Anim_State state;
+
+    Actor* draw_me;
   public:
 
     E_Weapon* weapon;
     Weapon weapon_type;
+
+    E_Throw* throwable;
+    Throwable throw_type;
+
+    bool wep_hit;
+    
+    float attack_animation;
     Enemy();
     ~Enemy();
     void Update(float dt);
     void Jump();
     void Add_Health(int x);
 	  void Killed();
+    inline int R_Health() { return health; }
   };
 
   /*// just moves into the screen all cool and then spawns Enemy

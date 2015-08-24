@@ -2,6 +2,8 @@
 #include "Augments.h"
 #include "Level.h"
 #include "Angel.h"
+#include "Monster.h"
+#include "Hero.h"
 #include "utility.h"
 #include <vector>
 
@@ -172,4 +174,63 @@ void LLeaves::Leaf::Update(float dt) {
       dip_up = 25;
     }
   }
+}
+
+
+Actor* Level::_HUD::hud_bottom,
+            * Level::_HUD::hud_bitch,
+            * Level::_HUD::hud_hero,
+            * Level::_HUD::hud_monster;
+TextActor* Level::_HUD::hero_health,
+         * Level::_HUD::monster_health;
+void Level::_HUD::Init() {
+  hud_bottom = new Actor();
+  hud_bottom->SetSize(MathUtil::PixelsToWorldUnits(480),
+                      MathUtil::PixelsToWorldUnits(48));
+  hud_bottom->SetSprite("Images\\hud_bottom.png");
+  hud_bottom->SetPosition(0,-8.5);
+  hud_bitch = new Actor();
+  hud_bitch->SetSize(MathUtil::PixelsToWorldUnits(58),
+                      MathUtil::PixelsToWorldUnits(42));
+  hud_bitch->SetSprite("Images\\hud_bitchtits.png");
+  hud_bitch->SetPosition(-50,-50);
+  hud_hero = new Actor();
+  hud_hero->SetSize(MathUtil::PixelsToWorldUnits(58),
+                      MathUtil::PixelsToWorldUnits(42));
+  hud_hero->SetSprite("Images\\hud_hero.png");
+  hud_monster = new Actor();
+  hud_monster->SetSize(MathUtil::PixelsToWorldUnits(58),
+                      MathUtil::PixelsToWorldUnits(42));
+  hud_monster->SetSprite("Images\\hud_enemy.png");
+
+  hero_health = new TextActor();
+  hero_health->SetPosition(-13,-12);
+  monster_health = new TextActor();
+  monster_health->SetPosition(13,-12);
+  theWorld.Add(hud_bottom);
+  theWorld.Add(hud_bitch);
+  theWorld.Add(hud_monster);
+  theWorld.Add(hud_hero);
+  theWorld.Add(hero_health);
+  theWorld.Add(monster_health);
+
+}
+void Level::_HUD::Apply() {
+  if ( Hero::theEnemy != nullptr && Game::thePlayer != nullptr ) {
+    hud_hero->SetPosition(-13.0,-8.5);
+    hero_health->SetDisplayString(std::to_string(Hero::theEnemy->R_Health()));
+    hero_health->SetPosition(-9,-8.3);
+  } else {
+    hud_hero->SetPosition(-50,-50);
+    hero_health->SetDisplayString( "" );
+    hero_health->SetPosition(-560,-50);
+  }
+  hud_monster->SetPosition(13.0,-8.5);
+  if ( Game::thePlayer != nullptr ) {
+    monster_health->SetDisplayString(std::to_string(Game::thePlayer->R_Health()));
+    monster_health->SetPosition(6,-8.3);
+  } else {
+    monster_health->SetDisplayString( "" );
+  }
+
 }

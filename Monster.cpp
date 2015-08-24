@@ -49,11 +49,11 @@ void Player::Monster::Update(float dt) {
       
       current_anim = Anim_Type::walk;
 
-      if ( theInput.IsKeyDown(Game::right_key) ) {
+      if ( theInput.IsKeyDown(Game::left_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 0;
       }
-      if ( theInput.IsKeyDown(Game::left_key) ) {
+      if ( theInput.IsKeyDown(Game::right_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(-target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 1;
       }
@@ -162,7 +162,7 @@ void Player::Monster::Update(float dt) {
   ApplyForce(Vector2(-GetBody()->GetLinearVelocity().x*dt*12,0),Vector2(0,0));
 
   if ( attack_cooldown >= 0 ) attack_cooldown -= dt;
-  else if ( theInput.IsKeyDown(Game::punch_key) && Hero::theEnemy ) {
+  else if ( theInput.IsKeyDown(GLFW_KEY_J) && Hero::theEnemy ) {
     //frame_weapon->Cast();
     theSound.PlaySound(Sounds::boss_punch, .1);
     attack_cooldown = .7f;

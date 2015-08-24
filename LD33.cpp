@@ -118,6 +118,7 @@ void Game::Initialize_Game() {
   theWorld.Add(theKeep);
   // sounds
   Sounds::Load_Sounds();
+  Level::_HUD::Init();
 }
 
 Player::Monster* Game::thePlayer = nullptr;
@@ -334,9 +335,8 @@ void Game::Overseer::Update(float dt) {
     Particles::Update(dt);
     Level::BG_Scroll::Update(dt);
     Level::Leaves::Update(dt);
-  
-    gold->SetDisplayString("Gold: " + std::to_string(Game::thePlayer->R_Gold()));
 
+    Level::_HUD::Apply();
     Sounds::Update(dt);
   }
 }

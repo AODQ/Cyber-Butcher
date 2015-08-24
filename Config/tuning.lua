@@ -65,3 +65,36 @@ LeafPlaybackSpeed = {
   type = "float",
   value = .003
 }
+
+c1x = {
+  type = "int",
+  value = 4
+}
+c1y = {
+  type = "int",
+  value = 6
+}
+c2x = {
+  type = "int",
+  value = -6
+}
+c2y = {
+  type = "int",
+  value = 25
+}
+c3x = {
+  type = "int",
+  value = 3
+}
+c3y = {
+  type = "int",
+  value = 15
+}
+c4x = {
+  type = "int",
+  value = 13
+}
+c4y = {
+  type = "int",
+  value = 5
+}
