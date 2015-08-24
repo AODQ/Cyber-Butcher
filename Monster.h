@@ -7,8 +7,14 @@
 
 
 namespace Player {
-  // contains information like health attack etc
-  // but more important body types
+
+  class Monster_Death : public PhysicsActor {
+    float time;
+  public:
+    Monster_Death();
+    void Update(float);
+  };
+
   class Monster : public PhysicsActor {
     PhysicsActor* chest_hitbox;
     int max_health, curr_health;
@@ -47,7 +53,7 @@ namespace Player {
     
     Augments::Weapon* R_Frame_Weapon();
     
-    
+    inline int R_Health() { return curr_health; }
     void Set_Max_Health(int);
     void Set_Curr_Health(int);
     void Add_Curr_Health(int);

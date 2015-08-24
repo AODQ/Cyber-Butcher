@@ -10,9 +10,45 @@ const int Player::Monster::idle_frame_max = 6;
 const int Player::Monster::attack_frame_max = 8;
 const int Player::Monster::walk_frame_max = 3;
 
+Player::Monster_Death::Monster_Death() {
+  time = 5;
+  SetSize(MathUtil::PixelsToWorldUnits(96),
+          MathUtil::PixelsToWorldUnits(96));
+  SetSprite("Images\\monster_attack_004.png");
+  SetDensity(.5);
+  InitPhysics();
+  auto fixture = GetBody()->GetFixtureList()->GetFilterData();
+  fixture.groupIndex = -8;
+  GetBody()->GetFixtureList()->SetFilterData(fixture);
+}
+
+void Player::Monster_Death::Update(float dt) {
+  time -= dt;
+  int amt_times = utility::R_Rand()/25 + 1;
+  ApplyForce(Vector2(150*(utility::R_Rand()-50),0),Vector2(0,0));
+  for ( int i = 0; i != amt_times; ++ i )
+    Particles::Add_Bleed(Vec2i(GetPosition().X + (utility::R_Rand()-50)/50,
+                               GetPosition().Y + (utility::R_Rand()-50)/50),utility::R_Rand(),200);
+  if ( time <= 0 ) {
+    Destroy();
+    // find a way to restart the game
+  }
+}
+
 void Player::Monster::Update(float dt) {
 
   chest_hitbox->GetBody()->SetTransform(b2Vec2(GetPosition().X, GetPosition().Y + .5f), 0.0f);
+
+  // check if dead
+  if ( curr_health <= 0 ) { // die motherfucker
+    theWorld.Add( new Monster_Death());
+    Game::thePlayer = nullptr;
+    theSound.PlaySound(Sounds::Monster_Death);
+    Destroy();
+    return;
+  }
+
+  --curr_health;
 
   // mirror according to direction
   if (direction == 1) {
@@ -28,6 +64,8 @@ void Player::Monster::Update(float dt) {
 
   if ( theInput.IsKeyDown(GLFW_KEY_W) &&
       phys_jump_timer <= 0 ) {
+    SetSprite("Images\\monster_jump_001.png");
+    theSound.PlaySound( Sounds::boss_jump, .1 );
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
     ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
     //theSound.PlaySound(Sounds::boss_jump);
@@ -86,10 +124,6 @@ void Player::Monster::Update(float dt) {
   }
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
-    if ( current_anim != Anim_Type::jump) {
-      SetSprite("Images\\monster_jump_001.png");
-      theSound.PlaySound( Sounds::boss_jump, .1 );
-    }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
   }
@@ -223,6 +257,7 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   SetColor(Color(1.0f, 1.0f, 1.0f));
 
   is_attacking = false;
+  curr_health = 50;
   
   float anim_frame = 0;
   Anim_Type current_anim = Anim_Type::walk;
