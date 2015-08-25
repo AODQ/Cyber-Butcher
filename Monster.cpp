@@ -10,6 +10,7 @@ const int Player::Monster::idle_frame_max = 6;
 const int Player::Monster::attack_frame_max = 8;
 const int Player::Monster::walk_frame_max = 3;
 
+<<<<<<< HEAD
 Player::Ripple::Ripple(int dit, float it, float pos_x) {
   timer = 1;
   iteration = it;
@@ -90,10 +91,13 @@ void Player::Monster_Death::Update(float dt) {
   }
 }
 
+=======
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
 void Player::Monster::Update(float dt) {
 
   chest_hitbox->GetBody()->SetTransform(b2Vec2(GetPosition().X, GetPosition().Y + .5f), 0.0f);
 
+<<<<<<< HEAD
   // check if dead
   if ( curr_health <= 0 ) { // die motherfucker
     theWorld.Add( new Monster_Death());
@@ -103,6 +107,8 @@ void Player::Monster::Update(float dt) {
     return;
   }
 
+=======
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
   // mirror according to direction
   if (direction == 1) {
     SetUVs(Vector2(0.f, 0.f), Vector2(1.f, 1.f));
@@ -117,8 +123,6 @@ void Player::Monster::Update(float dt) {
 
   if ( theInput.IsKeyDown(Game::jump_key) &&
       phys_jump_timer <= 0 ) {
-    SetSprite("Images\\monster_jump_001.png");
-    theSound.PlaySound( Sounds::boss_jump, .1 );
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
     ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
     auto x = new Ripple(-3,0,GetPosition().X-2);
@@ -186,6 +190,10 @@ void Player::Monster::Update(float dt) {
   }
 
   if (GetBody()->GetLinearVelocity().y != 0 && !is_attacking) {
+    if ( current_anim != Anim_Type::jump) {
+      SetSprite("Images\\monster_jump_001.png");
+      theSound.PlaySound( Sounds::boss_jump, .1 );
+    }
     current_anim = Anim_Type::jump;
     anim_frame = 0;
   }
@@ -320,7 +328,6 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   SetColor(Color(1.0f, 1.0f, 1.0f));
 
   is_attacking = false;
-  curr_health = 50;
   
   float anim_frame = 0;
   Anim_Type current_anim = Anim_Type::walk;

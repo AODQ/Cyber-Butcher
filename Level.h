@@ -56,6 +56,7 @@ namespace Level {
 
     void Update(float);
   };
+<<<<<<< HEAD
 
   /*namespace Inventory {
     extern float cooldown;
@@ -80,6 +81,9 @@ namespace Level {
     void Play_Inventory();
   }*/
 }
+=======
+};
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
 
 
 

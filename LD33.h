@@ -54,6 +54,14 @@ namespace Game {
          * back_arrow,
          * change_key;
 
+<<<<<<< HEAD
+=======
+    TextActor* right_text,
+             * left_text,
+             * punch_text,
+             * jump_text;
+
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
     void ChangeKey(int key);
 
     Actor* pressed_button;

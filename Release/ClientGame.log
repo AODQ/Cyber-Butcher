@@ -1,14 +1,26 @@
+<<<<<<< HEAD
 ﻿Build started 8/25/2015 1:46:55 PM.
      1>Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" on node 2 (Build target(s)).
+=======
+<<<<<<< HEAD
+﻿Build started 8/24/2015 2:47:06 PM.
+     1>Project "C:\Users\Frank\Desktop\Code\GameJam33LD\ClientGame.vcxproj" on node 2 (Build target(s)).
+=======
+﻿Build started 8/24/2015 7:21:38 PM.
+     1>Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" on node 2 (Build target(s)).
+>>>>>>> 7e67edf7fa84610d7752857f472884056cc537a0
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (Circle_Test.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
      1>PreBuildEvent:
          xcopy ..\Angel\Scripting\EngineScripts\* Resources\Scripts /y /e > nul
          
          cd ..\Tools\BuildScripts
-         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe swig_wrap.lua -p "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\"
+         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe swig_wrap.lua -p "C:\Users\Frank\Desktop\Code\"
          
          :VCEnd
          Interface files are up to date.
        ClCompile:
+<<<<<<< HEAD
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt stdafx.cpp
          stdafx.cpp
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt ..\Angel\Scripting\Interfaces\AngelLuaWrapping.cpp
@@ -60,8 +72,26 @@
          utility.cpp
        ResourceCompile:
          C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _UNICODE /D UNICODE /l"0x0409" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\/win" /nologo /fo"Release\ClientGame.res" platforms\win\ClientGame.rc 
+=======
+<<<<<<< HEAD
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /IC:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\freetype-2.4.8\include" /IC:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\FTGL\include /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\lua-5.2.1\src" /IC:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\FMOD\inc /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\libvorbis-1.3.2\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt LD33.cpp
+         LD33.cpp
+     1>LD33.cpp(67): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>LD33.cpp(76): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>LD33.cpp(85): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>LD33.cpp(132): warning C4102: 'Game' : unreferenced label
+=======
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iinclude /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\src" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\inc" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\include" /I"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\include" /I"C:\Program Files (x86)\Visual Leak Detector\include" /Zi /nologo /W3 /WX- /O2 /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D FTGL_LIBRARY_STATIC /D ANGEL_RELEASE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\ClientGame.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /wd4244 /analyze- /errorReport:prompt Monster.cpp
+         Monster.cpp
+     1>Monster.cpp(68): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Monster.cpp(123): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Monster.cpp(159): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Monster.cpp(176): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>Monster.cpp(201): warning C4305: 'argument' : truncation from 'double' to 'float'
+>>>>>>> 7e67edf7fa84610d7752857f472884056cc537a0
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\ClientGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:lib\x86 /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FMOD\lib" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\glfw-3.0.3\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\FTGL\win32_vcpp\build\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\freetype-2.4.8\objs\win32\vc2010\\" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\Box2D-2.2.1\Build\vs2010\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\lua-5.2.1\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\openal-soft-1.15-bin\lib\Win32" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libogg-1.3.0\win32\VS2010\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbis\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbisfile\Win32\Release" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Libraries\gwen\lib\windows\vs2010" /LIBPATH:"C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\..\Angel\Release" /LIBPATH:"C:\Program Files (x86)\Visual Leak Detector\lib\Win32" libpng.lib zlib.lib DevIL.lib ILU.lib ILUT.lib opengl32.lib glu32.lib fmodex_vc.lib _GLFW.lib _FTGL.lib freetype248.lib Box2D.lib Angel.lib Lua.lib libOpenAL32.dll.a _libogg.lib _libvorbis.lib _libvorbisfile.lib gwen_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Delayimp.lib /NODEFAULTLIB:LIBCMT.LIB /DELAYLOAD:DevIL.dll /DELAYLOAD:ILU.dll /DELAYLOAD:ILUT.dll /DELAYLOAD:fmodex.dll /DELAYLOAD:OpenAL32.dll /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\ClientGame.pdb" /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /LTCG /TLBID:1 /ENTRY:"mainCRTStartup" /DYNAMICBASE:NO /IMPLIB:"Release\ClientGame.lib" /MACHINE:X86 /SAFESEH Release\ClientGame.res
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release\ClientGame.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:lib\x86 /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib" /LIBPATH:C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\FMOD\lib /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\glfw-3.0.3\Release" /LIBPATH:C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\FTGL\win32_vcpp\build\Release /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\freetype-2.4.8\objs\win32\vc2010\\" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\Box2D-2.2.1\Build\vs2010\Release" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\lua-5.2.1\Release" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\openal-soft-1.15-bin\lib\Win32" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\libogg-1.3.0\win32\VS2010\Win32\Release" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbis\Win32\Release" /LIBPATH:"C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\libvorbis-1.3.2\win32\VS2010\libvorbisfile\Win32\Release" /LIBPATH:C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Libraries\gwen\lib\windows\vs2010 /LIBPATH:C:\Users\Frank\Desktop\Code\GameJam33LD\\..\Angel\Release libpng.lib zlib.lib DevIL.lib ILU.lib ILUT.lib opengl32.lib glu32.lib fmodex_vc.lib _GLFW.lib _FTGL.lib freetype248.lib Box2D.lib Angel.lib Lua.lib libOpenAL32.dll.a _libogg.lib _libvorbis.lib _libvorbisfile.lib gwen_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib Delayimp.lib /NODEFAULTLIB:LIBCMT.LIB /DELAYLOAD:DevIL.dll /DELAYLOAD:ILU.dll /DELAYLOAD:ILUT.dll /DELAYLOAD:fmodex.dll /DELAYLOAD:OpenAL32.dll /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Release\ClientGame.pdb" /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /LTCG /TLBID:1 /ENTRY:"mainCRTStartup" /DYNAMICBASE:NO /IMPLIB:"Release\ClientGame.lib" /MACHINE:X86 /SAFESEH Release\ClientGame.res
          Release\AngelLuaWrapping.obj
          Release\Augments.obj
          Release\Hero.obj
@@ -75,11 +105,11 @@
          Release\utility.obj
             Creating library Release\ClientGame.lib and object Release\ClientGame.exp
          Generating code
-     1>c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\augments.cpp(26): warning C4715: 'R_Off_Y' : not all control paths return a value
-     1>c:\users\the shire\desktop\ludum_dare\ludumdare33\code\clientgame\augments.cpp(17): warning C4715: 'R_Off_X' : not all control paths return a value
+     1>c:\users\frank\desktop\code\gamejam33ld\augments.cpp(26): warning C4715: 'R_Off_Y' : not all control paths return a value
+     1>c:\users\frank\desktop\code\gamejam33ld\augments.cpp(17): warning C4715: 'R_Off_X' : not all control paths return a value
          Finished generating code
      1>LINK : warning LNK4199: /DELAYLOAD:OpenAL32.dll ignored; no imports found from OpenAL32.dll
-         ClientGame.vcxproj -> C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\Release\ClientGame.exe
+         ClientGame.vcxproj -> C:\Users\Frank\Desktop\Code\GameJam33LD\Release\ClientGame.exe
        PostBuildEvent:
          copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\DevIL.dll . /y > nul
          copy ..\Angel\Libraries\DevIL-SDK-1.7.8\win\lib\ILU.dll . /y > nul
@@ -88,11 +118,19 @@
          copy ..\Angel\Libraries\openal-soft-1.15-bin\Win32\soft_oal.dll .\OpenAL32.dll /y > nul
          
          cd ..\Tools\BuildScripts\
-         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\..\Tools\BuildScripts\publish.lua" -o "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\Published" -i "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\\" -v "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\"
+         ..\..\Angel\Libraries\lua-5.2.1\Release\lua.exe "C:\Users\Frank\Desktop\Code\GameJam33LD\..\Tools\BuildScripts\publish.lua" -o "C:\Users\Frank\Desktop\Code\GameJam33LD\Published" -i "C:\Users\Frank\Desktop\Code\GameJam33LD\\" -v "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\\"
          
          :VCEnd
-     1>Done Building Project "C:\Users\The Shire\Desktop\ludum_dare\ludumdare33\Code\ClientGame\ClientGame.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\Frank\Desktop\Code\GameJam33LD\ClientGame.vcxproj" (Build target(s)).
 
 Build succeeded.
 
+<<<<<<< HEAD
 Time Elapsed 00:00:15.89
+=======
+<<<<<<< HEAD
+Time Elapsed 00:00:24.41
+=======
+Time Elapsed 00:00:09.31
+>>>>>>> 7e67edf7fa84610d7752857f472884056cc537a0
+>>>>>>> 21508a30f2249ec0bea47e3bf4cb228d0095bb46
