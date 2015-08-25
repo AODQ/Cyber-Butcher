@@ -7,6 +7,25 @@
 
 
 namespace Player {
+  
+  class Ripple : public PhysicsActor {
+    float iteration;
+    float timer;
+    int direction;
+    bool hit;
+  public:
+    Ripple(int direction, float iteration, float pos_x);
+    void Update(float dt);
+  };
+
+  class Rock : public PhysicsActor {
+    float timer;
+    bool hit;
+  public:
+    Rock(float pos_x);
+    void Update(float dt);
+  };
+
 
   class Monster_Death : public PhysicsActor {
     float time;
@@ -16,7 +35,6 @@ namespace Player {
   };
 
   class Monster : public PhysicsActor {
-    PhysicsActor* chest_hitbox;
     int max_health, curr_health;
     int attack_damage, stomp_damage;
     Augments::Weapon* frame_weapon;
@@ -41,6 +59,7 @@ namespace Player {
     // physics
     float phys_jump_timer, phys_jump_timer_max;
   public:
+    PhysicsActor* chest_hitbox;
     void Update(float dt);
     
     int R_Max_Health() const;

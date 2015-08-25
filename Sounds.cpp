@@ -38,7 +38,7 @@ void Sounds::Load_Sounds() {
   for ( int i = 1; i != 18; ++ i ) {
     std::string file_name = "Sounds\\Boss\\WTF\\wtf" + std::to_string(i) + ".ogg";
     WTF[i-1] = theSound.LoadSample(file_name,1);
-    file_name = "Sounds\\Inventory\\inv" + std::to_string(i) + ".ogg";
+    file_name = "Sounds\\Boss\\Inventory\\inv" + std::to_string(i) + ".ogg";
     Inventory[i-1] = theSound.LoadSample(file_name,1);
   }
     
@@ -69,7 +69,7 @@ void Sounds::Load_Sounds() {
 // includes WTF
 void Sounds::Play_Gibberish() {
   gibberish_count = 0;
-  gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], .3);
+  gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], 1);
 }
 void Sounds::Play_Inventory() {
   theSound.PlaySound(Inventory[int(utility::R_Rand())%17]);
@@ -83,10 +83,14 @@ void Sounds::Update(float dt) {
     monster_gibber_timer -= dt;
     if ( monster_gibber_timer <= 0 ) {
       monster_gibber_timer = 0;
-      theSound.PlaySound(WTF[int(utility::R_Rand())%17], .5);
+      if ( utility::R_Rand()<50 )
+        theSound.PlaySound(WTF[int(utility::R_Rand())%17], 1);
+      else
+        theSound.PlaySound(Inventory[int(utility::R_Rand())%17], 1);
     }
   }
   if ( gibberish_handle == nullptr ) return;
+
   if ( !theSound.IsPlaying(gibberish_handle) ) {
     gibberish_handle = nullptr;
     if ( Hero::theEnemy == nullptr ) // dead
@@ -94,7 +98,7 @@ void Sounds::Update(float dt) {
     if ( ++gibberish_count <= 2 ) {
       // if 1..2(50%) play another sound 
       if ( gibberish_count != 2 || (gibberish_count == 2 && utility::R_Rand()<50) ) {
-        gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], .5);
+        gibberish_handle = theSound.PlaySound(Gibberish[int(utility::R_Rand())%36], 1);
       }
     }
 

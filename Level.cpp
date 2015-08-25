@@ -9,13 +9,13 @@
 
 void Level::Initialize() {
   //theWorld.SetSideBlockers(true, 0.0f);
-  auto t = new Platform();
+  /*auto t = new Platform();
   t->SetPosition(Vector2(MathUtil::ScreenToWorld(0,
                                                  utility::Window_height)));
   t->SetSize(250,1);
   t->SetColor(0,0,0);
   theWorld.Add(t);
-  t->InitPhysics();
+  t->InitPhysics();*/
 }
   
 void Level::Clear() {
@@ -234,3 +234,13 @@ void Level::_HUD::Apply() {
   }
 
 }
+
+
+/*void Level::Inventory::Load_New_Inventory(int level) {
+  int num_items = (utility::R_Rand()*level)/50 + 1;
+  if ( num_items > 14 ) num_items = 14;
+
+  /*for ( int i = 0; i != num_items; ++ i )
+    if ( items[i] == nullptr )
+      items[i] = new Actor();_Item(int(int(utility::R_Rand())%int(_Item::size)));*/
+//}

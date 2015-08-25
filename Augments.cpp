@@ -89,16 +89,13 @@ Augments::ShopKeep::ShopKeep() {
 
 void Augments::ShopKeep::Update(float dt) {
   if (time_left > 0) {
-    time_left -= dt;
+    time_left -= dt*4;
   }
 
   if (time_left <= 0 && _active) {
     // close shop
     SetPosition(0, 20);
     _active = false;
-    for ( int i = 0; i != 3; ++ i )
-      if ( items[i] != nullptr )
-        items[i]->Destroy();
     items[0] = items[1] = items[2] = nullptr;
   } else if (time_left > 0 && !_active) {
     // open shop
@@ -145,10 +142,10 @@ Augments::Shop_Item::Shop_Item(Shop_Item_Type it) {
     break;
   }
   this->SetIsSensor(1);
-  gold_show = new TextActor();
+  /*gold_show = new TextActor();
   theWorld.Add(gold_show);
   gold_show->SetColor(Color(.4,.7,.3));
-  gold_show->SetDisplayString(std::to_string(gold_cost));
+  gold_show->SetDisplayString(std::to_string(gold_cost));*/
 }
 void Augments::Shop_Item::Update(float t) {
   gold_show->SetPosition(GetPosition().X-0.5,GetPosition().Y-2);

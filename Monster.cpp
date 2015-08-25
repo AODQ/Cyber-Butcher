@@ -10,6 +10,61 @@ const int Player::Monster::idle_frame_max = 6;
 const int Player::Monster::attack_frame_max = 8;
 const int Player::Monster::walk_frame_max = 3;
 
+Player::Ripple::Ripple(int dit, float it, float pos_x) {
+  timer = 1;
+  iteration = it;
+  direction = dit;
+  SetSize(MathUtil::PixelsToWorldUnits(32),
+          MathUtil::PixelsToWorldUnits(32));
+  SetIsSensor(1);
+  SetPosition(pos_x,-5);
+  InitPhysics();
+  hit = 0;
+  GetBody()->SetGravityScale(0);
+}
+void Player::Ripple::Update(float dt) {
+  if ( hit == 0 && Hero::theEnemy ) {
+    if ( BoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
+      hit = 1;
+      Hero::theEnemy->Add_Health(-2);
+      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+                                 Hero::theEnemy->GetPosition().Y),std::_Pi/-2,200);
+    }
+  }
+  SetSprite("Images\\wave_00" + std::to_string(int(timer*3)<1?1:int(timer*3)) + ".png");
+  timer -= dt;
+  if ( timer <= 0 ) {
+    if ( iteration+1 <= 1 ) {// limit
+      auto tz = new Ripple(direction,iteration+1,GetPosition().X+2*-direction);
+      theWorld.Add(tz);
+    }
+    Destroy();
+  }
+}
+
+Player::Rock::Rock(float pos_x) {
+  SetSize(MathUtil::PixelsToWorldUnits(32),
+          MathUtil::PixelsToWorldUnits(32));
+  SetPosition(pos_x,7);
+  SetIsSensor(1);
+  timer = 5;
+  hit = 0;
+  InitPhysics();
+  SetSprite("Images\\rock.png");
+}
+void Player::Rock::Update(float dt) {
+  timer -= dt;
+  if ( hit == 0 && Hero::theEnemy ) {
+    if ( BoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
+      hit = 1;
+      Hero::theEnemy->Add_Health(-4);
+      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+                                 Hero::theEnemy->GetPosition().Y),std::_Pi/-2,200);
+    }
+  }
+  if ( timer <= 0 ) Destroy();
+}
+
 Player::Monster_Death::Monster_Death() {
   time = 5;
   SetSize(MathUtil::PixelsToWorldUnits(96),
@@ -48,8 +103,6 @@ void Player::Monster::Update(float dt) {
     return;
   }
 
-  --curr_health;
-
   // mirror according to direction
   if (direction == 1) {
     SetUVs(Vector2(0.f, 0.f), Vector2(1.f, 1.f));
@@ -62,12 +115,21 @@ void Player::Monster::Update(float dt) {
     phys_jump_timer -= dt;
   }
 
-  if ( theInput.IsKeyDown(GLFW_KEY_W) &&
+  if ( theInput.IsKeyDown(Game::jump_key) &&
       phys_jump_timer <= 0 ) {
     SetSprite("Images\\monster_jump_001.png");
     theSound.PlaySound( Sounds::boss_jump, .1 );
     phys_jump_timer = theTuning.GetFloat("JumpTimer");
     ApplyForce(Vector2(0, theTuning.GetFloat("JumpVelocity")),Vector2(0,0));
+    auto x = new Ripple(-3,0,GetPosition().X-2);
+    theWorld.Add(x);
+         x = new Ripple( 3,0,GetPosition().X+2);
+    theWorld.Add(x);
+    for ( int i = -1; i != 2; ++ i ) {
+      auto y = new Rock(GetPosition().X + 5*i);
+      theWorld.Add(y);
+      y->ApplyForce(Vec2i(200*i,0),Vector2(0,0));
+    }
     //theSound.PlaySound(Sounds::boss_jump);
   }
 
@@ -78,8 +140,8 @@ void Player::Monster::Update(float dt) {
 
   // movement
   if ( !is_attacking && current_anim != Anim_Type::jump ) {
-    if ( theInput.IsKeyDown(GLFW_KEY_D) ^
-         theInput.IsKeyDown(GLFW_KEY_A) ) {
+    if ( theInput.IsKeyDown(Game::right_key) ^
+         theInput.IsKeyDown(Game::left_key) ) {
       if ( current_anim != Anim_Type::walk) {
         LoadSpriteFrames("Images\\monster_walk_001.png");
         anim_frame = 0;
@@ -87,11 +149,11 @@ void Player::Monster::Update(float dt) {
       
       current_anim = Anim_Type::walk;
 
-      if ( theInput.IsKeyDown(GLFW_KEY_D) ) {
+      if ( theInput.IsKeyDown(Game::left_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 0;
       }
-      if ( theInput.IsKeyDown(GLFW_KEY_A) ) {
+      if ( theInput.IsKeyDown(Game::right_key) ) {
 	      ApplyLinearImpulse(Vector2(mass*(-target_velocity.X - vel.x)*dt*4, 0), Vector2(0, 0));
         direction = 1;
       }
@@ -104,18 +166,18 @@ void Player::Monster::Update(float dt) {
     }
   }
 
-  if (Hero::theEnemy != nullptr &&
-    Hero::theEnemy->GetBoundingBox().Intersects(GetBoundingBox()) &&
-    GetBody()->GetLinearVelocity().y < 0 && !hit_ground_after_stomp ) {
+  if (Hero::theEnemy != nullptr )
+    if ( Hero::theEnemy->GetBoundingBox().Intersects(GetBoundingBox()) &&
+      GetBody()->GetLinearVelocity().y < 0 && !hit_ground_after_stomp ) {
 
-    Hero::theEnemy->Add_Health(-stomp_damage);
-    hit_ground_after_stomp = 1;
-    Hero::theEnemy->ApplyForce(Vector2(0, 250), Vector2(0, 0));
-    // cause bleed at top of middle of the enemy direction downwards
-    Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
-      Hero::theEnemy->GetPosition().Y-Hero::theEnemy->GetSize().Y/2),
-      std::_Pi + std::_Pi/2);
-  }
+      Hero::theEnemy->Add_Health(-stomp_damage);
+      hit_ground_after_stomp = 1;
+      Hero::theEnemy->ApplyForce(Vector2(0, 250), Vector2(0, 0));
+      // cause bleed at top of middle of the enemy direction downwards
+      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+        Hero::theEnemy->GetPosition().Y-Hero::theEnemy->GetSize().Y/2),
+        std::_Pi + std::_Pi/2);
+    }
 
   if ( GetBody()->GetLinearVelocity().y == 0 && current_anim == Anim_Type::jump ) {
     current_anim = Anim_Type::idle;
@@ -178,17 +240,18 @@ void Player::Monster::Update(float dt) {
     tz->InitPhysics();
     tz->GetBody()->SetGravityScale(0);
 
-    if ( tz->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
-      // send that fucker FLYINGGGGGGGGGGGGGGG!!!!!!!!!!!!!!!!!!!!
-      Hero::theEnemy->Add_Health(-attack_damage);
-      Hero::theEnemy->ApplyForce(Vector2(direction?-1200:1200,0),Vector2(0,0));
-      ++anim_frame;
-      Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
-                                 Hero::theEnemy->GetPosition().Y),
-      direction?std::_Pi:0,1500);
-      // recoil
-      ApplyForce(Vector2(direction?-750:750,0),Vector2(0,0));
-    }
+    if ( Hero::theEnemy != nullptr )
+      if ( tz->GetBoundingBox().Intersects(Hero::theEnemy->GetBoundingBox()) ) {
+        // send that fucker FLYINGGGGGGGGGGGGGGG!!!!!!!!!!!!!!!!!!!!
+        Hero::theEnemy->Add_Health(-attack_damage);
+        Hero::theEnemy->ApplyForce(Vector2(direction?-1200:1200,0),Vector2(0,0));
+        ++anim_frame;
+        Particles::Add_Bleed(Vec2i(Hero::theEnemy->GetPosition().X,
+                                   Hero::theEnemy->GetPosition().Y),
+        direction?std::_Pi:0,1500);
+        // recoil
+        ApplyForce(Vector2(direction?-750:750,0),Vector2(0,0));
+      }
     tz->Destroy();
   }
   
@@ -252,8 +315,8 @@ Player::Monster::Monster(Augments::Weapon_Type weapon) {
   direction = 0;
   previous_direction = 0;
   anim_frame = 1;
-  Set_Attack_Damage(12);
-  Set_Stomp_Damage(3);
+  Set_Attack_Damage(15);
+  Set_Stomp_Damage(5);
   SetColor(Color(1.0f, 1.0f, 1.0f));
 
   is_attacking = false;

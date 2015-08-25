@@ -56,6 +56,29 @@ namespace Level {
 
     void Update(float);
   };
+
+  /*namespace Inventory {
+    extern float cooldown;
+
+
+    enum class _Item {
+      HP_Mini, HP_Reg, HP_Large,
+      Mana_Mini, Mana_Reg, Mana_Large,
+      Throw_Axe, Magic, Knife, Shuriken,
+      Dagger, Long_Sword, Claymore, Axe, Battle_Axe, Uber_Axe, Spear,
+      Amulet, Ring, Armor, Leggings, Shoes, size
+    };
+
+    Actor* items[14];
+    Item   items_[14];
+
+    Actor* amulet, *ring, *leggings, *shoes, *weapon, *throwable;
+
+    void Load_Sprites();
+
+    void Load_New_Inventory(int level);
+    void Play_Inventory();
+  }*/
 }
 
 

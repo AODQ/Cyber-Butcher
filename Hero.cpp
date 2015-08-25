@@ -53,21 +53,16 @@ Hero::E_Weapon::E_Weapon(Weapon wep) {
 }
 
 void Hero::E_Weapon::Update(float dt) {
-  if ( !hit && int(Hero::theEnemy->attack_animation) >= 4 )
-    if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
-      Game::thePlayer->Add_Curr_Health(-10);
-      Particles::Add_Bleed(Vec2i(Game::thePlayer->GetPosition().X,Game::thePlayer->GetPosition().Y),
-        std::atan2f(GetPosition().Y - Game::thePlayer->GetPosition().Y,
-                    GetPosition().X - Game::thePlayer->GetPosition().X));
-      hit = 1;
-    }
-  if ( theEnemy != nullptr ) {
+  if ( theEnemy != nullptr || !Game::thePlayer ) {
     if ( Hero::theEnemy->attack_animation >= 6 ) {
       theEnemy->weapon = nullptr;
       Destroy();
+      return;
     }
-  } else
+  } else {
     Destroy();
+    return;
+  }
 }
 
 
@@ -76,10 +71,10 @@ Hero::E_Throw::E_Throw(Hero::Throwable th, float ang) {
           MathUtil::PixelsToWorldUnits(32));
   SetIsSensor(1);
   SetPosition(theEnemy->GetPosition());
-  SetDensity(0.2);
+  SetDensity(0.4);
   InitPhysics();
   type = th;
-  cooldown = 5;
+  cooldown = 15;
   hit = 0;
   float angle = std::atan2f(Game::thePlayer->GetPosition().Y-theEnemy->GetPosition().Y,
                           Game::thePlayer->GetPosition().X-theEnemy->GetPosition().X);
@@ -88,22 +83,23 @@ Hero::E_Throw::E_Throw(Hero::Throwable th, float ang) {
       if ( angle < std::_Pi/2 ) angle += std::_Pi/5;
       else                      angle -= std::_Pi/5;
       SetSprite("Images\\Hero_Throwing_Axe.png");
-      ApplyForce(Vector2(std::cos(angle)*350,std::sin(angle)*850),Vector2(0,0));
+      ApplyForce(Vector2(std::cos(angle)*250,std::sin(angle)*750),Vector2(0,0));
       ApplyTorque(50);
+      cooldown = 15;
     break;
     case Throwable::knife:
       SetSprite("Images\\Hero_Throwing_Knife.png");
       GetBody()->SetTransform(GetBody()->GetPosition(),angle);
-      ApplyForce(Vector2(std::cos(angle)*350,std::sin(angle)*350),Vector2(0,0));
+      ApplyForce(Vector2(std::cos(angle)*450,std::sin(angle)*450),Vector2(0,0));
       GetBody()->SetGravityScale(0);
-      cooldown = 1;
+      cooldown = 15;
     break;
     case Throwable::ball:
       angle -= ang;
       SetSprite("Images\\Hero_Throwing_Magic_00" + std::to_string(int(utility::R_Rand())%3+1) + ".png");
-      ApplyForce(Vector2(std::cos(angle)*200,std::sin(angle)*200),Vector2(0,0));
+      ApplyForce(Vector2(std::cos(angle)*300,std::sin(angle)*300),Vector2(0,0));
       GetBody()->SetGravityScale(0);
-      cooldown = 2;
+      cooldown = 7;
     break;
     case Throwable::cross:
       SetSprite("Images\\Hero_Throwing_Shuriken.png");
@@ -111,7 +107,8 @@ Hero::E_Throw::E_Throw(Hero::Throwable th, float ang) {
       ApplyTorque(50);
       recoiled = 0;
       GetBody()->SetGravityScale(0);
-      ApplyForce(Vector2(std::cos(angle)*500,std::sin(angle)*500),Vector2(0,0));
+      ApplyForce(Vector2(std::cos(angle)*600,std::sin(angle)*100),Vector2(0,0));
+      cooldown = 15;
     break;
   }
 }
@@ -130,19 +127,39 @@ void Hero::E_Throw::Update(float dt) {
           ApplyForce(Vector2(std::cos(angle)*100,std::sin(angle)*100),Vector2(0,0));
           GetBody()->SetAngularVelocity(0);
           ApplyTorque(-50);
-        } else
+          hit = 0;
+        } else {
           this->Destroy();
+          return;
+        }
       }
     break;
     default:
       cooldown -= dt;
-      if ( cooldown <= 0 )
+      if ( cooldown <= 0 ) {
         this->Destroy();
+        return;
+      }
   }
-  if ( !hit )
-    if ( GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
+  if ( !hit && Game::thePlayer )
+    if ( GetBoundingBox().Intersects(Game::thePlayer->chest_hitbox->GetBoundingBox()) ) {
       hit = 1;
-      Game::thePlayer->Add_Curr_Health(-3);
+      int damage = 0;
+      switch ( type ) {
+        case Throwable::axe:
+          damage = -5;
+        break;
+        case Throwable::cross:
+          damage = -3;
+        break;
+        case Throwable::ball:
+          damage = -2;
+        break;
+        case Throwable::knife:
+          damage = -4;
+        break;
+      }
+      Game::thePlayer->Add_Curr_Health(damage);
     }
 }
 
@@ -174,7 +191,7 @@ Hero::Enemy::Enemy() {
   movement_cooldown = melee_cooldown = range_cooldown = in_air_end = in_air_start =
   movement_attack_flinch = ghost_cooldown = platform_cooldown = slide_timer = slide_direction
   = ghost_timer = on_platform_timer = jumping_to_platform = slide_cooldown = 0;
-  gibber_timer = utility::R_Rand()/10 + 5;
+  gibber_timer = utility::R_Rand()/20 + 3.0;
   
   ghost_timer = 15 + utility::R_Rand()/20;
   mood = Mood::Close;
@@ -209,6 +226,10 @@ Hero::Enemy::Enemy() {
 };
 
 void Hero::Enemy::Update(float dt) {
+
+  if ( health <= 0 ) {
+    Killed();
+  }
   if ( Game::thePlayer == nullptr ) {
     Destroy();
     return;
@@ -227,7 +248,7 @@ void Hero::Enemy::Update(float dt) {
   gibber_timer -= dt;
 
   if ( gibber_timer <= 0 ) {
-    gibber_timer = utility::R_Rand()/10 + 5;
+    gibber_timer = utility::R_Rand()/20 + 3.0;
     Sounds::Play_Gibberish();
   }
 
@@ -271,6 +292,8 @@ void Hero::Enemy::Update(float dt) {
       GetBody()->SetLinearVelocity(b2Vec2(0,0));
       jumping_to_platform = 0;
       on_platform_timer = .001;
+      if ( platform != nullptr )
+        platform->Destroy();
       platform = nullptr;
       // in case he was swiped out of the air we check
       if ( GetPosition().X < -7.5 && GetPosition().X > -9.5  ) {
@@ -294,7 +317,7 @@ void Hero::Enemy::Update(float dt) {
         theWorld.Add(platform);
       }
     } else {
-      ApplyForce(Vec2i(0,20),Vec2i(0,0));
+      ApplyForce(Vec2i(0,400),Vec2i(0,0));
     }
     goto DETERMINE_SPRITE; // can't attack or move
   }
@@ -393,7 +416,7 @@ void Hero::Enemy::Update(float dt) {
       ghost_timer = 15 + utility::R_Rand()/20;
     }
   }
-  if ( platform_cooldown < 0 ) {
+  /*if ( platform_cooldown < 0 ) {
     // jump to platform and player is under one of the platforms
     if ( on_platform_timer <= 0 &&
           (( GetPosition().X > -9 && GetPosition().X < -7 ) ||
@@ -406,7 +429,7 @@ void Hero::Enemy::Update(float dt) {
       slide_timer = -1;
       goto DETERMINE_SPRITE;
     }
-  }
+  }*/
 
   // attacks options
   if ( movement_attack_flinch > 0 ) return; // hero just attacked
@@ -420,10 +443,6 @@ void Hero::Enemy::Update(float dt) {
     theSound.PlaySound( Sounds::hero_throw, .1 );
     Attack_Range();
     goto DETERMINE_SPRITE;
-  }
-
-  if ( health <= 0 ) {
-    Killed();
   }
 
   DETERMINE_SPRITE:
@@ -506,15 +525,15 @@ void Hero::Enemy::Update(float dt) {
                     sy = 0;
               switch ( weapon_type ) {
                 case Weapon::axe:
-                  sx = 3;
-                  sy = 6;
+                  sx = 6;
+                  sy = 7;
                 break;
                 case Weapon::bigaxe:
-                  sx = 6;
-                  sy = 6;
+                  sx = 12;
+                  sy = 67;
                 break;
                 case Weapon::miniaxe:
-                  sx = 2;
+                  sx = 4;
                   sy = 4;
                 break;
                 case Weapon::broadsword:
@@ -522,11 +541,11 @@ void Hero::Enemy::Update(float dt) {
                   sy = 4;
                 break;
                 case Weapon::sword:
-                  sx = 4;
+                  sx = 7;
                   sy = 4;
                 break;
                 case Weapon::dagger:
-                  sy = 3;
+                  sy = 4;
                   sx = 3;
                 break;
                 case Weapon::spear:
@@ -536,12 +555,36 @@ void Hero::Enemy::Update(float dt) {
               }
               tz->SetSize(MathUtil::PixelsToWorldUnits(sx),
                           MathUtil::PixelsToWorldUnits(sy));
-              tz->SetPosition(GetPosition().X + direction*MathUtil::PixelsToWorldUnits(3),
+              tz->SetPosition(GetPosition().X + direction*MathUtil::PixelsToWorldUnits(-3),
                               GetPosition().Y);
               tz->SetIsSensor(1);
               tz->InitPhysics();
-              if ( tz->GetBoundingBox().Intersects(Game::thePlayer->GetBoundingBox()) ) {
-                Game::thePlayer->Add_Curr_Health(-3);
+              if ( tz->GetBoundingBox().Intersects(Game::thePlayer->chest_hitbox->GetBoundingBox()) ) {
+                int damage = 0;
+                switch ( weapon_type ) {
+                  case Weapon::axe:
+                    damage = -3;
+                  break;
+                  case Weapon::bigaxe:
+                    damage = -5;
+                  break;
+                  case Weapon::miniaxe:
+                    damage = -2;
+                  break;
+                  case Weapon::broadsword:
+                    damage = -4;
+                  break;
+                  case Weapon::sword:
+                    damage = -3;
+                  break;
+                  case Weapon::dagger:
+                    damage = -1;
+                  break;
+                  case Weapon::spear:
+                    damage = -2;
+                  break;
+                }
+                Game::thePlayer->Add_Curr_Health(damage);
                 wep_hit = 1;
               }
               tz->Destroy();
@@ -562,7 +605,7 @@ void Hero::Enemy::Update(float dt) {
 
 void Hero::Enemy::Apply_Vel_X(float x, float dt) {
   x *= .96;
-  ApplyLinearImpulse(Vector2(x*dt*500,0),Vector2(0,0));
+  ApplyLinearImpulse(Vector2(x*dt*200*GetBody()->GetMass(),0),Vector2(0,0));
 }
 
 void Hero::Enemy::Jump() {
@@ -570,7 +613,31 @@ void Hero::Enemy::Jump() {
 }
 
 void Hero::Enemy::Attack_Melee() {
+  if ( melee_cooldown > 0 ) return;
   melee_cooldown = 5;
+  switch ( weapon_type ) {
+    case Weapon::axe:
+      melee_cooldown = 4;
+    break;
+    case Weapon::bigaxe:
+      melee_cooldown = 5;
+    break;
+    case Weapon::miniaxe:
+      melee_cooldown = 2;
+    break;
+    case Weapon::broadsword:
+      melee_cooldown = 4;
+    break;
+    case Weapon::sword:
+      melee_cooldown = 3;
+    break;
+    case Weapon::dagger:
+      melee_cooldown = 1;
+    break;
+    case Weapon::spear:
+      melee_cooldown = 2;
+    break;
+  }
   wep_hit = 0;
   weapon = new E_Weapon(weapon_type);
   theWorld.Add(weapon);
@@ -578,9 +645,10 @@ void Hero::Enemy::Attack_Melee() {
 }
 
 void Hero::Enemy::Attack_Range() {
-  range_cooldown = 7;
+  range_cooldown = utility::R_Rand()/25 + 1.5;
   attack_animation = .0001;
   auto z = new E_Throw(throw_type);
+  theWorld.Add(z);
   if ( throw_type == Throwable::ball ) {
     z = new E_Throw(throw_type,std::_Pi/2);
     theWorld.Add(z);
@@ -628,10 +696,10 @@ Hero::Enemy_Death::Enemy_Death() {
           MathUtil::PixelsToWorldUnits(32));
   SetSprite("Images\\Hero_Death.png");
   SetPosition(theEnemy->GetPosition());
+  InitPhysics();
   auto fixture = GetBody()->GetFixtureList()->GetFilterData();
   fixture.groupIndex = -8;
   GetBody()->GetFixtureList()->SetFilterData(fixture);
-  InitPhysics();
   time = 5;
 }
 void Hero::Enemy_Death::Update(float x) {
@@ -702,7 +770,7 @@ Hero::Dagger::Dagger(float angl, Vec2i pos) {
 }
 
 void Hero::Dagger::Update(float dt) {
-  lifetime -= dt;
+ /* lifetime -= dt;
   if ( lifetime < 0 || Hero::theEnemy == nullptr ) {
     Destroy();
   }
@@ -714,5 +782,5 @@ void Hero::Dagger::Update(float dt) {
         std::atan2f(Game::thePlayer->GetPosition().Y - GetPosition().Y,
                     Game::thePlayer->GetPosition().X - GetPosition().X));
       hit = 1;
-    }
+    } */
 }
